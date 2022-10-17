@@ -1,0 +1,42 @@
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+model Recipe {
+  id          Int             @id @default(autoincrement())
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now())
+  title       String
+  cookedCount Int             @default(0)
+  servings    String
+  prepTime    Int?
+  cookTime    Int
+  ingredients String          @db.LongText
+  steps       String          @db.LongText
+  notes       String          @db.LongText
+  category    String
+  tags        TagsOnRecipes[]
+}
+
+model Tag {
+  id      Int             @id @default(autoincrement())
+  name    String
+  recipes TagsOnRecipes[]
+}
+
+model TagsOnRecipes {
+  recipe     Recipe   @relation(fields: [recipeId], references: [id])
+  recipeId   Int
+  tag        Tag      @relation(fields: [tagId], references: [id])
+  tagId      Int
+  assignedAt DateTime @default(now())
+
+  @@id([recipeId, tagId])
+}

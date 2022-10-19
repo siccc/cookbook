@@ -5,9 +5,3 @@
       clip-rule="evenodd" fill-rule="evenodd" />
   </svg>
 </template>
-
-<script>
-export default {
-  name: 'SeasonIcon'
-};
-</script>

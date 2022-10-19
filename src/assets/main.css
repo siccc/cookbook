@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'K2D';
+    src: url('/font/K2D-Thin.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 300;
+  }
+
+  @font-face {
+    font-family: 'K2D';
+    src: url('/font/K2D-Regular.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 400;
+  }
+
+  @font-face {
+    font-family: 'K2D';
+    src: url('/font/K2D-Medium.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 500;
+  }
+}

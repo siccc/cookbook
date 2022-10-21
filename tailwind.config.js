@@ -7,9 +7,11 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'k2d': ['K2D' /*, 'sans-serif'*/]
-      },
-    },
+        'k2d': ['K2D', 'sans-serif']
+      }
+    }
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography')
+  ],
 };

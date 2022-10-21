@@ -13,12 +13,12 @@ import HomeIcon from '@/assets/icons/HomeIcon.vue';
         <img src="@/assets/vertical-logo.svg" class="mr-4 h-9" alt="Cookbook Logo" />
       </div>
       <div class="items-center ml-4 hidden md:flex">
-        <RouterLink to="/" class="ml-4 link-underline link-underline-black text-black uppercase">Home</RouterLink>
-        <RouterLink to="/" class="ml-4 link-underline link-underline-black text-black uppercase">Grocery list
+        <RouterLink to="/" class="ml-4 link-underline link-underline-black uppercase">Home</RouterLink>
+        <RouterLink to="/" class="ml-4 link-underline link-underline-black uppercase">Grocery list
         </RouterLink>
-        <RouterLink to="/" class="ml-4 link-underline link-underline-black text-black uppercase">What's in the fridge
+        <RouterLink to="/" class="ml-4 link-underline link-underline-black uppercase">What's in the fridge
         </RouterLink>
-        <RouterLink to="/" class="ml-4 link-underline link-underline-black text-black uppercase">In season</RouterLink>
+        <RouterLink to="/" class="ml-4 link-underline link-underline-black uppercase">In season</RouterLink>
       </div>
     </div>
   </div>
@@ -63,7 +63,7 @@ import HomeIcon from '@/assets/icons/HomeIcon.vue';
 }
 
 .link-underline-black {
-  background-image: linear-gradient(transparent, transparent), linear-gradient(#F2DE2C, #F2DE2C)
+  background-image: linear-gradient(transparent, transparent), linear-gradient(#facc15, #facc15)
 }
 
 .link-underline:hover {

@@ -12,7 +12,7 @@ generator client {
 model Recipe {
   id          Int             @id @default(autoincrement())
   createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
   title       String
   cookedCount Int             @default(0)
   servings    String

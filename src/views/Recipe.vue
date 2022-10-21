@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { getRecipe } from '../stores/recipes';
+import { getRecipe } from '@/stores/recipes';
+import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
+
 const props = defineProps<{
   id: string
 }>();
@@ -19,17 +21,17 @@ const { isLoading, isError, isFetching, data, error, refetch } = getRecipe(props
       </div>
       <!-- INFO -->
       <div class="md:col-span-2">
-        <div class="uppercase font-k2d text-xl px-2 py-1 bg-yellow-400 inline-block">{{ data.title }}</div>
+        <div class="uppercase font-k2d text-xl border-b-4 border-yellow-400 inline-block">{{ data.title }}</div>
         <!-- TODO: TAGS -->
         <div class="my-4">
-          <span class="border-2 border-yellow-400 rounded-lg px-2 py-1">{{ data.category }}</span>
+          <span class="text-yellow-400 border-2 border-yellow-400 rounded-lg px-2 py-1">{{ data.category }}</span>
           <!-- <div>{{ data?.tags }}</div> -->
         </div>
         <div class="flex gap-x-6">
-          <!-- <div>
+          <div>
             <div>Total</div>
             <span>{{ data.totalTime }} min</span>
-          </div> -->
+          </div>
           <div>
             <div>Prep</div>
             <span>{{ data.prepTime }} min</span>
@@ -43,19 +45,19 @@ const { isLoading, isError, isFetching, data, error, refetch } = getRecipe(props
             <span>{{ data.servings }}</span>
           </div>
         </div>
-        <div class="px-3 py-1.5 bg-yellow-400 text-center md:inline-block rounded-lg uppercase mt-4 cursor-pointer">I
-          did
-          it</div>
+        <div class="px-3 py-1.5 bg-yellow-400 text-center font-semibold text-white md:inline-block md:w-40 rounded-lg uppercase mt-4 cursor-pointer">
+          I made it!
+        </div>
       </div>
       <!-- INGREDIENTS -->
-      <div>
+      <div class="justify-self-start">
         <div class="text-xl uppercase font-k2d mb-2">Ingredients</div>
-        {{ data.ingredients }}
+        <MarkdownRenderer :content="data.ingredients" />
       </div>
       <!-- STEPS & NOTES -->
       <div class="md:col-span-2">
         <div class="text-xl uppercase font-k2d mb-2">Steps</div>
-        {{ data.steps }}
+        <MarkdownRenderer :content="data.steps" />
         <div v-if="data.notes">
           <div class="text-xl uppercase font-k2d mb-2">Notes</div>
           {{ data.notes }}

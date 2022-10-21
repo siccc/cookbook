@@ -1,29 +1,30 @@
 // useMutation, useQueryClient
 import { useQuery } from "vue-query";
 import type { Recipe } from '@/types';
+import type { Ref } from 'vue';
 import { reactive, computed } from 'vue';
 
 // const queryClient = useQueryClient(); // use in fn, I need it when I'm using optimistic updates
 
 // -----------------------------------
-// LIST RECIPES
+// LIST & SEARCH RECIPES
 // -----------------------------------
 
-const recipeListFetcher = async (): Promise<Recipe[]> => {
-  const result = await fetch('/api/recipes').then((response) =>
-    response.json()
-  );
+const recipeListFetcher = async (searchKeywords: Ref<string>): Promise<Recipe[]> => {
+  const result = await fetch(`/api/recipes?search=${searchKeywords.value ? searchKeywords.value : ''}`)
+    .then((response) =>
+      response.json()
+    );
   return await result.map((recipe: Recipe) => {
-    // transform data if needed
-    console.log(recipe);
+    // console.log(recipe);
     return recipe;
   });
 }
 
-export function listRecipes() {
+export function listRecipes(searchKeywords: Ref<string>) {
   const { isLoading, isError, isFetching, data, error, refetch } = useQuery(
-    ['recipes'],
-    recipeListFetcher
+    ['recipes', searchKeywords],
+    () => recipeListFetcher(searchKeywords)
   );
   return { isLoading, isError, isFetching, data, error, refetch };
 }
@@ -61,4 +62,3 @@ export function getRecipe(id: string) {
 // -----------------------------------
 // DELETE RECIPE
 // -----------------------------------
-

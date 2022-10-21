@@ -8,24 +8,47 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   if (query.resource === 'recipes') {
     // LIST RECIPES
     if (method === 'GET' && !query.id) {
-      const recipes = await prisma.recipe.findMany({
-        orderBy: { createdAt: "asc" },
-      });
+      let recipes;
+      if (query.search && typeof query.search === 'string') {
+        recipes = await prisma.recipe.findMany({
+          orderBy: { createdAt: 'asc' },
+          where: {
+            title: {
+              search: preprocessSearchKeywords(query.search),
+            }
+          }
+        });
+      } else {
+        recipes = await prisma.recipe.findMany({
+          orderBy: { createdAt: 'asc' },
+        });
+      }
       return res.json(recipes);
     }
     // GET RECIPE BY ID
     else if (method === 'GET' && query.id) {
       if (typeof query.id === 'string') {
-        const id = Number(query.id); // TODO: handle non-convertable string values
-        const recipe = await prisma.recipe.findUnique({
-          where: { id },
-          include: {
-            tags: true,
-          },
-        });
-        return res.json(recipe);
+        try {
+          const id = Number(query.id); // TODO: handle non-convertable string values
+          const recipe = await prisma.recipe.findUnique({
+            where: { id },
+            include: {
+              tags: true,
+            },
+          });
+          return res.json(recipe);
+        } catch {
+          return res.status(404).send('');
+        }
       }
     }
   }
   return res.status(404).send('');
 };
+
+const preprocessSearchKeywords = (searchKeywords: string) => {
+	return searchKeywords
+    .trim()
+		.split(/\s+/)
+		.join(' & ');
+}

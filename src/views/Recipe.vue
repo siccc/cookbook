@@ -12,7 +12,9 @@ const { isLoading, isError, isFetching, data, error, refetch } = getRecipe(props
 <template>
   <div class="p-4 max-w-screen-md mx-auto">
     <RouterLink to="/" class="p-2 font-k2d uppercase mb-8 block cursor-pointer">Go back</RouterLink>
-    <div v-if="isLoading" class="mt-8">Loading...</div>
+    <div v-if="isLoading" class="my-8 text-center font-k2d text-2xl text-yellow-400">
+      Loading...
+    </div>
     <div v-else-if="!isLoading && data"
       class="grid md:grid-cols-3 gap-6 md:gap-x-16 md:gap-y-6 justify-items-center md:justify-items-start">
       <!-- IMAGE -->
@@ -21,10 +23,14 @@ const { isLoading, isError, isFetching, data, error, refetch } = getRecipe(props
       </div>
       <!-- INFO -->
       <div class="md:col-span-2">
-        <div class="uppercase font-k2d text-xl border-b-4 border-yellow-400 inline-block">{{ data.title }}</div>
+        <div class="uppercase font-k2d text-xl border-b-4 border-yellow-400 inline-block">
+          {{ data.title }}
+        </div>
         <!-- TODO: TAGS -->
         <div class="my-4">
-          <span class="text-yellow-400 border-2 border-yellow-400 rounded-lg px-2 py-1">{{ data.category }}</span>
+          <span class="text-yellow-400 border-2 border-yellow-400 rounded-lg px-2 py-1">
+            {{ data.category }}
+          </span>
           <!-- <div>{{ data?.tags }}</div> -->
         </div>
         <div class="flex gap-x-6">
@@ -51,15 +57,15 @@ const { isLoading, isError, isFetching, data, error, refetch } = getRecipe(props
       </div>
       <!-- INGREDIENTS -->
       <div class="justify-self-start">
-        <div class="text-xl uppercase font-k2d mb-2">Ingredients</div>
+        <div class="text-xl uppercase font-k2d mb-1">Ingredients</div>
         <MarkdownRenderer :content="data.ingredients" />
       </div>
       <!-- STEPS & NOTES -->
       <div class="md:col-span-2">
-        <div class="text-xl uppercase font-k2d mb-2">Steps</div>
+        <div class="text-xl uppercase font-k2d mb-1">Steps</div>
         <MarkdownRenderer :content="data.steps" />
         <div v-if="data.notes">
-          <div class="text-xl uppercase font-k2d mb-2">Notes</div>
+          <div class="text-xl uppercase font-k2d mb-1 mt-3">Notes</div>
           {{ data.notes }}
         </div>
       </div>

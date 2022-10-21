@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import GroceryIcon from '@/assets/icons/GroceryIcon.vue';
-import FridgeIcon from '@/assets/icons/FridgeIcon.vue';
-import SeasonIcon from '@/assets/icons/SeasonIcon.vue';
-import HomeIcon from '@/assets/icons/HomeIcon.vue';
+import GroceryIcon from '@/assets/icons/grocery.svg?component';
+import FridgeIcon from '@/assets/icons/fridge.svg?component';
+import SeasonIcon from '@/assets/icons/season.svg?component';
+import HomeIcon from '@/assets/icons/home.svg?component';
+import Logo from '@/assets/vertical-logo.svg?component';
 
 </script>
 
@@ -10,15 +11,17 @@ import HomeIcon from '@/assets/icons/HomeIcon.vue';
   <div class="h-14 px-2 md:px-4 py-2.5 bg-white fixed w-full z-20 top-0 left-0 border-b border-gray-200">
     <div class="container mx-auto px-4 flex justify-center md:justify-between items-center">
       <div class="flex-shrink-0">
-        <img src="@/assets/vertical-logo.svg" class="mr-4 h-9" alt="Cookbook Logo" />
+        <RouterLink to="/">
+          <Logo class="mr-4 h-9" alt="Cookbook Logo" />
+        </RouterLink>
       </div>
       <div class="items-center ml-4 hidden md:flex">
-        <RouterLink to="/" class="ml-4 link-underline link-underline-black uppercase">Home</RouterLink>
-        <RouterLink to="/" class="ml-4 link-underline link-underline-black uppercase">Grocery list
+        <RouterLink to="/" class="ml-4 link-underline link-underline-yellow uppercase">Home</RouterLink>
+        <RouterLink to="/" class="ml-4 link-underline link-underline-yellow uppercase">Grocery list
         </RouterLink>
-        <RouterLink to="/" class="ml-4 link-underline link-underline-black uppercase">What's in the fridge
+        <RouterLink to="/" class="ml-4 link-underline link-underline-yellow uppercase">What's in the fridge
         </RouterLink>
-        <RouterLink to="/" class="ml-4 link-underline link-underline-black uppercase">In season</RouterLink>
+        <RouterLink to="/" class="ml-4 link-underline link-underline-yellow uppercase">In season</RouterLink>
       </div>
     </div>
   </div>
@@ -26,25 +29,25 @@ import HomeIcon from '@/assets/icons/HomeIcon.vue';
     <div class="flex justify-around items-center text-gray-500 h-full">
       <RouterLink to="/">
         <div class="flex flex-col items-center text-yellow-400">
-          <HomeIcon class="" />
+          <HomeIcon class="w-5 h-5" />
           <div class="text-xs">Home</div>
         </div>
       </RouterLink>
       <RouterLink to="/">
         <div class="flex flex-col items-center">
-          <GroceryIcon />
+          <GroceryIcon class="w-5 h-5"/>
           <div class="text-xs">Grocery</div>
         </div>
       </RouterLink>
       <RouterLink to="/">
         <div class="flex flex-col items-center">
-          <FridgeIcon />
+          <FridgeIcon class="w-5 h-5"/>
           <div class="text-xs">Fridge</div>
         </div>
       </RouterLink>
       <RouterLink to="/">
         <div class="flex flex-col items-center">
-          <SeasonIcon />
+          <SeasonIcon class="w-5 h-5"/>
           <div class="text-xs">Season</div>
         </div>
       </RouterLink>
@@ -62,7 +65,7 @@ import HomeIcon from '@/assets/icons/HomeIcon.vue';
   transition: background-size .3s ease-in-out;
 }
 
-.link-underline-black {
+.link-underline-yellow {
   background-image: linear-gradient(transparent, transparent), linear-gradient(#facc15, #facc15)
 }
 

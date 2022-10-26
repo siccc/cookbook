@@ -12,7 +12,9 @@ const vueQueryPluginOptions: VueQueryPluginOptions = {
   queryClientConfig: {
     defaultOptions: {
       queries: {
+        staleTime: 10 * 60 * 1000, // 10 minutes
         refetchOnWindowFocus: false,
+        retry: false // disable automatic retries
       },
     },
   },

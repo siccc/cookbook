@@ -9,6 +9,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     // LIST RECIPES
     if (method === 'GET' && !query.id) {
       let recipes;
+      // SEARCH
       if (query.search && typeof query.search === 'string') {
         recipes = await prisma.recipe.findMany({
           orderBy: { createdAt: 'asc' },
@@ -18,7 +19,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
             }
           }
         });
-      } else {
+      } 
+      // LIST ALL
+      else {
         recipes = await prisma.recipe.findMany({
           orderBy: { createdAt: 'asc' },
         });
@@ -27,19 +30,51 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     }
     // GET RECIPE BY ID
     else if (method === 'GET' && query.id) {
-      if (typeof query.id === 'string') {
-        try {
-          const id = Number(query.id); // TODO: handle non-convertable string values
-          const recipe = await prisma.recipe.findUnique({
-            where: { id },
-            include: {
-              tags: true,
-            },
-          });
-          return res.json(recipe);
-        } catch {
-          return res.status(404).send('');
-        }
+      const id = Number(query.id);
+      if (isNaN(id)) {
+        return res.status(404).send('');
+      }
+      try {
+        const recipe = await prisma.recipe.findUniqueOrThrow({
+          where: { id },
+          // include: {
+          //   tags: true,
+          // },
+        });
+        return res.json(recipe);
+      } catch {
+        return res.status(404).send('');
+      }
+    }
+    // UPDATE RECIPE
+    else if (method === 'PUT' && query.id) {
+      const id = Number(query.id);
+      if (isNaN(id)) {
+        return res.status(404).send('');
+      }
+      try {
+        const recipe = await prisma.recipe.update({
+          where: { id },
+          data: req.body,
+        });
+        return res.json(recipe);
+      } catch {
+        return res.status(404).send('');
+      }
+    }
+    // DELETE RECIPE
+    else if (method === 'DELETE' && query.id) {
+      const id = Number(query.id);
+      if (isNaN(id)) {
+        return res.status(404).send('');
+      }
+      try {
+        await prisma.recipe.delete({
+          where: { id },
+        });
+        return res.json({ status: "ok" });
+      } catch {
+        return res.status(404).send('');
       }
     }
   }

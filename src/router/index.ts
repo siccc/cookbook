@@ -10,7 +10,17 @@ const router = createRouter({
     {
       path: '/recipe/:id',
       component: () => import('@/views/Recipe.vue'),
-      props: true
+      props: (route) => {
+        return { id: Number(route.params.id) }
+      },
+      beforeEnter: (to, from, next) => {
+        const id = Number(to.params.id);
+        if (isNaN(id)) {
+          next('/');
+        } else {
+          next();
+        }
+      },
     }
   ]
 });

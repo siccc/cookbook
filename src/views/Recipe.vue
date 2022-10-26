@@ -2,6 +2,7 @@
 import { getRecipe, useDeleteRecipeMutation, useUpdateRecipeMutation } from '@/stores/recipes';
 import type { Recipe } from '@/types';
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
+import Button from '@/components/Button.vue';
 import StarIcon from '@/assets/icons/star.svg?component';
 import DeleteIcon from '@/assets/icons/trash-alt.svg?component';
 import EditIcon from '@/assets/icons/edit.svg?component';
@@ -38,16 +39,18 @@ function onCounterClick(recipe: Recipe) {
     <div v-else-if="!isLoading && data">
       <!-- NAV & OPTIONS -->
       <div class="flex justify-between items-center mb-8">
-        <RouterLink to="/" class="p-2 font-k2d uppercase inline-block cursor-pointer">Go back</RouterLink>
+        <Button class="uppercase" to="/">
+          Go back
+        </Button>
         <div class="flex items-center">
-          <div class="btn flex justify-center items-center mr-3">
+          <Button class="mr-3">
             <EditIcon class="w-5 h-5 mr-2" />
             Edit
-          </div>
-          <div class="btn flex justify-center items-center" @click="onDelete(data!)">
+          </Button>
+          <Button @click="onDelete(data!)">
             <DeleteIcon class="w-5 h-5 mr-2" />
             Delete
-          </div>
+          </Button>
         </div>
       </div>
       <div class="grid md:grid-cols-3 gap-6 md:gap-x-16 md:gap-y-6 justify-items-center md:justify-items-start">
@@ -85,20 +88,23 @@ function onCounterClick(recipe: Recipe) {
               <span>{{ data.servings }}</span>
             </div>
           </div>
-          <div
-            class="primary-btn w-full md:w-40 mt-4 flex justify-center items-center" 
+          <Button
+            primary
+            class="w-full md:w-40 mt-4"
             @click="onCounterClick(data!)"
+            :disabled="updateRecipeMutation.isLoading.value"
           >
             <StarIcon class="w-5 h-5 mr-2" />
             I made it!
             ({{ data.cookedCount }})
-          </div>
+          </Button>
         </div>
         <!-- INGREDIENTS -->
         <div class="justify-self-start">
           <div class="text-xl uppercase font-k2d mb-1">Ingredients</div>
           <MarkdownRenderer :content="data.ingredients" />
-          <div class="btn w-full mt-4">Add to groceries</div>
+          <!-- <div class="btn w-full mt-4">Add to groceries</div> -->
+          <Button class="w-full mt-4">Add to groceries</Button>
         </div>
         <!-- STEPS & NOTES -->
         <div class="md:col-span-2">
@@ -113,13 +119,3 @@ function onCounterClick(recipe: Recipe) {
     </div>
   </div>
 </template>
-
-<style scoped>
-.primary-btn {
-  @apply bg-yellow-400 text-center font-medium text-white rounded-lg cursor-pointer px-3 py-1.5 hover:bg-yellow-500 select-none;
-}
-
-.btn {
-  @apply border-2 border-yellow-400 text-center font-medium text-yellow-400 rounded-lg cursor-pointer px-3 py-1 hover:bg-yellow-50 select-none;
-}
-</style>

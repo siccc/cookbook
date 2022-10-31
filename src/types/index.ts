@@ -7,11 +7,48 @@ export interface Recipe {
   category: string,
   cookTime: number
   prepTime?: number,
-  totalTime?: ComputedRef<number>,
   servings: string,
   cookedCount: number,
-  // TODO: tags: []
+  tags?: Tag[],
+  ingredients: string,
+  steps: string,
+  notes: string,
+  imageName?: string,
+  totalTime?: ComputedRef<number>,
+  imageUrl?: string
+}
+
+export interface DBRecipe {
+  id: number,
+  title: string,
+  category: string,
+  cookTime: number
+  prepTime?: number,
+  servings: string,
+  cookedCount: number,
+  tags?: Tag[]
   ingredients: string
   steps: string
   notes: string
+  imageName: string
 }
+
+interface Tag {
+  id: number,
+  name: string
+}
+
+export interface RecipeExtract {
+  id: number,
+  title: string,
+  category: string,
+  imageUrl?: string
+}
+
+export interface DBRecipeExtract {
+  id: number,
+  title: string,
+  category: string,
+  imageName?: string
+}
+

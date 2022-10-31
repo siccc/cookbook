@@ -22,14 +22,16 @@ function onDelete(recipe: Recipe) {
 }
 
 function onCounterClick(recipe: Recipe) {
-  const newRecipe = { ...recipe };
+  // const newRecipe = { ...recipe };
+  const newRecipe = JSON.parse(JSON.stringify(recipe));
   newRecipe.cookedCount = newRecipe.cookedCount + 1;
   updateRecipeMutation.mutate(newRecipe);
 }
+
 </script>
 
 <template>
-  <div class="p-4 max-w-screen-md mx-auto">
+  <div class="p-4 max-w-screen-lg mx-auto">
     <div v-if="isLoading" class="my-8 text-center font-k2d text-2xl text-yellow-400">
       Loading...
     </div>
@@ -53,24 +55,28 @@ function onCounterClick(recipe: Recipe) {
           </Button>
         </div>
       </div>
-      <div class="grid md:grid-cols-3 gap-6 md:gap-x-16 md:gap-y-6 justify-items-center md:justify-items-start">
+      <div class="md:grid md:grid-cols-3 md:gap-6 md:justify-items-start">
         <!-- IMAGE -->
-        <div class="col-span-1">
-          <div class="h-72 w-60 bg-slate-100"></div>
+        <div class="my-6 md:my-0 w-full">
+          <img v-if="data.imageUrl" class="w-full h-96 object-cover rounded-lg" :src="data.imageUrl" />
+          <div v-else class="w-full h-96 rounded-lg bg-stone-100" />
         </div>
         <!-- INFO -->
-        <div class="md:col-span-2">
-          <div class="uppercase font-k2d text-xl border-b-4 border-yellow-400 inline-block">
+        <div class="md:col-span-2 my-6 md:my-0">
+          <div class="uppercase font-k2d text-2xl text-center md:text-start">
             {{ data.title }}
           </div>
-          <!-- TODO: TAGS -->
-          <div class="my-4">
-            <span class="text-sky-300 inline-block bg-sky-100 rounded-sm px-1 py-0.5">
+          <!-- TAGS -->
+          <div class="mt-2 flex justify-center md:justify-start">
+            <span class="tag mr-2">
               {{ data.category }}
             </span>
-            <!-- <div>{{ data?.tags }}</div> -->
+            <div class="mr-2 flex items-center" v-for="tag in data.tags" :key="tag.id">
+              <span class="dot" />
+              <span class="tag">{{ tag.name }}</span>
+            </div>
           </div>
-          <div class="flex gap-x-6">
+          <div class="mt-6 flex gap-x-6">
             <div>
               <div>Total</div>
               <span>{{ data.totalTime }} min</span>
@@ -100,22 +106,31 @@ function onCounterClick(recipe: Recipe) {
           </Button>
         </div>
         <!-- INGREDIENTS -->
-        <div class="justify-self-start">
+        <div class="my-6 md:my-0">
           <div class="text-xl uppercase font-k2d mb-1">Ingredients</div>
           <MarkdownRenderer :content="data.ingredients" />
           <!-- <div class="btn w-full mt-4">Add to groceries</div> -->
           <Button class="w-full mt-4">Add to groceries</Button>
         </div>
         <!-- STEPS & NOTES -->
-        <div class="md:col-span-2">
+        <div class="md:col-span-2 my-6 md:my-0">
           <div class="text-xl uppercase font-k2d mb-1">Steps</div>
           <MarkdownRenderer :content="data.steps" />
           <div v-if="data.notes">
             <div class="text-xl uppercase font-k2d mb-1 mt-3">Notes</div>
-            {{ data.notes }}
+            <MarkdownRenderer :content="data.notes" />
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.tag {
+  @apply inline-block text-stone-400 uppercase;
+}
+.dot {
+  @apply bg-stone-400 rounded-full w-1 h-1 mr-2 inline-block;
+}
+</style>

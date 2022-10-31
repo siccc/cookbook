@@ -1,14 +1,17 @@
-// useMutation, useQueryClient
 import { useQuery, useMutation, useQueryClient } from "vue-query";
-import type { Recipe } from '@/types';
+import type { Recipe, RecipeExtract, DBRecipeExtract, DBRecipe } from '@/types';
 import type { Ref } from 'vue';
 import { reactive, computed } from 'vue';
+import { useCloudinary } from '@/stores/cloudinary';
+import { fill } from '@cloudinary/url-gen/actions/resize';
+
+const cloudinary = useCloudinary();
 
 // -----------------------------------
 // LIST & SEARCH RECIPES
 // -----------------------------------
 
-const recipeListFetcher = async (searchKeywords: Ref<string>): Promise<Recipe[]> => {
+const recipeListFetcher = async (searchKeywords: Ref<string>): Promise<DBRecipeExtract[]> => {
   const response = await fetch(`/api/recipes?search=${searchKeywords.value ? searchKeywords.value : ''}`)
   if (!response.ok) {
     throw new Error('An error occurred while fetching a recipe.');
@@ -16,10 +19,25 @@ const recipeListFetcher = async (searchKeywords: Ref<string>): Promise<Recipe[]>
   return response.json();
 }
 
+function transformRecipeExtracts(recipeExtracts: DBRecipeExtract[]): RecipeExtract[] {
+  if (recipeExtracts.length > 0) {
+    return recipeExtracts.map(extract => {
+      return {
+        ...extract,
+        imageUrl: getImageUrl(extract.imageName)
+      };
+    });
+  } else {
+    return recipeExtracts;
+  }
+}
+
 export function listRecipes(searchKeywords: Ref<string>) {
   const { isLoading, isError, isFetching, data, error, refetch } = useQuery(
     ['recipes', searchKeywords],
-    () => recipeListFetcher(searchKeywords)
+    () => recipeListFetcher(searchKeywords), {
+      select: transformRecipeExtracts
+    }
   );
   console.log('refetch recipe list');
   return { isLoading, isError, isFetching, data, error, refetch };
@@ -29,7 +47,7 @@ export function listRecipes(searchKeywords: Ref<string>) {
 // GET RECIPE
 // -----------------------------------
 
-const recipeFetcher = async (id: number): Promise<Recipe> => {
+const recipeFetcher = async (id: number): Promise<DBRecipe> => {
   const response = await fetch(`/api/recipes/${id}`);
   if (!response.ok) {
     throw new Error('An error occurred while fetching a recipe.');
@@ -37,10 +55,12 @@ const recipeFetcher = async (id: number): Promise<Recipe> => {
   return response.json();
 }
 
-function transformRecipe(recipe: Recipe) {
+function transformRecipe(dbRecipe: DBRecipe): Recipe {
+  const recipe = JSON.parse(JSON.stringify(dbRecipe)); // deep copy because of tags
   recipe.totalTime = computed<number>(() => {
     return recipe.cookTime + (recipe.prepTime || 0);
   });
+  recipe.imageUrl = getImageUrl(recipe.imageName);
   return recipe;
 }
 
@@ -48,7 +68,7 @@ export function getRecipe(id: number) {
   const { isLoading, isError, isFetching, data, error, refetch } = useQuery(
     ['recipe', id],
     () => recipeFetcher(id), {
-      select: transformRecipe,
+      select: transformRecipe
     }
   );
   return { isLoading, isError, isFetching, data, error, refetch };
@@ -59,8 +79,9 @@ export function getRecipe(id: number) {
 // -----------------------------------
 
 const recipeUpdater = async (updatedRecipe: Recipe): Promise<Recipe> => {
-  const dbRecipe = { ...updatedRecipe };
+  const dbRecipe = JSON.parse(JSON.stringify(updatedRecipe));
   delete dbRecipe.totalTime;
+  delete dbRecipe.imageUrl;
   const response = await fetch(`/api/recipes/${updatedRecipe.id}`, {
     method: 'PUT',
     headers: {
@@ -80,9 +101,11 @@ export function useUpdateRecipeMutation() {
     recipeUpdater, {
       onMutate: async (updatedRecipe: Recipe) => {
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-        await queryClient.cancelQueries(['recipes']);
+        await queryClient.cancelQueries(['recipes', '']);
+        await queryClient.cancelQueries(['recipe', updatedRecipe.id]);
         // Snapshot the previous value
         const previousRecipes = queryClient.getQueryData<Recipe[]>(['recipes', '']);
+        const previousRecipe = queryClient.getQueryData<Recipe>(['recipe', updatedRecipe.id]);
         // Optimistically update to the new value
         if (previousRecipes) {
           queryClient.setQueryData<Recipe[]>(
@@ -97,16 +120,16 @@ export function useUpdateRecipeMutation() {
         }
         queryClient.setQueryData(['recipe', updatedRecipe.id], updatedRecipe);
         console.log('optimistic update on recipe list');
-        return { previousRecipes, updatedRecipe };
+        return { previousRecipes, previousRecipe };
       },
-      onSuccess: (newData, recipe) => {
-        queryClient.setQueryData(['recipe', recipe.id], newData);
-      } ,
       // If the mutation fails, use the context returned from onMutate to roll back
       onError: (err, variables, context) => {
         console.log('rolling back optimistic update', err);
         if (context?.previousRecipes) {
           queryClient.setQueryData<Recipe[]>(['recipes', ''], context.previousRecipes);
+        }
+        if (context?.previousRecipe) {
+          queryClient.setQueryData(['recipe', variables.id], context.previousRecipe);
         }
       },
       // Always refetch after error or success:
@@ -144,7 +167,7 @@ export function useDeleteRecipeMutation() {
       // When mutate is called:
       onMutate: async (deletedRecipe: Recipe) => {
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-        await queryClient.cancelQueries(['recipes']);
+        await queryClient.cancelQueries(['recipes', '']);
         // Snapshot the previous value
         const previousRecipes = queryClient.getQueryData<Recipe[]>(['recipes', '']);
         // Optimistically update to the new value
@@ -168,10 +191,26 @@ export function useDeleteRecipeMutation() {
       },
       // Always refetch after error or success:
       onSettled: () => {
-        // TODO: This messes up the list
+        // TODO: This mess up the list
         // console.log('Invalidate recipe list');
         // queryClient.invalidateQueries(['recipes', '']);
       }
     }
   );
+}
+
+// -----------------------------------
+// HELPERS
+// -----------------------------------
+
+function getImageUrl(imageName?: string) {
+  let url;
+  if (imageName) {
+    url = cloudinary.image(`cookbook/${imageName}`)
+      .resize(
+        fill().width(700).height(700)
+      )
+      .toURL();
+  }
+  return url;
 }

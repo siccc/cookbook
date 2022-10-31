@@ -17,13 +17,25 @@ export default async (req: VercelRequest, res: VercelResponse) => {
             title: {
               search: preprocessSearchKeywords(query.search),
             }
-          }
+          },
+          select: {
+            id: true,
+            title: true,
+            category: true,
+            imageName: true
+          },
         });
       } 
       // LIST ALL
       else {
         recipes = await prisma.recipe.findMany({
           orderBy: { createdAt: 'asc' },
+          select: {
+            id: true,
+            title: true,
+            category: true,
+            imageName: true
+          },
         });
       }
       return res.json(recipes);
@@ -37,12 +49,12 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       try {
         const recipe = await prisma.recipe.findUniqueOrThrow({
           where: { id },
-          // include: {
-          //   tags: true,
-          // },
+          include: {
+            tags: true,
+          },
         });
         return res.json(recipe);
-      } catch {
+      } catch (error) {
         return res.status(404).send('');
       }
     }
@@ -55,10 +67,13 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       try {
         const recipe = await prisma.recipe.update({
           where: { id },
-          data: req.body,
+          data: {
+            ...req.body,
+            tags: processTags(req.body.tags)
+          },
         });
         return res.json(recipe);
-      } catch {
+      } catch (error) {
         return res.status(404).send('');
       }
     }
@@ -73,7 +88,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           where: { id },
         });
         return res.json({ status: "ok" });
-      } catch {
+      } catch (error) {
         return res.status(404).send('');
       }
     }
@@ -86,4 +101,21 @@ const preprocessSearchKeywords = (searchKeywords: string) => {
     .trim()
 		.split(/\s+/)
 		.join(' & ');
+}
+
+const processTags = (tags: {id: string, name: string}[]) => {
+  if (tags && tags.length > 0) {
+    return {
+      connectOrCreate: tags.map((tag) => {
+        return {
+          where: { id: tag.id },
+          create: { name: tag.name }
+        }
+      })
+    }
+  } else {
+    return {
+      deleteMany: {}
+    }
+  }
 }

@@ -20,21 +20,22 @@ function search(event: Event) {
       <div class="mx-auto md:px-20 px-1">
         <input
           :value="searchText"
-          class="ring-1 rounded-lg px-2 ring-gray-300 p-1 outline-none w-full"
+          class="ring-1 rounded-lg px-2 ring-stone-300 p-1 outline-none w-full"
           @change="search" placeholder="Search..."
         />
       </div>
-      <div class="flex flex-row flex-wrap justify-center md:mt-8 mt-2">
-        <div class="bg-white p-4" v-for="recipe in data" :key="recipe.id">
+      <div class="sm:flex sm:flex-row sm:flex-wrap sm:justify-center md:mt-8 mt-2">
+        <div class="sm:p-4 py-4" v-for="recipe in data" :key="recipe.id">
           <RouterLink :to="`/recipe/${recipe.id}`">
-            <div class="h-72 w-60 bg-slate-100" />
-            <div class="my-3">
-              <span class="text-yellow-400 border-2 border-yellow-400 rounded-lg px-1 py-0.5">
+            <img v-if="recipe.imageUrl" class="w-full h-72 md:w-60 object-cover rounded-lg bg-stone-100" :src="recipe.imageUrl" />
+            <div v-else class="w-full h-72 md:w-60 rounded-lg bg-stone-100" />
+            <div class="mt-2 uppercase select-none md:w-60 w-72">
+              <span class="inline-block text-stone-400">
                 {{ recipe.category }}
               </span>
-            </div>
-            <div class="uppercase w-60 hover:text-sky-300 hover:transition duration-300 ease-in-out font-k2d">
-              {{ recipe.title }}
+              <div class="hover:text-sky-300 hover:transition duration-300 ease-in-out font-k2d text-xl">
+                {{ recipe.title }}
+              </div>
             </div>
           </RouterLink>
         </div>

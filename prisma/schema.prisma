@@ -22,7 +22,8 @@ model Recipe {
   steps       String          @db.LongText
   notes       String          @db.LongText
   category    String
-  tags        TagsOnRecipes[]
+  tags        Tag[]
+  imageName   String?
 
   @@fulltext([title])
 }
@@ -30,15 +31,5 @@ model Recipe {
 model Tag {
   id      Int             @id @default(autoincrement())
   name    String
-  recipes TagsOnRecipes[]
-}
-
-model TagsOnRecipes {
-  recipe     Recipe   @relation(fields: [recipeId], references: [id])
-  recipeId   Int
-  tag        Tag      @relation(fields: [tagId], references: [id])
-  tagId      Int
-  assignedAt DateTime @default(now())
-
-  @@id([recipeId, tagId])
+  recipes Recipe[]
 }

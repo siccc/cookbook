@@ -24,84 +24,156 @@ export const seedRecipes = [
 6. Serve with pasta and don't forget to put a lot of shredded gouda cheese on top.
 `,
     notes: '',
-    category: 'lunch'
+    category: 'lunch',
+    tags: {
+      create: [
+        { name: 'italian' }
+      ]
+    },
+    imageName: 'emanuel-ekstrom-_CO7YZ501g4-unsplash_bms5xh.jpg'
   },
   {
     title: 'Berry Granola Parfait',
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
-    steps: 'Mix all ingredients.'
+    steps: 'Mix all ingredients.',
+    tags: {
+      create: [
+        { name: 'tag1' },
+        { name: 'tag2' },
+        { name: 'tag3' },
+      ]
+    },
+    imageName: 'mae-mu-dEUyLofZe5o-unsplash_tynk5z.jpg'
   },
   {
     title: 'Caramelized onion and brie pizza',
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
-    steps: 'Mix all ingredients.'
+    steps: 'Mix all ingredients.',
+    tags: {
+      create: [
+        { name: 'tag1' },
+        { name: 'tag2' },
+        { name: 'tag3' },
+      ]
+    },
+    imageName: 'mae-mu-dEUyLofZe5o-unsplash_tynk5z.jpg'
   },
   {
     title: 'Almond Caesar salad with croutons',
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
-    steps: 'Mix all ingredients.'
+    steps: 'Mix all ingredients.',
+    tags: {
+      create: [
+        { name: 'tag1' },
+        { name: 'tag2' },
+        { name: 'tag3' },
+      ]
+    },
+    imageName: 'mae-mu-dEUyLofZe5o-unsplash_tynk5z.jpg'
   },
   {
     title: 'Vanilla ice cream',
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
-    category: 'snack',
-    steps: 'Mix all ingredients.'
+    category: 'dessert',
+    steps: 'Mix all ingredients.',
+    tags: {
+      create: [
+        { name: 'sweet' },
+        { name: 'tag2' }
+      ]
+    },
+    imageName: 'mae-mu-dEUyLofZe5o-unsplash_tynk5z.jpg'
   },
   {
     title: 'Coconut lime semifreddo',
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
-    steps: 'Mix all ingredients.'
+    steps: 'Mix all ingredients.',
+    imageName: 'mae-mu-dEUyLofZe5o-unsplash_tynk5z.jpg'
   },
   {
     title: 'Bacon-wrapped roast partridge, pork stuffing & lentils',
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
-    steps: 'Mix all ingredients.'
+    steps: 'Mix all ingredients.',
+    imageName: 'mae-mu-dEUyLofZe5o-unsplash_tynk5z.jpg'
   },
   {
     title: 'Sweet & sour stir-fry',
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
-    steps: 'Mix all ingredients.'
+    steps: 'Mix all ingredients.',
+    imageName: 'mae-mu-dEUyLofZe5o-unsplash_tynk5z.jpg'
   },
   {
     title: 'Homemade bagels',
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
     steps: 'Mix all ingredients.'
@@ -111,7 +183,11 @@ export const seedRecipes = [
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
     steps: 'Mix all ingredients.'
@@ -121,7 +197,11 @@ export const seedRecipes = [
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
     steps: 'Mix all ingredients.'
@@ -131,7 +211,11 @@ export const seedRecipes = [
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
     steps: 'Mix all ingredients.'
@@ -141,7 +225,11 @@ export const seedRecipes = [
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
     steps: 'Mix all ingredients.'
@@ -151,7 +239,11 @@ export const seedRecipes = [
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
     steps: 'Mix all ingredients.'
@@ -161,7 +253,11 @@ export const seedRecipes = [
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
     steps: 'Mix all ingredients.'
@@ -171,7 +267,11 @@ export const seedRecipes = [
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
     steps: 'Mix all ingredients.'
@@ -181,7 +281,11 @@ export const seedRecipes = [
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
     steps: 'Mix all ingredients.'
@@ -191,7 +295,11 @@ export const seedRecipes = [
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
     steps: 'Mix all ingredients.'
@@ -201,7 +309,11 @@ export const seedRecipes = [
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
     steps: 'Mix all ingredients.'
@@ -211,7 +323,11 @@ export const seedRecipes = [
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
     steps: 'Mix all ingredients.'
@@ -221,7 +337,11 @@ export const seedRecipes = [
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
     steps: 'Mix all ingredients.'
@@ -231,7 +351,11 @@ export const seedRecipes = [
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
     steps: 'Mix all ingredients.'
@@ -241,7 +365,11 @@ export const seedRecipes = [
     servings: '1',
     prepTime: 5,
     cookTime: 0,
-    ingredients: '-3/4 cup fresh berries -7oz Greek yogurt (2% Fage) -2 tablespoon granola',
+    ingredients: `
+- 3/4 cup fresh berries
+- 7oz Greek yogurt (2% Fage)
+- 2 tablespoon granola
+`,
     notes: 'Some useful notes.',
     category: 'snack',
     steps: 'Mix all ingredients.'

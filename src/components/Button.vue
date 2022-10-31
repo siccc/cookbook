@@ -56,7 +56,7 @@ function onFocusout(event: Event) {
   text-yellow-400 rounded-lg cursor-pointer px-3 py-1 select-none;
 }
 .button:disabled {
-  @apply text-gray-300 border-gray-300 cursor-default;
+  @apply text-stone-300 border-stone-300 cursor-default;
 }
 .button:hover:not(:disabled), .button:active {
   @apply bg-yellow-50;
@@ -66,7 +66,7 @@ function onFocusout(event: Event) {
   rounded-lg cursor-pointer px-3 py-1.5 select-none;
 }
 .button.primary:disabled {
-  @apply text-gray-300 bg-gray-100 cursor-default;
+  @apply text-stone-300 bg-stone-100 cursor-default;
 }
 .button.primary:hover:not(:disabled), .button:active {
   @apply bg-yellow-500;

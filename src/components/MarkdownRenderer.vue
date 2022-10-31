@@ -9,7 +9,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <Markdown :source="content" class="prose markdown-content" />
+  <Markdown :source="content" class="prose prose-stone markdown-content" />
 </template>
 
 <style>

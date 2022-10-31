@@ -8,7 +8,7 @@ import Logo from '@/assets/vertical-logo.svg?component';
 </script>
 
 <template>
-  <div class="h-14 px-2 md:px-4 py-2.5 bg-white fixed w-full z-20 top-0 left-0 border-b border-gray-200">
+  <div class="h-14 px-2 md:px-4 py-2.5 bg-white fixed w-full z-20 top-0 left-0 border-b border-stone-200">
     <div class="container mx-auto px-4 flex justify-center md:justify-between items-center">
       <div class="flex-shrink-0">
         <RouterLink to="/">
@@ -25,8 +25,8 @@ import Logo from '@/assets/vertical-logo.svg?component';
       </div>
     </div>
   </div>
-  <div class="w-full fixed bottom-0 z-20 border-t border-gray-200 h-12 bg-white md:hidden">
-    <div class="flex justify-around items-center text-gray-500 h-full">
+  <div class="w-full fixed bottom-0 z-20 border-t border-stone-200 h-12 bg-white md:hidden">
+    <div class="flex justify-around items-center text-stone-500 h-full">
       <RouterLink to="/">
         <div class="flex flex-col items-center text-yellow-400">
           <HomeIcon class="w-5 h-5" />

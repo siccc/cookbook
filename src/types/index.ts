@@ -33,8 +33,8 @@ export interface DBRecipe {
   imageName: string
 }
 
-interface Tag {
-  id: number,
+export interface Tag {
+  id?: number,
   name: string
 }
 

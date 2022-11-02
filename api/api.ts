@@ -40,6 +40,21 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       }
       return res.json(recipes);
     }
+    // CREATE RECIPE
+    else if (method === 'POST' && !query.id) {
+      try {
+        const recipe = await prisma.recipe.create({
+          data: {
+            ...req.body,
+            tags: createTags(req.body.tags)
+          }
+        });
+        return res.json(recipe);
+      } catch (error) {
+        console.log(error)
+        return res.status(404).send('');
+      }
+    }
     // GET RECIPE BY ID
     else if (method === 'GET' && query.id) {
       const id = Number(query.id);
@@ -117,5 +132,15 @@ const processTags = (tags: {id: string, name: string}[]) => {
     return {
       deleteMany: {}
     }
+  }
+}
+
+const createTags = (tags: {name: string}[]) => {
+  if (tags && tags.length > 0) {
+    return {
+      create: [
+        ...tags
+      ]
+    };
   }
 }

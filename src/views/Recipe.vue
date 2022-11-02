@@ -7,6 +7,10 @@ import StarIcon from '@/assets/icons/star.svg?component';
 import DeleteIcon from '@/assets/icons/trash-alt.svg?component';
 import EditIcon from '@/assets/icons/edit.svg?component';
 import router from '@/router';
+import ImagePlaceholder from '@/assets/image-placeholder.svg?component';
+import ErrorIcon from '@/assets/error.svg?component';
+import LoadingIcon from '@/assets/loading-pot.svg?component';
+import LoadingShadow from '@/assets/loading-shadow.svg?component';
 
 const props = defineProps<{
   id: number
@@ -32,11 +36,14 @@ function onCounterClick(recipe: Recipe) {
 
 <template>
   <div class="p-4 max-w-screen-lg mx-auto">
-    <div v-if="isLoading" class="my-8 text-center font-k2d text-2xl text-yellow-400">
+    <div v-if="isLoading" class="my-8 text-center font-k2d text-2xl text-yellow-400 flex flex-col justify-center items-center">
+        <LoadingIcon class="w-24 opacity-80 animate-bounce block" />
+        <LoadingShadow class="w-24 opacity-80 block" />
       Loading...
     </div>
-    <div v-if="isError" class="my-8 text-center font-k2d text-xl text-red-300">
-      {{ error }}
+    <div v-if="isError" class="my-8 text-center font-k2d text-xl text-red-300 flex justify-center items-center">
+      <ErrorIcon class="w-24 h-24 opacity-50" />
+      <div>{{ error }}</div>
     </div>
     <div v-else-if="!isLoading && data">
       <!-- NAV & OPTIONS -->
@@ -58,8 +65,10 @@ function onCounterClick(recipe: Recipe) {
       <div class="md:grid md:grid-cols-3 md:gap-6 md:justify-items-start">
         <!-- IMAGE -->
         <div class="my-6 md:my-0 w-full">
-          <img v-if="data.imageUrl" class="w-full h-96 object-cover rounded-lg" :src="data.imageUrl" />
-          <div v-else class="w-full h-96 rounded-lg bg-stone-100" />
+          <img v-if="data.imageUrl" class="w-full h-96 object-cover rounded-xl" :src="data.imageUrl" />
+          <div v-else class="w-full h-96 rounded-xl bg-stone-100 flex justify-center items-center">
+            <ImagePlaceholder class="opacity-10 w-40 h-40"/>
+          </div>
         </div>
         <!-- INFO -->
         <div class="md:col-span-2 my-6 md:my-0">
@@ -106,7 +115,7 @@ function onCounterClick(recipe: Recipe) {
           </Button>
         </div>
         <!-- INGREDIENTS -->
-        <div class="my-6 md:my-0">
+        <div class="my-6 md:my-0 w-full">
           <div class="text-xl uppercase font-k2d mb-1">Ingredients</div>
           <MarkdownRenderer :content="data.ingredients" />
           <!-- <div class="btn w-full mt-4">Add to groceries</div> -->

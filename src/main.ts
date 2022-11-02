@@ -26,6 +26,8 @@ const app = createApp(App);
 app.use(router);
 app.use(VueQueryPlugin, vueQueryPluginOptions);
 
+app.provide('app', app);
+
 app.mount('#app');
 
 // app.config.errorHandler = (err, instance, info) => {

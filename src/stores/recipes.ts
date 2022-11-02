@@ -75,6 +75,42 @@ export function getRecipe(id: number) {
 }
 
 // -----------------------------------
+// CREATE RECIPE
+// -----------------------------------
+
+const recipeCreater = async (newRecipe: Recipe): Promise<Recipe> => {
+  const dbRecipe = JSON.parse(JSON.stringify(newRecipe));
+  // TODO upload image
+  delete dbRecipe.id;
+  const response = await fetch(`/api/recipes`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dbRecipe),
+  });
+  if (!response.ok) {
+    throw new Error('An error occurred while updating the recipe. Try again later.');
+  }
+  return response.json();
+}
+
+export function useCreateRecipeMutation() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    recipeCreater, {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      onError: (err, variables, context) => {
+        console.log('Error', err);
+      },
+      onSuccess: (err, variables, context) => {
+        console.log('Yay');
+      }
+    }
+  );
+}
+
+// -----------------------------------
 // UPDATE RECIPE
 // -----------------------------------
 

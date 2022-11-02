@@ -8,6 +8,10 @@ const router = createRouter({
       component: () => import('@/views/Home.vue')
     },
     {
+      path: '/edit/:id',
+      component: () => import('@/views/EditRecipe.vue')
+    },
+    {
       path: '/recipe/:id',
       component: () => import('@/views/Recipe.vue'),
       props: (route) => {

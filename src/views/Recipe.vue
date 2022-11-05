@@ -3,20 +3,24 @@ import { getRecipe, useDeleteRecipeMutation, useUpdateRecipeMutation } from '@/s
 import type { Recipe } from '@/types';
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
 import Button from '@/components/Button.vue';
-import StarIcon from '@/assets/icons/star.svg?component';
+import EmptyStarIcon from '@/assets/icons/star.svg?component';
+import FullStarIcon from '@/assets/icons/full-star.svg?component';
 import DeleteIcon from '@/assets/icons/trash-alt.svg?component';
 import EditIcon from '@/assets/icons/edit.svg?component';
-import router from '@/router';
 import ImagePlaceholder from '@/assets/image-placeholder.svg?component';
 import ErrorIcon from '@/assets/error.svg?component';
 import LoadingIcon from '@/assets/loading-pot.svg?component';
 import LoadingShadow from '@/assets/loading-shadow.svg?component';
+import { useRouter } from 'vue-router';
+import { ref, type Ref } from 'vue';
 
 const props = defineProps<{
   id: number
 }>();
 
-const { isLoading, isError, isFetching, data, error, refetch } = getRecipe(props.id);
+const router = useRouter();
+const isCounterClicked:Ref<boolean> = ref(false);
+const { isLoading, isError, data:recipe, error } = getRecipe(props.id);
 const deleteRecipeMutation = useDeleteRecipeMutation();
 const updateRecipeMutation = useUpdateRecipeMutation();
 
@@ -26,7 +30,7 @@ function onDelete(recipe: Recipe) {
 }
 
 function onCounterClick(recipe: Recipe) {
-  // const newRecipe = { ...recipe };
+  isCounterClicked.value = true;
   const newRecipe = JSON.parse(JSON.stringify(recipe));
   newRecipe.cookedCount = newRecipe.cookedCount + 1;
   updateRecipeMutation.mutate(newRecipe);
@@ -45,18 +49,18 @@ function onCounterClick(recipe: Recipe) {
       <ErrorIcon class="w-24 h-24 opacity-50" />
       <div>{{ error }}</div>
     </div>
-    <div v-else-if="!isLoading && data">
-      <!-- NAV & OPTIONS -->
+    <div v-else-if="!isLoading && recipe">
+      <!-- NAV & ACTIONS -->
       <div class="flex justify-between items-center mb-8">
         <Button class="uppercase" to="/">
           Go back
         </Button>
         <div class="flex items-center">
-          <Button class="mr-3">
+          <Button class="mr-3" :to="`/edit/${props.id}`">
             <EditIcon class="w-5 h-5 mr-2" />
             Edit
           </Button>
-          <Button @click="onDelete(data!)">
+          <Button @click="onDelete(recipe!)">
             <DeleteIcon class="w-5 h-5 mr-2" />
             Delete
           </Button>
@@ -65,7 +69,7 @@ function onCounterClick(recipe: Recipe) {
       <div class="md:grid md:grid-cols-3 md:gap-6 md:justify-items-start">
         <!-- IMAGE -->
         <div class="my-6 md:my-0 w-full">
-          <img v-if="data.imageUrl" class="w-full h-96 object-cover rounded-xl" :src="data.imageUrl" />
+          <img v-if="recipe.imageUrl" class="w-full h-96 object-cover rounded-xl" :src="recipe.imageUrl" />
           <div v-else class="w-full h-96 rounded-xl bg-stone-100 flex justify-center items-center">
             <ImagePlaceholder class="opacity-10 w-40 h-40"/>
           </div>
@@ -73,61 +77,63 @@ function onCounterClick(recipe: Recipe) {
         <!-- INFO -->
         <div class="md:col-span-2 my-6 md:my-0">
           <div class="uppercase font-k2d text-2xl text-center md:text-start">
-            {{ data.title }}
+            {{ recipe.title }}
           </div>
           <!-- TAGS -->
           <div class="mt-2 flex justify-center md:justify-start">
             <span class="tag mr-2">
-              {{ data.category }}
+              {{ recipe.category }}
             </span>
-            <div class="mr-2 flex items-center" v-for="tag in data.tags" :key="tag.id">
+            <div class="mr-2 flex items-center" v-for="tag in recipe.tags" :key="tag.id">
               <span class="dot" />
               <span class="tag">{{ tag.name }}</span>
             </div>
           </div>
+          <!-- TIME & SERVINGS -->
           <div class="mt-6 flex gap-x-6">
             <div>
               <div>Total</div>
-              <span>{{ data.totalTime }} min</span>
+              <span>{{ recipe.totalTime }} min</span>
             </div>
             <div>
               <div>Prep</div>
-              <span>{{ data.prepTime }} min</span>
+              <span>{{ recipe.prepTime }} min</span>
             </div>
             <div>
               <div>Cook</div>
-              <span>{{ data.cookTime }} min</span>
+              <span>{{ recipe.cookTime }} min</span>
             </div>
             <div>
               <div>Servings</div>
-              <span>{{ data.servings }}</span>
+              <span>{{ recipe.servings }}</span>
             </div>
           </div>
           <Button
             primary
             class="w-full md:w-40 mt-4"
-            @click="onCounterClick(data!)"
+            @click="onCounterClick(recipe!)"
             :disabled="updateRecipeMutation.isLoading.value"
           >
-            <StarIcon class="w-5 h-5 mr-2" />
+            <EmptyStarIcon v-if="!isCounterClicked" class="w-5 h-5 mr-2 opacity-60" />
+            <FullStarIcon v-else class="w-5 h-5 mr-2 opacity-60" />
             I made it!
-            ({{ data.cookedCount }})
+            ({{ recipe.cookedCount }})
           </Button>
         </div>
         <!-- INGREDIENTS -->
         <div class="my-6 md:my-0 w-full">
           <div class="text-xl uppercase font-k2d mb-1">Ingredients</div>
-          <MarkdownRenderer :content="data.ingredients" />
+          <MarkdownRenderer :content="recipe.ingredients" />
           <!-- <div class="btn w-full mt-4">Add to groceries</div> -->
           <Button class="w-full mt-4">Add to groceries</Button>
         </div>
         <!-- STEPS & NOTES -->
         <div class="md:col-span-2 my-6 md:my-0">
           <div class="text-xl uppercase font-k2d mb-1">Steps</div>
-          <MarkdownRenderer :content="data.steps" />
-          <div v-if="data.notes">
+          <MarkdownRenderer :content="recipe.steps" />
+          <div v-if="recipe.notes">
             <div class="text-xl uppercase font-k2d mb-1 mt-3">Notes</div>
-            <MarkdownRenderer :content="data.notes" />
+            <MarkdownRenderer :content="recipe.notes" />
           </div>
         </div>
       </div>

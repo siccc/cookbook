@@ -5,7 +5,7 @@ export interface Recipe {
   id: number,
   title: string,
   category: string,
-  cookTime: number
+  cookTime?: number
   prepTime?: number,
   servings: string,
   cookedCount: number,
@@ -22,7 +22,7 @@ export interface DBRecipe {
   id: number,
   title: string,
   category: string,
-  cookTime: number
+  cookTime?: number
   prepTime?: number,
   servings: string,
   cookedCount: number,

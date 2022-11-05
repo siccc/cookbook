@@ -17,11 +17,11 @@ import Logo from '@/assets/vertical-logo.svg?component';
       </div>
       <div class="items-center ml-4 hidden md:flex">
         <RouterLink to="/" class="ml-4 link-underline link-underline-yellow uppercase">Home</RouterLink>
-        <RouterLink to="/" class="ml-4 link-underline link-underline-yellow uppercase">Grocery list
+        <RouterLink to="/" class="ml-4 uppercase cursor-default text-stone-400">Grocery list
         </RouterLink>
-        <RouterLink to="/" class="ml-4 link-underline link-underline-yellow uppercase">What's in the fridge
+        <RouterLink to="/" class="ml-4 uppercase cursor-default text-stone-400">What's in the fridge
         </RouterLink>
-        <RouterLink to="/" class="ml-4 link-underline link-underline-yellow uppercase">In season</RouterLink>
+        <RouterLink to="/" class="ml-4 uppercase cursor-default text-stone-400">In season</RouterLink>
       </div>
     </div>
   </div>
@@ -34,19 +34,19 @@ import Logo from '@/assets/vertical-logo.svg?component';
         </div>
       </RouterLink>
       <RouterLink to="/">
-        <div class="flex flex-col items-center">
+        <div class="flex flex-col items-center text-stone-200">
           <GroceryIcon class="w-5 h-5"/>
           <div class="text-xs">Grocery</div>
         </div>
       </RouterLink>
       <RouterLink to="/">
-        <div class="flex flex-col items-center">
+        <div class="flex flex-col items-center text-stone-200">
           <FridgeIcon class="w-5 h-5"/>
           <div class="text-xs">Fridge</div>
         </div>
       </RouterLink>
       <RouterLink to="/">
-        <div class="flex flex-col items-center">
+        <div class="flex flex-col items-center text-stone-200">
           <SeasonIcon class="w-5 h-5"/>
           <div class="text-xs">Season</div>
         </div>

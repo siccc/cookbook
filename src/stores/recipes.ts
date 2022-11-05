@@ -47,7 +47,23 @@ export function listRecipes(searchKeywords: Ref<string>) {
 // GET RECIPE
 // -----------------------------------
 
-const recipeFetcher = async (id: number): Promise<DBRecipe> => {
+const recipeFetcher = async (id: number | 'new'): Promise<DBRecipe> => {
+  if (id === 'new') {
+    let recipe:DBRecipe = {
+      title: '',
+      id: 0,
+      category: '',
+      cookTime: 0,
+      prepTime: 0,
+      servings: '',
+      cookedCount: 0,
+      ingredients: '',
+      steps: '',
+      notes: '',
+      imageName: ''
+    };
+    return Promise.resolve(recipe);
+  }
   const response = await fetch(`/api/recipes/${id}`);
   if (!response.ok) {
     throw new Error('An error occurred while fetching a recipe.');
@@ -64,7 +80,7 @@ function transformRecipe(dbRecipe: DBRecipe): Recipe {
   return recipe;
 }
 
-export function getRecipe(id: number) {
+export function getRecipe(id: number | 'new') {
   const { isLoading, isError, isFetching, data, error, refetch } = useQuery(
     ['recipe', id],
     () => recipeFetcher(id), {
@@ -81,6 +97,8 @@ export function getRecipe(id: number) {
 const recipeCreater = async (newRecipe: Recipe): Promise<Recipe> => {
   const dbRecipe = JSON.parse(JSON.stringify(newRecipe));
   // TODO upload image
+  delete dbRecipe.totalTime;
+  delete dbRecipe.imageUrl;
   delete dbRecipe.id;
   const response = await fetch(`/api/recipes`, {
     method: 'POST',
@@ -103,8 +121,8 @@ export function useCreateRecipeMutation() {
       onError: (err, variables, context) => {
         console.log('Error', err);
       },
-      onSuccess: (err, variables, context) => {
-        console.log('Yay');
+      onSettled: () => {
+        queryClient.invalidateQueries(['recipes', '']);
       }
     }
   );

@@ -6,9 +6,9 @@ import Button from '@/components/Button.vue';
 import EmptyIcon from '@/assets/empty.svg?component';
 
 let searchText = ref('');
-let { isLoading, isError, isFetching, data, error, refetch } = listRecipes(searchText);
+let { isLoading, isError, data: recipeList, error } = listRecipes(searchText);
 
-const dataLength = computed(() => data.value ? data.value.length : 0);
+const recipeListLength = computed(() => recipeList.value ? recipeList.value.length : 0);
 
 function search(event: Event) {
   searchText.value = (event.target as HTMLInputElement).value;
@@ -33,11 +33,11 @@ function search(event: Event) {
         </Button>
       </div>
       <div class="sm:flex sm:flex-row sm:flex-wrap sm:justify-center md:mt-8 mt-2">
-        <div v-if="dataLength === 0" class="flex justify-center items-center">
+        <div v-if="recipeListLength === 0" class="flex justify-center items-center">
           <EmptyIcon class="w-24 h-24 opacity-80" />
           <span class="text-center font-k2d text-xl text-stone-600">No recipes found.</span>
         </div>
-        <div v-if="dataLength > 0" class="sm:p-4 py-4" v-for="recipe in data" :key="recipe.id">
+        <div v-if="recipeListLength > 0" class="sm:p-4 py-4" v-for="recipe in recipeList" :key="recipe.id">
           <RouterLink :to="`/recipe/${recipe.id}`">
             <img
               v-if="recipe.imageUrl"

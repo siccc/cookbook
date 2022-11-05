@@ -17,7 +17,7 @@ model Recipe {
   cookedCount Int             @default(0)
   servings    String
   prepTime    Int?
-  cookTime    Int
+  cookTime    Int?
   ingredients String          @db.LongText
   steps       String          @db.LongText
   notes       String          @db.LongText

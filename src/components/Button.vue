@@ -69,6 +69,6 @@ function onFocusout(event: Event) {
   @apply text-stone-300 bg-stone-100 cursor-default;
 }
 .button.primary:hover:not(:disabled), .button:active {
-  @apply bg-yellow-500;
+  @apply bg-amber-300;
 }
 </style>

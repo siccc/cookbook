@@ -51,7 +51,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         });
         return res.json(recipe);
       } catch (error) {
-        console.log(error)
         return res.status(404).send('');
       }
     }

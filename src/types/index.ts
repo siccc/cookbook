@@ -13,7 +13,8 @@ export interface Recipe {
   ingredients: string,
   steps: string,
   notes: string,
-  imageName?: string,
+  imageName: string,
+  imagePublicId: string,
   totalTime?: ComputedRef<number>,
   imageUrl?: string
 }
@@ -30,7 +31,8 @@ export interface DBRecipe {
   ingredients: string
   steps: string
   notes: string
-  imageName: string
+  imageName: string,
+  imagePublicId: string
 }
 
 export interface Tag {

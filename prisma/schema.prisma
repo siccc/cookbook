@@ -10,20 +10,21 @@ generator client {
 }
 
 model Recipe {
-  id          Int             @id @default(autoincrement())
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  title       String
-  cookedCount Int             @default(0)
-  servings    String
-  prepTime    Int?
-  cookTime    Int?
-  ingredients String          @db.LongText
-  steps       String          @db.LongText
-  notes       String          @db.LongText
-  category    String
-  tags        Tag[]
-  imageName   String?
+  id              Int             @id @default(autoincrement())
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  title           String
+  cookedCount     Int             @default(0)
+  servings        String
+  prepTime        Int?
+  cookTime        Int?
+  ingredients     String          @db.LongText
+  steps           String          @db.LongText
+  notes           String          @db.LongText
+  category        String
+  tags            Tag[]
+  imageName       String          @default("")
+  imagePublicId   String          @default("")
 
   @@fulltext([title])
 }

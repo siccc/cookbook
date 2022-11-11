@@ -59,7 +59,7 @@ export const seedRecipes = [
 `,
     notes: '',
     category: 'dessert',
-    imageName: 'didi-miam-0lqRhBh0I40-unsplash_yxxogz.jpg'
+    imageName: 'didi-miam-0lqRhBh0I40-unsplash_rgerci.jpg'
   },
   {
     title: 'Super soft mini baguettes',

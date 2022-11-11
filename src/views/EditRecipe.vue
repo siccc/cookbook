@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { getRecipe, useCreateRecipeMutation, useUpdateRecipeMutation } from '@/stores/recipes';
 import type { Recipe, Tag } from '@/types';
+import DOMPurify from 'dompurify';
+import { uploadImage } from '@/stores/cloudinary';
 import Button from '@/components/Button.vue';
 import MarkdownEditor from '@/components/MarkdownEditor.vue';
-import ImagePlaceholder from '@/assets/image-placeholder.svg?component';
+import ImageUploader from '@/components/ImageUploader.vue';
 import SpinnerIcon from '@/assets/icons/spinner.svg?component';
 import ErrorIcon from '@/assets/error.svg?component';
 import LoadingIcon from '@/assets/loading-pot.svg?component';
 import LoadingShadow from '@/assets/loading-shadow.svg?component';
 import { ref, reactive, computed, type Ref, type ComputedRef } from 'vue';
-import { forEach } from 'lodash';
+import { forEach, find } from 'lodash';
 import { useRouter } from 'vue-router';
 
 type RecipeMDInputKeys = 'ingredients' | 'steps' | 'notes';
@@ -29,9 +31,13 @@ const inputValidations = reactive({
   ingredients: { hasError: false, message: 'Add at least one the ingredient.'},
   steps: { hasError: false, message: 'Add at least one step.'},
 });
+
 const tags:Ref<string> = ref('');
-const saveInProgress:Ref<boolean>  = ref(false);
+const saveInProgress:Ref<boolean> = ref(false);
 const anyInputHasError:Ref<boolean> = ref(false);
+const shouldSaveImage = ref(false);
+const savingIsError = ref(false);
+const savingErrorMessage = ref('');
 
 // -----------------------------------
 // INIT
@@ -59,23 +65,48 @@ async function onSaveClick() {
     return;
   }
   
+  saveInProgress.value = true;
+
   // transform tags
   if (tags.value) {
-    recipe.value.tags = transformTags(tags.value);
+    recipe.value.tags = transformTags(tags.value, recipe.value.tags);
+  }
+
+  // upload image to cloudinary
+  if (shouldSaveImage.value === true) {
+    if (recipe.value.imageUrl) {
+      try {
+        const uploadedImageResult = await uploadImage(recipe.value.imageUrl);
+        recipe.value.imageName = uploadedImageResult.imageName;
+        recipe.value.imagePublicId = uploadedImageResult.imagePublicId;
+      } catch (error) {
+        saveInProgress.value = false;
+        savingIsError.value = true;
+        savingErrorMessage.value = error as string;
+      }
+    } else {
+      recipe.value.imagePublicId = '';
+    }
   }
 
   // save recipe
-  saveInProgress.value = true;
-  let response:Recipe;
-  if (props.id === 'new') {
-    response = await createRecipeMutation.mutateAsync(recipe.value);
-  } else {
-    response = await updateRecipeMutation.mutateAsync(recipe.value);
-  }
-  // TODO: error handling
-  if (response.id) {
-    saveInProgress.value = false;
-    router.push(`/recipe/${response.id}`);
+  if (!savingIsError.value) {
+    try {
+      let response:Recipe;
+      if (props.id === 'new') {
+        response = await createRecipeMutation.mutateAsync(recipe.value);
+      } else {
+        response = await updateRecipeMutation.mutateAsync(recipe.value);
+      }
+      if (response.id) {
+        saveInProgress.value = false;
+        router.push(`/recipe/${response.id}`);
+      }
+    } catch (error) {
+      saveInProgress.value = false;
+      savingIsError.value = true;
+      savingErrorMessage.value = error as string;
+    }
   }
 }
 
@@ -84,31 +115,45 @@ function onCancelClick() {
 }
 
 function onInputChange(key:RecipeMDInputKeys, value:string) {
-  recipe.value[key] = value;
+  recipe.value[key] = DOMPurify.sanitize(value);
 }
 
 function onCategoryChange(value: string) {
   recipe.value.category = value;
 }
 
-function transformTags(tags:string):Tag[] {
-  return tags.split(',').map(tag => {
-    return {
-      name: tag.trim()
+function transformTags(inputTags:string, recipeTags:Array<Tag> | undefined):Tag[] {
+  const newTags = inputTags.split(',').map(tag => { return { name: tag.trim() }});
+  if (!recipeTags) {
+    return newTags;
+  }
+  newTags.forEach(newTag => {
+    if (!find(recipeTags, { name: newTag.name})) {
+      recipeTags.push({
+        name: newTag.name
+      });
     }
   });
+  return recipeTags;
 }
 
 function validateAll() {
   anyInputHasError.value = false;
   forEach(inputValidations, (value, key, list) => {
-    value.hasError = !recipe.value[key as ValidationKeys];
+    if (key !== 'fileSize') {
+      value.hasError = !recipe.value[key as ValidationKeys];
+    }
     anyInputHasError.value = anyInputHasError.value || value.hasError;
   });
 }
 
 function validate(key:ValidationKeys, value:string) {
   inputValidations[key].hasError = !value;
+}
+
+function onImageChange(imageSource:string) {
+  shouldSaveImage.value = true;
+  recipe.value.imageUrl = imageSource;
 }
 
 </script>
@@ -149,11 +194,12 @@ function validate(key:ValidationKeys, value:string) {
           </Button>
         </div>
       </div>
+      <div v-if="savingIsError" class="my-8 text-center font-k2d text-xl text-red-300 flex justify-center items-center">
+        <ErrorIcon class="w-24 h-24 opacity-50" />
+        <div>{{ savingErrorMessage }}</div>
+      </div>
       <div class="md:grid md:grid-cols-3 md:gap-6 md:justify-items-start">
-        <div class="w-full h-96 rounded-xl bg-stone-50 border-dashed border-2 border-stone-300 flex flex-col justify-center items-center">
-          <ImagePlaceholder class="opacity-10 w-40 h-40"/>
-          <span class="text-stone-400"><span class="text-yellow-400 font-semibold cursor-pointer">Upload</span> a photo of your dish</span>
-        </div>
+        <ImageUploader :image-source="recipe.imageUrl" @change="onImageChange"/>
         <div class="md:col-span-2 my-6 md:my-0">
           <div>
             <span class="uppercase">Your recipe's name*</span>

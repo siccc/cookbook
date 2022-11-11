@@ -60,7 +60,8 @@ const recipeFetcher = async (id: number | 'new'): Promise<DBRecipe> => {
       ingredients: '',
       steps: '',
       notes: '',
-      imageName: ''
+      imageName: '',
+      imagePublicId: ''
     };
     return Promise.resolve(recipe);
   }
@@ -258,7 +259,7 @@ export function useDeleteRecipeMutation() {
 // -----------------------------------
 
 function getImageUrl(imageName?: string) {
-  let url;
+  let url:string = '';
   if (imageName) {
     url = cloudinary.image(`cookbook/${imageName}`)
       .resize(

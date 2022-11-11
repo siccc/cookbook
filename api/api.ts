@@ -88,6 +88,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         });
         return res.json(recipe);
       } catch (error) {
+        console.log(error)
         return res.status(404).send('');
       }
     }
@@ -122,7 +123,7 @@ const processTags = (tags: {id: string, name: string}[]) => {
     return {
       connectOrCreate: tags.map((tag) => {
         return {
-          where: { id: tag.id },
+          where: { id: tag.id || 0 },
           create: { name: tag.name }
         }
       })

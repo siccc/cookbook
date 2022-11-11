@@ -4,6 +4,9 @@ import { ref, computed } from 'vue';
 import ImagePlaceholder from '@/assets/image-placeholder.svg?component';
 import Button from '@/components/Button.vue';
 import EmptyIcon from '@/assets/empty.svg?component';
+import CloseIcon from '@/assets/icons/close.svg?component';
+import LoadingIcon from '@/assets/loading-pot.svg?component';
+import LoadingShadow from '@/assets/loading-shadow.svg?component';
 
 let searchText = ref('');
 let { isLoading, isError, data: recipeList, error } = listRecipes(searchText);
@@ -14,20 +17,30 @@ function search(event: Event) {
   searchText.value = (event.target as HTMLInputElement).value;
 }
 
+function cancelSearch() {
+  searchText.value = '';
+}
+
 </script>
 
 <template>
   <main class="p-4 max-w-screen-xl mx-auto">
-    <div v-if="isLoading" class="my-8 text-center font-k2d text-2xl text-yellow-400">
+    <div v-if="isLoading" class="my-8 text-center font-k2d text-2xl text-yellow-400 flex flex-col justify-center items-center">
+      <LoadingIcon class="w-24 opacity-80 animate-bounce block" />
+      <LoadingShadow class="w-24 opacity-80 block" />
       Loading...
     </div>
     <div v-else>
       <div class="mx-auto md:px-20 sm:flex sm:items-center sm:justify-between">
-        <input
-          :value="searchText"
-          class="px-3 py-1.5 w-full sm:flex-1 rounded border border-solid border-stone-300 focus:text-stone-800 focus:bg-white focus:border-yellow-400 focus:outline-none mr-3"
-          @change="search" placeholder="Search..."
-        />
+        <div class="sm:flex-1 flex items-center relative mr-3">
+          <input
+            enterkeyhint="search"
+            :value="searchText"
+            class="px-3 py-1.5 w-full rounded border border-solid border-stone-300 focus:text-stone-800 focus:bg-white focus:border-yellow-400 focus:outline-none"
+            @change="search" placeholder="Search..."
+          />
+          <CloseIcon class="w-4 h-4 text-stone-400 absolute right-0 mr-2 cursor-pointer" @click="cancelSearch"/>
+        </div>
         <Button primary to="/edit/new" class="w-full sm:w-auto mt-3 sm:mt-0">
           Create recipe
         </Button>

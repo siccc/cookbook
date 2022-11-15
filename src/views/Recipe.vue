@@ -12,17 +12,24 @@ import ErrorIcon from '@/assets/error.svg?component';
 import LoadingIcon from '@/assets/loading-pot.svg?component';
 import LoadingShadow from '@/assets/loading-shadow.svg?component';
 import { useRouter } from 'vue-router';
-import { ref, type Ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps<{
   id: number
 }>();
 
 const router = useRouter();
-const isCounterClicked:Ref<boolean> = ref(false);
+const isCounterClicked = ref(false);
 const { isLoading, isError, data:recipe, error } = getRecipe(props.id);
 const deleteRecipeMutation = useDeleteRecipeMutation();
 const updateRecipeMutation = useUpdateRecipeMutation();
+
+const totalTime = computed<number>(() => {
+  if (!recipe.value) {
+    return 0;
+  }
+  return (recipe.value.cookTime || 0) + (recipe.value.prepTime || 0);
+});
 
 function onDelete(recipe: Recipe) {
   deleteRecipeMutation.mutate(recipe);
@@ -53,7 +60,7 @@ function onCounterClick(recipe: Recipe) {
       <!-- NAV & ACTIONS -->
       <div class="flex justify-between items-center mb-8">
         <Button class="uppercase" to="/">
-          Go back
+          Back
         </Button>
         <div class="flex items-center">
           <Button class="mr-3" :to="`/edit/${props.id}`">
@@ -93,7 +100,7 @@ function onCounterClick(recipe: Recipe) {
           <div class="mt-6 flex gap-x-6">
             <div>
               <div>Total</div>
-              <span>{{ recipe.totalTime }} min</span>
+              <span>{{ totalTime }} min</span>
             </div>
             <div>
               <div>Prep</div>

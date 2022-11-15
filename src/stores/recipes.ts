@@ -74,9 +74,6 @@ const recipeFetcher = async (id: number | 'new'): Promise<DBRecipe> => {
 
 function transformRecipe(dbRecipe: DBRecipe): Recipe {
   const recipe = JSON.parse(JSON.stringify(dbRecipe)); // deep copy because of tags
-  recipe.totalTime = computed<number>(() => {
-    return recipe.cookTime + (recipe.prepTime || 0);
-  });
   recipe.imageUrl = getImageUrl(recipe.imageName);
   return recipe;
 }
@@ -97,8 +94,6 @@ export function getRecipe(id: number | 'new') {
 
 const recipeCreater = async (newRecipe: Recipe): Promise<Recipe> => {
   const dbRecipe = JSON.parse(JSON.stringify(newRecipe));
-  // TODO upload image
-  delete dbRecipe.totalTime;
   delete dbRecipe.imageUrl;
   delete dbRecipe.id;
   const response = await fetch(`/api/recipes`, {
@@ -135,7 +130,6 @@ export function useCreateRecipeMutation() {
 
 const recipeUpdater = async (updatedRecipe: Recipe): Promise<Recipe> => {
   const dbRecipe = JSON.parse(JSON.stringify(updatedRecipe));
-  delete dbRecipe.totalTime;
   delete dbRecipe.imageUrl;
   const response = await fetch(`/api/recipes/${updatedRecipe.id}`, {
     method: 'PUT',

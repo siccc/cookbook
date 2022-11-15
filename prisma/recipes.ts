@@ -229,6 +229,310 @@ export const seedRecipes = [
     imageName: 'lencsefozelek_j0y1bm.jpg'
   },
   {
+    title: 'Crunchy baked potato',
+    servings: '3-4 servings',
+    prepTime: 10,
+    cookTime: 30,
+    ingredients: `
+- 1 kg potato, peeled, diced
+- salt, to taste
+- 1 tbsp baking soda
+- 1 tsp olive oil
+`,
+    steps: `
+1. Pour diced potatoes in a pot with a little bit of salt and 1 tbsp of baking soda. Cook them for 8 minutes.
+2. Drain the water, add 1 tsp of olive oil to the potato. You can spice it up if you want (e.g. with rosemary), mix it well.
+3. Preheat the oven to 230 Celsius.
+4. Bake the potato for 30 minutes, turn them 1-2 times.
+`,
+    notes: '',
+    category: 'side dish',
+    imageName: 'clark-douglas-37oYY2wHu0Q-unsplash_ccebso.jpg'
+  },
+  {
+    title: 'Basic chia pudding',
+    servings: '1 serving',
+    prepTime: 10,
+    cookTime: 0,
+    ingredients: `
+- 1.5 tsp chia seeds
+- 100 ml milk of choice
+- a little honey or a half banana
+- berries for topping
+`,
+    steps: `
+1. Pour milk, chia seeds and optionally honey into a jar and mix well. Let settle for 2-3 minutes then mix again very well until you see no clumping.
+2. Cover the jar and store in fridge overnight or for at least 2 hours.
+3. Top with berries or other fruits.
+`,
+    notes: 'This pudding will keep well in the fridge, covered, for about 5 days.',
+    category: 'breakfast',
+    imageName: 'pexels-anastasia-belousova-9022035_fhx418.jpg'
+  },
+  {
+    title: 'Vanilla & orange chia pudding',
+    servings: '1 serving',
+    prepTime: 10,
+    cookTime: 0,
+    ingredients: `
+- 1.5 tsp chia seeds
+- 100 ml milk of choice
+- vanilla extract
+- orange zest
+- a little honey or a half banana
+- orange slices for topping
+`,
+    steps: `
+1. In a small jar, combine the milk, orange zest, and vanilla extract. Let settle for 2-3 minutes then mix again very well until you see no clumping.
+2. Cover the jar and store in fridge overnight or for at least 2 hours.
+3. Top with orange, drizzle with a little honey.
+`,
+    notes: 'This pudding will keep well in the fridge, covered, for about 5 days.',
+    category: 'breakfast',
+    imageName: 'pexels-alesia-kozik-6544212_tox2y3.jpg'
+  },
+  {
+    title: 'Basic tapioca pudding',
+    servings: '5 servings',
+    prepTime: 10,
+    cookTime: 35,
+    ingredients: `
+- 150 g small pearl tapioca
+- 700 ml coconut milk
+- vanilla extract
+- 1/2 tsp cinnamon
+- lime zest
+- berries or other fruits for topping
+`,
+    steps: `
+1. Combine tapioca, milk, vanilla extract and cinnamon in a pan on medium-high heat. Stir while bringing to a bare simmer.
+2. Lower the heat and cook uncovered, at the lowest possible heat, until the tapioca pearls have plumped up and thickened. Stir occasionally so the tapioca doesn't stick to the bottom of the pan. (this take about 35 minutes)
+3. Pour into jars and place in the refrigerator overnight.
+4. Serve with sliced fresh fruit and lime zest.
+`,
+    notes: '',
+    category: 'breakfast',
+    imageName: 'tapioca-g09f6f5dfd_1920_go0sbz.jpg'
+  },
+  {
+    title: 'Waffles a la mom',
+    servings: '4 servings',
+    prepTime: 15,
+    cookTime: 35,
+    ingredients: `
+- 120 g butter
+- whole 3 eggs
+- 140 g flour
+- 140 g sugar
+- lemon zest
+- 1 tsp baking soda
+- pinch of salt
+`,
+    steps: `
+1. In a large bowl mix flour, a pinch of salt, lemon zest and baking soda together.
+2. In a smaller bowl whisk butter with sugar, add the eggs one by one.
+3. Gently fold the wet mixture into the dry one.
+4. Preheat the waffle iron, brush with a little of oil.
+5. Cook waffles until golden brown and crisp.
+6. Serve immediately with maple syrup or fresh fruits.
+`,
+    notes: '',
+    category: 'breakfast',
+    imageName: 'mae-mu-dEUyLofZe5o-unsplash_tynk5z.jpg'
+  },
+  {
+    title: 'Eggplant dip',
+    servings: '2 jar',
+    prepTime: 5,
+    cookTime: 50,
+    ingredients: `
+- 2 eggplant
+- salt, pepper to taste
+`,
+    steps: `
+1. Preheat the oven to 190 Celsius.
+2. Wash the eggplants, cut them half and place them on a baking sheet (cutted side on bottom). Poke some holes in the eggplants with a knife.
+3. Roast the eggplants for 45-50 minutes, turn them over at half time.
+4. Let them cool completely.
+5. Peel them with a knife. Make sure to remove any of the dark peel.
+6. Place the eggplants in a food processor with salt and pepper.
+8. Pour the dip into jars, keep them in the fridge.
+7. Serve with toasted bread, hard eggs and lots of veggies.
+`,
+    notes: 'You can experiment by adding 1 tbsp mayo or olive oil or dries tomatoes to the dip.',
+    category: 'breakfast',
+    imageName: 'eggplant-dip_j046yt.jpg',
+    tags: {
+      create: [
+        { name: 'party food' },
+        { name: 'dip' },
+        { name: 'spread' },
+        { name: 'sandwich' },
+      ]
+    }
+  },
+  {
+    title: 'Carrotcake cupcakes',
+    servings: '12 cupcakes',
+    prepTime: 15,
+    cookTime: 20,
+    ingredients: `
+- 250 g flour
+- 200 g sugar
+- 2 whole eggs
+- 3 carrot, peeled, shredded
+- 150 ml oil
+- 1 tsp cinnamon
+- 1 tsp clove
+- nutmeg
+- ginger to taste
+- 1 tsp baking soda
+- 100 g walnut/almond, chopped
+- orange zest
+
+Cream Cheese icing:
+
+- 200 g cream cheese (mascarpone)
+- 3 tbsp powdered sugar
+- 1 tsp vanilla extract
+`,
+    steps: `
+1. Preheat the oven to 180 Celsius.
+2. In a large bowl mix flour, orange zest, spices, baking soda and nuts together.
+3. In another bowl mix the wet ingredients together: sugar, eggs, oil and shredded carrots.
+4. Gently fold the wet mixture into the dry one. Stir them together.
+5. Fill each muffin cup with batter.
+6. Bake them for 20-25 minutes. (toothpick test)
+
+Frosting:
+
+Combine all icing ingredients until smooth and creamy. Spread over cooled muffins.
+`,
+    notes: '',
+    category: 'dessert',
+    imageName: 'food-photographer-jennifer-pallian-4yTCqUHG1II-unsplash_iaui5p.jpg',
+    tags: {
+      create: [
+        { name: 'muffin' }
+      ]
+    }
+  },
+  {
+    title: 'Double chocolate cupcakes',
+    servings: '20 cupcakes',
+    prepTime: 15,
+    cookTime: 20,
+    ingredients: `
+- 270 g flour
+- 75 g unsweetened cocoa powder
+- 250 g sugar
+- 1 whole egg
+- 200 ml plain yogurt
+- 125 g butter
+- 1 tsp baking soda
+- pinch of salt
+- 100 g chocolate chips
+- 1 tsp vanilla extract
+
+White chocolate ganache:
+
+- 200 g white chocolate, roughly chopped
+- 100 ml cream
+- 1 vanilla bean
+`,
+    steps: `
+1. Preheat the oven to 180 Celsius.
+2. In a large bowl mix flour, salt, cocoa powder, baking soda and chocolate chips together.
+3. In another bowl mix sugar, egg, yogurt, vanilla extract and butter together.
+4. Gently fold the wet mixture into the dry one. Stir them together.
+5. Fill each muffin cup with batter.
+6. Bake them for 20-25 minutes. (toothpick test)
+
+Icing:
+
+1. Fill a saucepan with some water and bring it to a very gentle simmer.
+2. Place a metal or glass bowl over the warm water but make sure it doesn't actually touch the water. Pour the chocolate and cream into the bowl and stir frequently while it melts.
+3. Once all of the chocolate is almost completely melted, remove the bowl from the heat. The rest of the chocolate will continue to melt off-heat. 
+4. Scrape the vanilla bean seeds by cutting down the center of the bean first and then scraping the seeds with the flat side of a knife. Add the vanilla bean seeds to the cream.
+5. Let it thicken as it cools. (30 min - 2 hours)
+`,
+    notes: 'Keep in the fridge for up to 5 days or frozen for up to 2 months.',
+    category: 'dessert',
+    imageName: 'dessy-dimcheva-Uc9HyrJMQdI-unsplash_yg4vix.jpg',
+    tags: {
+      create: [
+        { name: 'muffin' }
+      ]
+    }
+  },
+  {
+    title: 'Blueberry cupcakes',
+    servings: '12 cupcakes',
+    prepTime: 10,
+    cookTime: 20,
+    ingredients: `
+- 350 g flour
+- 200 g sugar
+- 3 whole eggs
+- 200 ml plain yogurt
+- 6 tbsp oil
+- 1 tsp baking soda
+- pinch of salt
+- lemon zest
+- 1 tsp vanilla extract
+- 200 g blueberry
+`,
+    steps: `
+1. Preheat the oven to 180 Celsius.
+2. In a large bowl mix flour, salt, baking soda together.
+3. In another bowl mix sugar, eggs, yogurt, vanilla extract and oil together.
+4. Gently fold the wet mixture into the dry one. Stir them together.
+5. Fill each muffin cup with batter. Stud each muffin with blueberries.
+6. Bake them for 20-25 minutes. (toothpick test)
+`,
+    notes: '',
+    category: 'dessert',
+    imageName: 'IMG_20200703_175110_gaesm0.jpg',
+    tags: {
+      create: [
+        { name: 'muffin' }
+      ]
+    }
+  },
+  {
+    title: 'Chocolate-cranberry cookies',
+    servings: '35 cookie',
+    prepTime: 10,
+    cookTime: 13,
+    ingredients: `
+- 150 g flour
+- 50 g finely shredded coconut
+- 50 g dried cranberry
+- 100 g sugar
+- 100 g butter
+- 1 whole egg
+- 1 tsp baking powder
+- pich of salt
+`,
+    steps: `
+1. Preheat the oven to 180 Celsius.
+2. In a large bowl mix flour, salt, baking powder, cranberry and shredded coconut together.
+3. In another bowl mix sugar, egg and butter together.
+4. Gently fold the wet mixture into the dry one. Stir them together.
+5. Roll the dough into balls (walnut size) place them on baking sheet well spaced apart. Flatten each slightly using your palm. (around 1 cm thick)
+6. Bake them for 13 minutes. (toothpick test)
+7. Let them cool on a wire rack.
+`,
+    notes: 'You can use nuts, other dried fruits, chocolate to vary the recipe.',
+    category: 'dessert',
+    imageName: 'DSC_0396_ofbut9.jpg',
+    tags: {
+      create: [
+        { name: 'edible gift' }
+      ]
+    }
+  },
+  /*{
     title: 'Berry Granola Parfait',
     servings: '1',
     prepTime: 5,
@@ -569,5 +873,5 @@ export const seedRecipes = [
     notes: 'Some useful notes.',
     category: 'snack',
     steps: 'Mix all ingredients.'
-  },
+  },*/
 ];

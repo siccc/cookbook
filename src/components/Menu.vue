@@ -25,8 +25,8 @@ import Logo from '@/assets/vertical-logo.svg?component';
       </div>
     </div>
   </div>
-  <div class="w-full fixed bottom-0 z-20 border-t border-stone-200 h-12 bg-white md:hidden">
-    <div class="flex justify-around items-center text-stone-500 h-full">
+  <div class="w-full fixed bottom-0 z-20 border-t border-stone-200 bg-white md:hidden bottom-menu">
+    <div class="flex justify-around items-center text-stone-500 h-full my-1">
       <RouterLink to="/">
         <div class="flex flex-col items-center text-yellow-400">
           <HomeIcon class="w-5 h-5" />
@@ -72,5 +72,9 @@ import Logo from '@/assets/vertical-logo.svg?component';
 .link-underline:hover {
   background-size: 100% 3px;
   background-position: 0 100%
+}
+
+.bottom-menu {
+  padding-bottom: env(safe-area-inset-bottom);
 }
 </style>

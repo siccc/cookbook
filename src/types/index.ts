@@ -15,7 +15,6 @@ export interface Recipe {
   notes: string,
   imageName: string,
   imagePublicId: string,
-  totalTime?: ComputedRef<number>,
   imageUrl?: string
 }
 

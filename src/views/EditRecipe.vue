@@ -4,13 +4,15 @@ import type { Recipe, Tag } from '@/types';
 import DOMPurify from 'dompurify';
 import { uploadImage } from '@/stores/cloudinary';
 import Button from '@/components/Button.vue';
+import ValidationMessage from '@/components/ValidationMessage.vue';
+import CategoryButton from '@/components/CategoryButton.vue';
 import MarkdownEditor from '@/components/MarkdownEditor.vue';
 import ImageUploader from '@/components/ImageUploader.vue';
 import SpinnerIcon from '@/assets/icons/spinner.svg?component';
 import ErrorIcon from '@/assets/error.svg?component';
 import LoadingIcon from '@/assets/loading-pot.svg?component';
 import LoadingShadow from '@/assets/loading-shadow.svg?component';
-import { ref, reactive, computed, type Ref, type ComputedRef } from 'vue';
+import { ref, reactive, type Ref, watch } from 'vue';
 import { forEach, find } from 'lodash';
 import { useRouter } from 'vue-router';
 
@@ -31,10 +33,10 @@ const inputValidations = reactive({
   ingredients: { hasError: false, message: 'Add at least one the ingredient.'},
   steps: { hasError: false, message: 'Add at least one step.'},
 });
-
-const tags:Ref<string> = ref('');
-const saveInProgress:Ref<boolean> = ref(false);
-const anyInputHasError:Ref<boolean> = ref(false);
+const categories = ['breakfast', 'lunch', 'dinner', 'snack', 'dessert', 'side dish'];
+const tags = ref('');
+const saveInProgress = ref(false);
+const anyInputHasError = ref(false);
 const shouldSaveImage = ref(false);
 const savingIsError = ref(false);
 const savingErrorMessage = ref('');
@@ -45,20 +47,30 @@ const savingErrorMessage = ref('');
 
 const id = props.id === 'new' ? props.id : Number(props.id);
 const { isLoading, isError, data, error } = getRecipe(id);
+const recipe:Ref<Recipe|undefined> = ref(undefined);
 
 // copy recipe data to be able to mutate it's properties
-const recipe:ComputedRef<Recipe> = computed(() => {
-  if (data.value) {
-    return reactive(JSON.parse(JSON.stringify(data.value)));
-  }
-  return;
-});
+watch(
+  data, (data) => {
+    if (data) {
+      recipe.value = JSON.parse(JSON.stringify(data));
+      if (data.tags) {
+        tags.value = data.tags.map(tag => tag.name).join(', ');
+      }
+    }
+  },
+  { immediate:true }
+)
 
 // -----------------------------------
 // METHODS
 // -----------------------------------
 
 async function onSaveClick() {
+  if (!recipe.value) {
+    return;
+  }
+  console.log(recipe.value);
   // validation
   validateAll();
   if (anyInputHasError.value) {
@@ -72,7 +84,7 @@ async function onSaveClick() {
     recipe.value.tags = transformTags(tags.value, recipe.value.tags);
   }
 
-  // upload image to cloudinary
+  // upload image to cloudinary and set image props
   if (shouldSaveImage.value === true) {
     if (recipe.value.imageUrl) {
       try {
@@ -86,6 +98,8 @@ async function onSaveClick() {
       }
     } else {
       recipe.value.imagePublicId = '';
+      recipe.value.imageName = '';
+      recipe.value.imageUrl = '';
     }
   }
 
@@ -115,11 +129,15 @@ function onCancelClick() {
 }
 
 function onInputChange(key:RecipeMDInputKeys, value:string) {
-  recipe.value[key] = DOMPurify.sanitize(value);
+  if (recipe.value) {
+    recipe.value[key] = DOMPurify.sanitize(value);
+  }
 }
 
 function onCategoryChange(value: string) {
-  recipe.value.category = value;
+  if (recipe.value) {
+    recipe.value.category = value;
+  }
 }
 
 function transformTags(inputTags:string, recipeTags:Array<Tag> | undefined):Tag[] {
@@ -138,13 +156,13 @@ function transformTags(inputTags:string, recipeTags:Array<Tag> | undefined):Tag[
 }
 
 function validateAll() {
-  anyInputHasError.value = false;
-  forEach(inputValidations, (value, key, list) => {
-    if (key !== 'fileSize') {
-      value.hasError = !recipe.value[key as ValidationKeys];
-    }
-    anyInputHasError.value = anyInputHasError.value || value.hasError;
-  });
+  if (recipe.value) {
+    anyInputHasError.value = false;
+    forEach(inputValidations, (value, key, list) => {
+      value.hasError = !recipe.value![key as ValidationKeys];
+      anyInputHasError.value = anyInputHasError.value || value.hasError;
+    });
+  }
 }
 
 function validate(key:ValidationKeys, value:string) {
@@ -152,27 +170,31 @@ function validate(key:ValidationKeys, value:string) {
 }
 
 function onImageChange(imageSource:string) {
-  shouldSaveImage.value = true;
-  recipe.value.imageUrl = imageSource;
+  if (recipe.value) {
+    shouldSaveImage.value = true;
+    recipe.value.imageUrl = imageSource;
+  }
 }
 
 </script>
 
 <template>
   <div class="p-4 max-w-screen-lg mx-auto">
-    <div v-if="isLoading" class="my-8 text-center font-k2d text-2xl text-yellow-400 flex flex-col justify-center items-center">
+    <div v-if="isLoading" class="my-8 text-center font-k2d text-2xl text-yellow-400 flex
+      flex-col justify-center items-center">
         <LoadingIcon class="w-24 opacity-80 animate-bounce block" />
         <LoadingShadow class="w-24 opacity-80 block" />
       Loading...
     </div>
-    <div v-if="isError" class="my-8 text-center font-k2d text-xl text-red-300 flex justify-center items-center">
+    <div v-if="isError" class="my-8 text-center font-k2d text-xl text-red-300 flex
+      justify-center items-center">
       <ErrorIcon class="w-24 h-24 opacity-50" />
       <div>{{ error }}</div>
     </div>
-    <div v-else-if="!isLoading && data">
+    <div v-else-if="!isLoading && recipe">
       <div class="flex justify-between items-center mb-8">
         <Button class="uppercase" to="/">
-          Go back
+          Back
         </Button>
         <div class="flex items-center">
           <Button
@@ -194,7 +216,8 @@ function onImageChange(imageSource:string) {
           </Button>
         </div>
       </div>
-      <div v-if="savingIsError" class="my-8 text-center font-k2d text-xl text-red-300 flex justify-center items-center">
+      <div v-if="savingIsError" class="my-8 text-center font-k2d text-xl text-red-300 flex
+        justify-center items-center">
         <ErrorIcon class="w-24 h-24 opacity-50" />
         <div>{{ savingErrorMessage }}</div>
       </div>
@@ -203,11 +226,15 @@ function onImageChange(imageSource:string) {
         <div class="md:col-span-2 my-6 md:my-0">
           <div>
             <span class="uppercase">Your recipe's name*</span>
-            <input v-model="recipe.title" placeholder="My favorite bolognese sauce" @change="validate('title', recipe.title)"/>
+            <input
+              v-model="recipe.title"
+              placeholder="My favorite bolognese sauce"
+              @change="validate('title', recipe!.title)"
+            />
           </div>
-          <div v-if="inputValidations.title.hasError" class="validationError">
+          <ValidationMessage v-if="inputValidations.title.hasError">
             {{ inputValidations.title.message }}
-          </div>
+          </ValidationMessage>
           <div class="mt-3">
             <span class="uppercase">Tags</span>
             <input v-model="tags" placeholder="italian, comfort food"/>
@@ -215,7 +242,11 @@ function onImageChange(imageSource:string) {
           <div class="mt-6 flex items-center gap-3">
             <div>
               <span class="uppercase">Serving*</span>
-              <input v-model="recipe.servings" placeholder="4 servings" @change="validate('servings', recipe.servings)"/>
+              <input
+                v-model="recipe.servings"
+                placeholder="4 servings"
+                @change="validate('servings', recipe!.servings)"
+              />
             </div>
             <div>
               <span class="uppercase">Prep time</span>
@@ -226,25 +257,24 @@ function onImageChange(imageSource:string) {
               <input type="number" min="0" v-model="recipe.cookTime" />
             </div>
           </div>
-          <div v-if="inputValidations.servings.hasError" class="validationError">
+          <ValidationMessage v-if="inputValidations.servings.hasError">
             {{ inputValidations.servings.message }}
-          </div>
+          </ValidationMessage>
           <div class="mt-6">
             <span class="uppercase">Dish type*</span>
             <div class="flex items-center flex-wrap gap-3">
-              <div
-                class="category"
-                :class="{'selected-category': recipe.category === category}"
-                v-for="category in ['breakfast', 'lunch', 'dinner', 'snack', 'dessert']"
+              <CategoryButton
+                :class="{'bg-sky-300 border-sky-300 text-white hover:border-sky-300 hover:text-white': recipe.category === category}"
+                v-for="category in categories"
                 @click="onCategoryChange(category)"
               >
                 {{ category }}
-              </div>
+              </CategoryButton>
             </div>
           </div>
-          <div v-if="inputValidations.category.hasError" class="validationError">
+          <ValidationMessage v-if="inputValidations.category.hasError">
             {{ inputValidations.category.message }}
-          </div>
+          </ValidationMessage>
         </div>
         <div class="my-6 md:my-0 w-full">
           <div class="flex">
@@ -256,9 +286,9 @@ function onImageChange(imageSource:string) {
             placeholder="Add some ingredients"
             @change="(event) => { onInputChange('ingredients', event); validate('steps', event) }"
           />
-          <div v-if="inputValidations.ingredients.hasError" class="validationError">
+          <ValidationMessage v-if="inputValidations.ingredients.hasError">
             {{ inputValidations.ingredients.message }}
-          </div>
+          </ValidationMessage>
         </div>
         <div class="md:col-span-2 my-6 md:my-0 w-full">
           <div class="flex">
@@ -270,9 +300,9 @@ function onImageChange(imageSource:string) {
             placeholder="Add steps"
             @change="(event) => { onInputChange('steps', event); validate('steps', event) }"
           />
-          <div v-if="inputValidations.steps.hasError" class="validationError">
+          <ValidationMessage v-if="inputValidations.steps.hasError">
             {{ inputValidations.steps.message }}
-          </div>
+          </ValidationMessage>
           <div class="text-xl uppercase font-k2d mb-1 mt-3">Notes</div>
           <MarkdownEditor
             :content="recipe.notes"
@@ -285,23 +315,3 @@ function onImageChange(imageSource:string) {
     </div>
   </div>
 </template>
-
-<style scoped>
-.category {
-  @apply border border-stone-300 uppercase px-3 py-1.5 rounded cursor-pointer;
-}
-.category:hover:not(.selected-category) {
-  @apply border-sky-300 text-sky-400;
-}
-.selected-category {
-  @apply bg-sky-300 border-sky-300 text-white;
-}
-input, textarea {
-  @apply px-3 py-1.5 w-full rounded border border-solid border-stone-300
-  focus:text-stone-800 focus:bg-white focus:border-yellow-400 focus:outline-none;
-}
-
-.validationError {
-  @apply px-3 py-1.5 w-full rounded border border-solid border-red-300 text-red-400 mt-1;
-}
-</style>

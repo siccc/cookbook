@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { PrismaClient } from '@prisma/client';
+import fetch from 'cross-fetch';
 
 const prisma = new PrismaClient();
 
@@ -78,6 +79,20 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       if (isNaN(id)) {
         return res.status(404).send('');
       }
+      const recipe = await prisma.recipe.findUniqueOrThrow({
+        where: { id }
+      });
+      // if image was removed
+      if (recipe.imagePublicId && !req.body.imagePublicId) {
+        // delete image from cloudinary
+        try {
+          if (recipe.imagePublicId) {
+            await deleteImage(recipe.imagePublicId);
+          }
+        } catch (error) {
+          return res.status(404).send('');
+        }
+      }
       try {
         const recipe = await prisma.recipe.update({
           where: { id },
@@ -96,6 +111,17 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     else if (method === 'DELETE' && query.id) {
       const id = Number(query.id);
       if (isNaN(id)) {
+        return res.status(404).send('');
+      }
+      const recipe = await prisma.recipe.findUniqueOrThrow({
+        where: { id }
+      });
+      // delete image from cloudinary
+      try {
+        if (recipe.imagePublicId) {
+          await deleteImage(recipe.imagePublicId);
+        }
+      } catch (error) {
         return res.status(404).send('');
       }
       try {
@@ -143,4 +169,14 @@ const createTags = (tags: {name: string}[]) => {
       ]
     };
   }
+}
+
+const deleteImage = async (publicId: string) => {
+  const data = new URLSearchParams();
+  data.append('public_ids', publicId);
+  const response = await fetch(`https://${process.env.CLOUDINARY_API_KEY}:${process.env.CLOUDINARY_API_SECRET}@api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/resources/image/upload`, {
+    method: 'DELETE',
+    body: data
+  });
+  return response;
 }

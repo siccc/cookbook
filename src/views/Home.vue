@@ -25,21 +25,26 @@ function cancelSearch() {
 
 <template>
   <main class="p-4 max-w-screen-xl mx-auto">
-    <div v-if="isLoading" class="my-8 text-center font-k2d text-2xl text-yellow-400 flex flex-col justify-center items-center">
+    <div v-if="isLoading" class="my-8 text-center font-k2d text-2xl text-yellow-400 flex
+      flex-col justify-center items-center">
       <LoadingIcon class="w-24 opacity-80 animate-bounce block" />
       <LoadingShadow class="w-24 opacity-80 block" />
       Loading...
     </div>
     <div v-else>
       <div class="mx-auto md:px-20 sm:flex sm:items-center sm:justify-between">
-        <div class="sm:flex-1 flex items-center relative mr-3">
+        <div class="sm:flex-1 flex items-center relative sm:mr-3">
           <input
             enterkeyhint="search"
             :value="searchText"
-            class="px-3 py-1.5 w-full rounded border border-solid border-stone-300 focus:text-stone-800 focus:bg-white focus:border-yellow-400 focus:outline-none"
+            class="px-3 py-1.5 w-full rounded border border-solid border-stone-300
+            focus:text-stone-800 focus:bg-white focus:border-yellow-400 focus:outline-none"
             @change="search" placeholder="Search..."
           />
-          <CloseIcon class="w-4 h-4 text-stone-400 absolute right-0 mr-2 cursor-pointer" @click="cancelSearch"/>
+          <CloseIcon
+            class="w-4 h-4 text-stone-400 absolute right-0 mr-2 cursor-pointer"
+            @click="cancelSearch"
+          />
         </div>
         <Button primary to="/edit/new" class="w-full sm:w-auto mt-3 sm:mt-0">
           Create recipe
@@ -57,14 +62,16 @@ function cancelSearch() {
               class="w-full h-72 md:w-60 object-cover rounded-xl"
               :src="recipe.imageUrl"
             />
-            <div v-else class="w-full h-72 md:w-60 rounded-xl bg-stone-100 flex items-center justify-center">
+            <div v-else class="w-full h-72 md:w-60 rounded-xl bg-stone-100 flex items-center
+              justify-center">
               <ImagePlaceholder class="opacity-10 w-40 h-40"/>
             </div>
             <div class="mt-2 uppercase select-none md:w-60 w-72">
               <span class="inline-block text-stone-400">
                 {{ recipe.category }}
               </span>
-              <div class="hover:text-sky-300 hover:transition duration-300 ease-in-out font-k2d text-xl">
+              <div class="hover:text-sky-300 hover:transition duration-300 ease-in-out
+                font-k2d text-xl">
                 {{ recipe.title }}
               </div>
             </div>

@@ -10,10 +10,16 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     // LIST RECIPES
     if (method === 'GET' && !query.id) {
       let recipes;
+      const limit = 16;
+      const cursor = query.cursor as string ?? '';
+      const cursorObj = cursor === '' ? undefined : { id: Number(cursor) };
       // SEARCH
       if (query.search && typeof query.search === 'string') {
         recipes = await prisma.recipe.findMany({
-          orderBy: { createdAt: 'asc' },
+          take: limit,
+          skip: query.cursor !== '' ? 1 : 0,
+          cursor: cursorObj,
+          orderBy: { id: 'asc' },
           where: {
             title: {
               search: preprocessSearchKeywords(query.search),
@@ -30,7 +36,10 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       // LIST ALL
       else {
         recipes = await prisma.recipe.findMany({
-          orderBy: { createdAt: 'asc' },
+          take: limit,
+          skip: query.cursor !== '' ? 1 : 0,
+          cursor: cursorObj,
+          orderBy: { id: 'asc' },
           select: {
             id: true,
             title: true,
@@ -39,7 +48,10 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           },
         });
       }
-      return res.json(recipes);
+      return res.json({
+        recipes,
+        nextId: recipes.length === limit ? recipes[limit - 1].id : undefined
+      });
     }
     // CREATE RECIPE
     else if (method === 'POST' && !query.id) {
@@ -103,7 +115,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         });
         return res.json(recipe);
       } catch (error) {
-        console.log(error)
         return res.status(404).send('');
       }
     }

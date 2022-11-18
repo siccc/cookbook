@@ -87,13 +87,13 @@ function onCounterClick(recipe: Recipe) {
             {{ recipe.title }}
           </div>
           <!-- TAGS -->
-          <div class="mt-2 flex justify-center md:justify-start">
-            <span class="tag mr-2">
+          <div class="mt-2 flex justify-center md:justify-start flex-wrap">
+            <span class="inline-block text-stone-400 uppercase mr-2">
               {{ recipe.category }}
             </span>
             <div class="mr-2 flex items-center" v-for="tag in recipe.tags" :key="tag.id">
-              <span class="dot" />
-              <span class="tag">{{ tag.name }}</span>
+              <span class="bg-stone-400 rounded-full w-1 h-1 mr-2 inline-block" />
+              <span class="inline-block text-stone-400 uppercase">{{ tag.name }}</span>
             </div>
           </div>
           <!-- TIME & SERVINGS -->
@@ -139,7 +139,7 @@ function onCounterClick(recipe: Recipe) {
           <div class="text-xl uppercase font-k2d mb-1">Steps</div>
           <MarkdownRenderer :content="recipe.steps" />
           <div v-if="recipe.notes">
-            <div class="text-xl uppercase font-k2d mb-1 mt-3">Notes</div>
+            <div class="text-xl uppercase font-k2d mb-1 mt-6">Notes</div>
             <MarkdownRenderer :content="recipe.notes" />
           </div>
         </div>
@@ -147,12 +147,3 @@ function onCounterClick(recipe: Recipe) {
     </div>
   </div>
 </template>
-
-<style scoped>
-.tag {
-  @apply inline-block text-stone-400 uppercase;
-}
-.dot {
-  @apply bg-stone-400 rounded-full w-1 h-1 mr-2 inline-block;
-}
-</style>

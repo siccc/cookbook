@@ -13,6 +13,12 @@ module.exports = {
   }],
   rules: {
     semi: ['error', 'always'],
+    quotes: ['error', 'single'],
+    'max-len': ['error', {
+      code: 100,
+      ignoreTemplateLiterals: true
+    }],
+    'vue/no-undef-components': ['error']
   },
   parserOptions: {
     ecmaVersion: 'latest'

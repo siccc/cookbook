@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "vue-query";
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "vue-query";
 import type { Recipe, RecipeExtract, DBRecipeExtract, DBRecipe } from '@/types';
 import type { Ref } from 'vue';
 import { reactive, computed } from 'vue';
@@ -8,39 +8,64 @@ import { fill } from '@cloudinary/url-gen/actions/resize';
 const cloudinary = useCloudinary();
 
 // -----------------------------------
-// LIST & SEARCH RECIPES
+// LIST & SEARCH RECIPES -- WITH CURSOR
 // -----------------------------------
 
-const recipeListFetcher = async (searchKeywords: Ref<string>): Promise<DBRecipeExtract[]> => {
-  const response = await fetch(`/api/recipes?search=${searchKeywords.value ? searchKeywords.value : ''}`)
+type  recipeFetcherOptions = {
+  searchKeywords: Ref<string>,
+  cursor: string
+}
+
+type DBQueryResult = {
+  recipes: DBRecipeExtract[],
+  nextId: number | undefined
+};
+const recipeListFetcher = async ({ searchKeywords, cursor = '' }: recipeFetcherOptions): Promise<DBQueryResult> => {
+  const response = await fetch(`/api/recipes?search=${searchKeywords.value ? searchKeywords.value : ''}&cursor=${cursor}`)
   if (!response.ok) {
     throw new Error('An error occurred while fetching a recipe.');
   }
   return response.json();
 }
 
-function transformRecipeExtracts(recipeExtracts: DBRecipeExtract[]): RecipeExtract[] {
-  if (recipeExtracts.length > 0) {
-    return recipeExtracts.map(extract => {
-      return {
-        ...extract,
-        imageUrl: getImageUrl(extract.imageName)
-      };
-    });
-  } else {
-    return recipeExtracts;
-  }
+type TransformRecipeOptions = {
+  pages: DBQueryResult[],
+  pageParams: unknown[]
+}
+
+type TransformedQueryResult = {
+  pages: {
+    recipes: RecipeExtract[],
+    nextId: number | undefined
+  }[],
+  pageParams: unknown[]
+};
+function transformRecipeExtracts(data: TransformRecipeOptions): TransformedQueryResult {
+  const transformedRecipeExtracts = data.pages.map(page => {
+    return {
+      recipes: page.recipes.map(extract => {
+        return {
+          ...extract,
+          imageUrl: getImageUrl(extract.imageName)
+        };
+      }),
+      nextId: page.nextId
+    }
+    
+  });
+  return { pages: transformedRecipeExtracts, pageParams: data.pageParams };
 }
 
 export function listRecipes(searchKeywords: Ref<string>) {
-  const { isLoading, isError, isFetching, data, error, refetch } = useQuery(
+  const { isLoading, isError, data, error, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery(
     ['recipes', searchKeywords],
-    () => recipeListFetcher(searchKeywords), {
-      select: transformRecipeExtracts
+    ({ pageParam }) => recipeListFetcher({searchKeywords, cursor: pageParam}),
+    {
+      select: transformRecipeExtracts,
+      getNextPageParam: (lastPage) => lastPage.nextId ?? false
     }
   );
-  console.log('refetch recipe list');
-  return { isLoading, isError, isFetching, data, error, refetch };
+  return { isLoading, isError, data, error, isFetchingNextPage, fetchNextPage, hasNextPage };
 }
 
 // -----------------------------------

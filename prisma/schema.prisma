@@ -1,12 +1,12 @@
 datasource db {
   provider             = "mysql"
   url                  = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+  relationMode = "prisma"
 }
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity", "fullTextSearch", "fullTextIndex"]
+  previewFeatures = ["fullTextSearch", "fullTextIndex", "extendedWhereUnique"]
 }
 
 model Recipe {
@@ -25,6 +25,7 @@ model Recipe {
   tags            Tag[]
   imageName       String          @default("")
   imagePublicId   String          @default("")
+  userId          String?         @default("")
 
   @@fulltext([title])
 }
@@ -33,4 +34,9 @@ model Tag {
   id      Int             @id @default(autoincrement())
   name    String
   recipes Recipe[]
+}
+
+model User {
+  id              String          @id @unique
+  createdAt       DateTime        @default(now())
 }

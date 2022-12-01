@@ -6,6 +6,11 @@ const prisma = new PrismaClient();
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   const { method, query } = req;
+  const userId = processAuthToken(req.headers.authorization);
+  if (!userId) {
+    return res.status(403);
+  }
+  // TODO: check if user existing?
   if (query.resource === 'recipes') {
     // LIST RECIPES
     if (method === 'GET' && !query.id) {
@@ -21,15 +26,22 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           cursor: cursorObj,
           orderBy: { id: 'asc' },
           where: {
-            title: {
-              search: preprocessSearchKeywords(query.search),
-            }
+            AND: [
+              {
+                title: {
+                  search: preprocessSearchKeywords(query.search)
+                }
+              },
+              {
+                userId: { equals: userId }
+              }
+            ]
           },
           select: {
             id: true,
             title: true,
             category: true,
-            imageName: true
+            imagePublicId: true
           },
         });
       } 
@@ -40,11 +52,14 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           skip: query.cursor !== '' ? 1 : 0,
           cursor: cursorObj,
           orderBy: { id: 'asc' },
+          where: {
+            userId: { equals: userId }
+          },
           select: {
             id: true,
             title: true,
             category: true,
-            imageName: true
+            imagePublicId: true
           },
         });
       }
@@ -59,6 +74,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         const recipe = await prisma.recipe.create({
           data: {
             ...req.body,
+            userId,
             tags: createTags(req.body.tags)
           }
         });
@@ -75,13 +91,17 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       }
       try {
         const recipe = await prisma.recipe.findUniqueOrThrow({
-          where: { id },
+          where: {
+            id,
+            userId
+          },
           include: {
             tags: true,
           },
         });
         return res.json(recipe);
       } catch (error) {
+        console.log(error);
         return res.status(404).send('');
       }
     }
@@ -94,9 +114,13 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       const recipe = await prisma.recipe.findUniqueOrThrow({
         where: { id }
       });
-      // if image was removed
-      if (recipe.imagePublicId && !req.body.imagePublicId) {
-        // delete image from cloudinary
+      if (recipe.userId !== userId) {
+        return res.status(403);
+      }
+      // if image was removed or replaced
+      if (!!recipe.imagePublicId && !req.body.imagePublicId || 
+        (!!recipe.imagePublicId && !!req.body.imagePublicId && recipe.imagePublicId !== req.body.imagePublicId)) {
+        // delete prev image from cloudinary
         try {
           if (recipe.imagePublicId) {
             await deleteImage(recipe.imagePublicId);
@@ -127,6 +151,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       const recipe = await prisma.recipe.findUniqueOrThrow({
         where: { id }
       });
+      if (recipe.userId !== userId) {
+        return res.status(403);
+      }
       // delete image from cloudinary
       try {
         if (recipe.imagePublicId) {
@@ -147,6 +174,18 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   }
   return res.status(404).send('');
 };
+
+// -----------------------------------
+// HELPERS
+// -----------------------------------
+
+const processAuthToken = (authHeader: string | undefined) => {
+  let userId = '';
+  if (authHeader && authHeader.startsWith('Basic ') && authHeader.length > 6){
+    userId = authHeader.substring(6, authHeader.length);
+  }
+  return userId;
+}
 
 const preprocessSearchKeywords = (searchKeywords: string) => {
 	return searchKeywords
@@ -183,6 +222,13 @@ const createTags = (tags: {name: string}[]) => {
 }
 
 const deleteImage = async (publicId: string) => {
+  // For demo purposes 
+  // I don't want to upload these demo images for every user. I use these as common images and they can't be deleted.
+  // -------------------
+  if (publicId.includes('cookbook/default/')) {
+    return Promise.resolve(null);
+  }
+  // -------------------
   const data = new URLSearchParams();
   data.append('public_ids', publicId);
   const response = await fetch(`https://${process.env.CLOUDINARY_API_KEY}:${process.env.CLOUDINARY_API_SECRET}@api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/resources/image/upload`, {

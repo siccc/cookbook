@@ -5,6 +5,10 @@
       "destination": "/api/api?resource=recipes&id=:id"
     },
     {
+      "source": "/api/user/:id?",
+      "destination": "/api/user?id=:id"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

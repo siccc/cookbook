@@ -3,6 +3,10 @@
     {
       "source": "/api/recipes/:id?",
       "destination": "/api/api?resource=recipes&id=:id"
+    },
+    {
+      "source": "/api/user/:id?",
+      "destination": "/api/user?id=:id"
     }
   ]
 }

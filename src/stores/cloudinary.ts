@@ -12,8 +12,10 @@ export function useCloudinary() {
 }
 
 export async function uploadImage(file: string) {
+  const userId = localStorage.getItem('userId');
   const data = new FormData();
   data.append('file', file);
+  data.append('folder', `cookbook/demo/${userId}`);
   data.append('upload_preset', 'cookbook-preset');
   const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
     method: 'POST',

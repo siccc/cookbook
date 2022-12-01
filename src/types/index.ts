@@ -50,6 +50,10 @@ export interface DBRecipeExtract {
   id: number,
   title: string,
   category: string,
-  imageName?: string
+  imagePublicId?: string
 }
 
+export interface User {
+  id: string,
+  createdAt: string
+};

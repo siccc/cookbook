@@ -7,6 +7,7 @@ import EmptyStarIcon from '@/assets/icons/star.svg?component';
 import FullStarIcon from '@/assets/icons/full-star.svg?component';
 import DeleteIcon from '@/assets/icons/trash-alt.svg?component';
 import EditIcon from '@/assets/icons/edit.svg?component';
+import SpinnerIcon from '@/assets/icons/spinner.svg?component';
 import ImagePlaceholder from '@/assets/image-placeholder.svg?component';
 import ErrorIcon from '@/assets/error.svg?component';
 import LoadingIcon from '@/assets/loading-pot.svg?component';
@@ -32,8 +33,10 @@ const totalTime = computed<number>(() => {
 });
 
 function onDelete(recipe: Recipe) {
-  deleteRecipeMutation.mutate(recipe);
-  router.push('/');
+  deleteRecipeMutation.mutate(
+    recipe,
+    { onSuccess: () => router.push('/') }
+  );
 }
 
 function onCounterClick(recipe: Recipe) {
@@ -67,8 +70,9 @@ function onCounterClick(recipe: Recipe) {
             <EditIcon class="w-5 h-5 mr-2" />
             Edit
           </Button>
-          <Button @click="onDelete(recipe!)">
-            <DeleteIcon class="w-5 h-5 mr-2" />
+          <Button @click="onDelete(recipe!)" :disabled="deleteRecipeMutation.isLoading.value">
+            <SpinnerIcon v-if="deleteRecipeMutation.isLoading.value" class="w-5 h-5 animate-spin mr-2"/>
+            <DeleteIcon v-else class="w-5 h-5 mr-2" />
             Delete
           </Button>
         </div>
@@ -131,7 +135,6 @@ function onCounterClick(recipe: Recipe) {
         <div class="my-6 md:my-0 w-full">
           <div class="text-xl uppercase font-k2d mb-1">Ingredients</div>
           <MarkdownRenderer :content="recipe.ingredients" />
-          <!-- <div class="btn w-full mt-4">Add to groceries</div> -->
           <Button class="w-full mt-4">Add to groceries</Button>
         </div>
         <!-- STEPS & NOTES -->

@@ -70,7 +70,6 @@ async function onSaveClick() {
   if (!recipe.value) {
     return;
   }
-  console.log(recipe.value);
   // validation
   validateAll();
   if (anyInputHasError.value) {
@@ -203,7 +202,7 @@ function onImageChange(imageSource:string) {
             @click="onSaveClick()"
             :disabled="saveInProgress"
           >
-            <SpinnerIcon v-if="saveInProgress" class="w-8 h-8 animate-spin mr-2"/>
+            <SpinnerIcon v-if="saveInProgress" class="w-5 h-5 animate-spin mr-2"/>
             Save
           </Button>
           <Button

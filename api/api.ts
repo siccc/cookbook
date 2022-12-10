@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { PrismaClient } from '@prisma/client';
 import fetch from 'cross-fetch';
+import { differenceBy} from 'lodash';
 
 const prisma = new PrismaClient();
 
@@ -10,12 +11,11 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   if (!userId) {
     return res.status(403);
   }
-  // TODO: check if user existing?
   if (query.resource === 'recipes') {
     // LIST RECIPES
     if (method === 'GET' && !query.id) {
       let recipes;
-      const limit = 16;
+      const limit = 20;
       const cursor = query.cursor as string ?? '';
       const cursorObj = cursor === '' ? undefined : { id: Number(cursor) };
       // SEARCH
@@ -27,14 +27,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           orderBy: { id: 'asc' },
           where: {
             AND: [
-              {
-                title: {
-                  search: preprocessSearchKeywords(query.search)
-                }
-              },
-              {
-                userId: { equals: userId }
-              }
+              { title: { search: preprocessSearchKeywords(query.search) } },
+              { userId: { equals: userId } }
             ]
           },
           select: {
@@ -75,7 +69,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           data: {
             ...req.body,
             userId,
-            tags: createTags(req.body.tags)
+            tags: processTags(userId, req.body.tags)
           }
         });
         return res.json(recipe);
@@ -111,19 +105,22 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       if (isNaN(id)) {
         return res.status(404).send('');
       }
-      const recipe = await prisma.recipe.findUniqueOrThrow({
-        where: { id }
+      const prevRecipe = await prisma.recipe.findUniqueOrThrow({
+        where: { id },
+        include: {
+          tags: true,
+        }
       });
-      if (recipe.userId !== userId) {
+      if (prevRecipe.userId !== userId) {
         return res.status(403);
       }
       // if image was removed or replaced
-      if (!!recipe.imagePublicId && !req.body.imagePublicId || 
-        (!!recipe.imagePublicId && !!req.body.imagePublicId && recipe.imagePublicId !== req.body.imagePublicId)) {
+      if (!!prevRecipe.imagePublicId && !req.body.imagePublicId || 
+        (!!prevRecipe.imagePublicId && !!req.body.imagePublicId && prevRecipe.imagePublicId !== req.body.imagePublicId)) {
         // delete prev image from cloudinary
         try {
-          if (recipe.imagePublicId) {
-            await deleteImage(recipe.imagePublicId);
+          if (prevRecipe.imagePublicId) {
+            await deleteImage(prevRecipe.imagePublicId);
           }
         } catch (error) {
           return res.status(404).send('');
@@ -134,7 +131,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           where: { id },
           data: {
             ...req.body,
-            tags: processTags(req.body.tags)
+            tags: processTags(userId, req.body.tags, prevRecipe.tags)
           },
         });
         return res.json(recipe);
@@ -149,10 +146,25 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         return res.status(404).send('');
       }
       const recipe = await prisma.recipe.findUniqueOrThrow({
-        where: { id }
+        where: { id },
+        include: {
+          tags: true
+        }
       });
       if (recipe.userId !== userId) {
         return res.status(403);
+      }
+      // disconnect tags
+      try {
+        await prisma.recipe.update({
+          where: { id },
+          data: {
+            ...recipe,
+            tags: processTags(userId, [], recipe.tags)
+          },
+        });
+      } catch (error) {
+        return res.status(404).send('');
       }
       // delete image from cloudinary
       try {
@@ -162,6 +174,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       } catch (error) {
         return res.status(404).send('');
       }
+      
       try {
         await prisma.recipe.delete({
           where: { id },
@@ -194,30 +207,25 @@ const preprocessSearchKeywords = (searchKeywords: string) => {
 		.join(' & ');
 }
 
-const processTags = (tags: {id: string, name: string}[]) => {
-  if (tags && tags.length > 0) {
+const processTags = (userId: string, newTags: {id: string, name: string}[], prevTags?: {id: string, name: string}[]) => {
+  const tagsToDisconnect = differenceBy(prevTags, newTags, 'id');
+  if (newTags && newTags.length > 0) {
     return {
-      connectOrCreate: tags.map((tag) => {
+      connectOrCreate: newTags.map((tag) => {
         return {
-          where: { id: tag.id || 0 },
-          create: { name: tag.name }
+          where: { id: `${userId}:${tag.name}` },
+          create: { 
+            id: `${userId}:${tag.name}`,
+            name: tag.name,
+            userId
+          }
         }
       })
     }
-  } else {
+  } else if (tagsToDisconnect.length > 0){
     return {
-      deleteMany: {}
+      disconnect: tagsToDisconnect.map(tag => { return { id: tag.id }})
     }
-  }
-}
-
-const createTags = (tags: {name: string}[]) => {
-  if (tags && tags.length > 0) {
-    return {
-      create: [
-        ...tags
-      ]
-    };
   }
 }
 

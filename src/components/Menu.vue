@@ -3,6 +3,7 @@ import GroceryIcon from '@/assets/icons/grocery.svg?component';
 import FridgeIcon from '@/assets/icons/fridge.svg?component';
 import SeasonIcon from '@/assets/icons/season.svg?component';
 import HomeIcon from '@/assets/icons/home.svg?component';
+import PlusIcon from '@/assets/icons/plus.svg?component';
 import Logo from '@/assets/vertical-logo.svg?component';
 
 </script>
@@ -17,7 +18,7 @@ import Logo from '@/assets/vertical-logo.svg?component';
       </div>
       <div class="items-center ml-4 hidden md:flex">
         <RouterLink to="/" class="ml-4 link-underline link-underline-yellow uppercase">Home</RouterLink>
-        <RouterLink to="/" class="ml-4 uppercase cursor-default text-stone-400">Grocery list
+        <RouterLink to="/" class="ml-4 uppercase cursor-default text-stone-400">Shopping list
         </RouterLink>
         <RouterLink to="/" class="ml-4 uppercase cursor-default text-stone-400">What's in the fridge
         </RouterLink>
@@ -27,27 +28,33 @@ import Logo from '@/assets/vertical-logo.svg?component';
   </div>
   <div class="w-full fixed bottom-0 z-20 border-t border-stone-200 bg-white md:hidden bottom-menu">
     <div class="flex justify-around items-center text-stone-500 h-full my-1">
-      <RouterLink to="/">
+      <RouterLink to="/" class="w-1/5">
         <div class="flex flex-col items-center text-yellow-400">
-          <HomeIcon class="w-5 h-5" />
+          <HomeIcon class="w-6 h-6" />
           <div class="text-xs">Home</div>
         </div>
       </RouterLink>
-      <RouterLink to="/">
+      <RouterLink to="/" class="w-1/5">
         <div class="flex flex-col items-center text-stone-200">
-          <GroceryIcon class="w-5 h-5"/>
-          <div class="text-xs">Grocery</div>
+          <GroceryIcon class="w-6 h-6"/>
+          <div class="text-xs">Shopping list</div>
         </div>
       </RouterLink>
-      <RouterLink to="/">
+      <RouterLink to="/edit/new" class="w-1/5">
+        <div class="flex flex-col items-center text-stone-400">
+          <PlusIcon class="w-6 h-6"/>
+          <div class="text-xs">Create</div>
+        </div>
+      </RouterLink>
+      <RouterLink to="/" class="w-1/5">
         <div class="flex flex-col items-center text-stone-200">
-          <FridgeIcon class="w-5 h-5"/>
+          <FridgeIcon class="w-6 h-6"/>
           <div class="text-xs">Fridge</div>
         </div>
       </RouterLink>
-      <RouterLink to="/">
+      <RouterLink to="/" class="w-1/5">
         <div class="flex flex-col items-center text-stone-200">
-          <SeasonIcon class="w-5 h-5"/>
+          <SeasonIcon class="w-6 h-6"/>
           <div class="text-xs">Season</div>
         </div>
       </RouterLink>

@@ -69,7 +69,7 @@ type RecaptchaResponse = {
 }
 const verifyRecaptcha = async (recaptchaToken: string): Promise<RecaptchaResponse> => {
   const data = new URLSearchParams();
-  data.append('secret', process.env.RECAPCHA_SECRET_KEY || '');
+  data.append('secret', process.env.RECAPCHA_SECRET_KEY_INVISIBLE || '');
   data.append('response', recaptchaToken);
   const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
     method: 'POST',
@@ -91,14 +91,39 @@ const generateRecipes = async (userId: string) => {
   const file = path.join(process.cwd(), 'prisma', 'recipes.json');
   const seedStr = readFileSync(file, 'utf8');
   const seedData = JSON.parse(seedStr);
-  for (const recipe of seedData.recipes) {
-    const d = await prisma.recipe.create({
-      data: {
-        ...recipe,
-        userId
-      }
-    });
-    console.log(`Created recipe with id: ${d.id}`);
+  try {
+    for (const recipe of seedData.recipes) {
+      const d = await prisma.recipe.create({
+        data: {
+          ...recipe,
+          tags: processTags(recipe.tags, userId),
+          userId
+        },
+        include: {
+          tags: true,
+        }
+      });
+      console.log(`Created recipe with id: ${d.id}`);
+    }
+  } catch (err) {
+    console.log(err);
   }
   await prisma.$disconnect();
+}
+
+const processTags = (tags: { name: string }[], userId: string) => {
+  if (tags && tags.length > 0) {
+    return {
+      connectOrCreate: tags.map((tag) => {
+        return {
+          where: { id: `${userId}:${tag.name}` },
+          create: { 
+            id: `${userId}:${tag.name}`,
+            name: tag.name,
+            userId
+          }
+        }
+      })
+    }
+  }
 }

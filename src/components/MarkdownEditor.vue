@@ -11,12 +11,13 @@ const props = defineProps<{
   placeholder?: string,
   height?: number
 }>();
+const modelValue = ref(props.content);
+const emittedValue = ref(props.content);
 
 const emit = defineEmits<{
   (e: 'change', content: string): void
 }>();
 
-const content = ref(props.content);
 
 const app = inject('app') as App<RendererElement>;
 if (!app._context.components.VueCodemirror) {
@@ -29,36 +30,57 @@ if (!app._context.components.VueCodemirror) {
 const myTheme = EditorView.theme({
   '&': {
     border: '1px solid #d6d3d1',
-    'border-radius': '0.25rem',
+    'border-radius': '0.5rem',
     'padding-left': '0.75rem',
     'padding-right': '0.75rem',
     'padding-top': '0.375rem',
     'padding-bottom': '0.375rem',
-    fontSize: "16px"
+    'fontSize': '16px',
+  },
+  '.cm-content': {
+    'font-family': "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
   },
   '&.cm-editor.cm-focused': {
-    outline: 'none',
-    border: '1px solid #facc15',
+    'outline': 'none',
+    'border': '1px solid #facc15',
   }
 });
 
-const extensions = [minimalSetup, markdown(), myTheme];
+const extensions = [
+  minimalSetup, 
+  markdown(),
+  EditorView.lineWrapping,
+  EditorView.domEventHandlers({
+    blur() {
+      console.log('Codemirror blur');
+      emitChange();
+    }
+  }),
+  myTheme
+];
 
-function onChange() {
-  emit('change', content.value);
+function emitChange() {
+  if (modelValue.value !== emittedValue.value) {
+    emittedValue.value = modelValue.value;
+    emit('change', modelValue.value);
+  }
 }
 
+// Change is called on every input
+function onChange(newValue: string) {
+  modelValue.value = newValue;
+}
 </script>
 
 <template>
   <codemirror
-    v-model="content"
+    :model-value="modelValue"
     :placeholder="props.placeholder"
-    :style="{ height: `${props.height || 200}px` }"
+    :style="{ height: '100%' }"
     :autofocus="false"
     :indent-with-tab="true"
     :tab-size="2"
     :extensions="extensions"
-    @blur="onChange"
+    @change="onChange"
   />
 </template>

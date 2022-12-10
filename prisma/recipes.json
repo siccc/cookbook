@@ -9,11 +9,7 @@
       "steps": "1. Heat olive oil in a pan over medium high heat. Add onions and cook, stirring occasionally, until translucent.\n2. Increase the heat to medium-high, add minced meat and cook until browned.\n3. Stir in tomato sauce, finely chopped garlic, season with salt, sugar, chilli and pepper. Reduce heat to low; simmer, stirring occasionally, with lid slightly open. Cook for 40 minutes.\n4. Add oregano to the sauce, cook for 10 more minutes and it's all done.\n5. In a large pot of boiling salted water, cook pasta according to package instructions; drain well.\n6. Serve with pasta and don't forget to put a lot of shredded gouda cheese on top.",
       "notes": "",
       "category": "lunch",
-      "tags": {
-        "create": [
-          { "name": "italian" }
-        ]
-      },
+      "tags": [{ "name": "italian" }],
       "imageName": "emanuel-ekstrom-_CO7YZ501g4-unsplash_bms5xh.jpg",
       "imagePublicId": "cookbook/default/emanuel-ekstrom-_CO7YZ501g4-unsplash_bms5xh.jpg"
     },
@@ -172,14 +168,12 @@
       "category": "breakfast",
       "imageName": "eggplant-dip_j046yt.jpg",
       "imagePublicId": "cookbook/default/eggplant-dip_j046yt.jpg",
-      "tags": {
-        "create": [
-          { "name": "party food" },
-          { "name": "dip" },
-          { "name": "spread" },
-          { "name": "sandwich" }
-        ]
-      }
+      "tags": [
+        { "name": "party food" },
+        { "name": "dip" },
+        { "name": "spread" },
+        { "name": "sandwich" }
+      ]
     },
     {
       "title": "Carrotcake cupcakes",
@@ -192,11 +186,9 @@
       "category": "dessert",
       "imageName": "food-photographer-jennifer-pallian-4yTCqUHG1II-unsplash_iaui5p.jpg",
       "imagePublicId": "cookbook/default/food-photographer-jennifer-pallian-4yTCqUHG1II-unsplash_iaui5p.jpg",
-      "tags": {
-        "create": [
-          { "name": "muffin" }
-        ]
-      }
+      "tags": [
+        { "name": "muffin" }
+      ]
     },
     {
       "title": "Double chocolate cupcakes",
@@ -209,11 +201,9 @@
       "category": "dessert",
       "imageName": "dessy-dimcheva-Uc9HyrJMQdI-unsplash_yg4vix.jpg",
       "imagePublicId": "cookbook/default/dessy-dimcheva-Uc9HyrJMQdI-unsplash_yg4vix.jpg",
-      "tags": {
-        "create": [
-          { "name": "muffin" }
-        ]
-      }
+      "tags": [
+        { "name": "muffin" }
+      ]
     },
     {
       "title": "Blueberry cupcakes",
@@ -226,11 +216,9 @@
       "category": "dessert",
       "imageName": "IMG_20200703_175110_gaesm0.jpg",
       "imagePublicId": "cookbook/default/IMG_20200703_175110_gaesm0.jpg",
-      "tags": {
-        "create": [
-          { "name": "muffin" }
-        ]
-      }
+      "tags": [
+        { "name": "muffin" }
+      ]
     },
     {
       "title": "Chocolate-cranberry cookies",
@@ -243,11 +231,10 @@
       "category": "dessert",
       "imageName": "DSC_0396_ofbut9.jpg",
       "imagePublicId": "cookbook/default/DSC_0396_ofbut9.jpg",
-      "tags": {
-        "create": [
-          { "name": "edible gift" }
-        ]
-      }
+      "tags": [
+        { "name": "edible gift" },
+        { "name": "christmas" }
+      ]
     }
   ]
 }

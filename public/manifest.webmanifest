@@ -35,10 +35,10 @@
   ],
   "id": "/?source=pwa",
   "start_url": "/?source=pwa",
-  "background_color": "#F0F9FF",
+  "background_color": "#FFFFFF",
   "display": "standalone",
   "scope": "/",
   "orientation": "portrait",
-  "theme_color": "#F0F9FF",
+  "theme_color": "#FFFFFF",
   "description": "Cookbook for family recipes"
 }

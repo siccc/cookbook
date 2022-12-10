@@ -1,5 +1,5 @@
 import { createApp } from 'vue';
-// import { createPinia } from 'pinia';
+import { autoAnimatePlugin } from '@formkit/auto-animate/vue';
 import { VueQueryPlugin } from "vue-query";
 import type { VueQueryPluginOptions } from "vue-query";
 
@@ -22,9 +22,9 @@ const vueQueryPluginOptions: VueQueryPluginOptions = {
 
 const app = createApp(App);
 
-// app.use(createPinia());
 app.use(router);
 app.use(VueQueryPlugin, vueQueryPluginOptions);
+app.use(autoAnimatePlugin);
 
 app.provide('app', app);
 

@@ -6,6 +6,7 @@ datasource db {
 
 generator client {
   provider        = "prisma-client-js"
+  binaryTargets   = ["native"]
   previewFeatures = ["fullTextSearch", "fullTextIndex", "extendedWhereUnique"]
 }
 
@@ -25,14 +26,15 @@ model Recipe {
   tags            Tag[]
   imageName       String          @default("")
   imagePublicId   String          @default("")
-  userId          String?         @default("")
+  userId          String          @default("")
 
   @@fulltext([title])
 }
 
 model Tag {
-  id      Int             @id @default(autoincrement())
+  id      String                  @id @unique
   name    String
+  userId  String
   recipes Recipe[]
 }
 

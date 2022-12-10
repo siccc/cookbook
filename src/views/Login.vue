@@ -16,6 +16,7 @@ async function onCaptchaVerified (recaptchaToken: string) {
   if (recaptcha.value) {
     (recaptcha.value as VueRecaptcha).reset();
     await createUserMutation.mutateAsync(recaptchaToken);
+    router.push('/');
   }
 }
 
@@ -26,32 +27,38 @@ function onCaptchaExpired () {
 }
 
 function onSubmit() {
-  router.push('/');
+  if (recaptcha.value) {
+    (recaptcha.value as VueRecaptcha).execute();
+  }
 }
 </script>
 
 <template>
   <div class="bg-sky-50 lg:bg-white absolute inset-0 flex">
-    <div class="flex-1 flex flex-col items-center justify-center rounded-xl p-3 m-3 bg-white">
+    <div class="flex-1 flex flex-col items-center justify-center rounded-xl p-3 m-4 sm:m-10 bg-white">
       <DetailedLogo class="w-32 h-32 mt-3" />
-      <div class="text-2xl text-center my-6 font-k2d">Hey, welcome to Cookbook</div>
-      <div class="sm:w-96 text-center mb-9">Cookbook is my demo project, a recipe organiser app,
-        where I can access all my favorite recipes. Whether I'm using my phone in the kitchen or I checking out the recipes on my laptop.
+      <div class="text-2xl text-center my-6 font-k2d">Hey, welcome to Cookbook<sup class="text-sm">DEMO</sup></div>
+      <div class="sm:w-96 text-center mb-9">Bring your treasured family recipes into the digital
+        age with my easy-to-use recipe app. Keep all of your favorite dishes in one convenient
+        place and share them with loved ones near and far.
       </div>
       <vue-recaptcha
         ref="recaptcha"
-        sitekey="6Le0wBcjAAAAAPnP-HHegwxHBJgtcqvZDDQAMZT3"
+        sitekey="6LcCol0jAAAAAKhH5PzaxhZTo5rUhieg6Bpkqr4y"
+        size="invisible"
         @verify="onCaptchaVerified"
         @expired="onCaptchaExpired"
-      />
+      >
+      </vue-recaptcha>
       <Button
-        class="my-6 uppercase" 
+        class="my-6" 
         primary 
         @click="onSubmit"
-        :disabled="!createUserMutation.data.value"
+        :disabled="createUserMutation.isLoading.value"
       >
         <SpinnerIcon v-if="createUserMutation.isLoading.value" class="w-8 h-8 animate-spin mr-2"/>
-        Check it out
+        <span v-if="createUserMutation.isLoading.value">Creating demo user...</span>
+        <span v-else class="uppercase">Start demo</span>
       </Button>
       <div
         class="text-xl text-red-300"

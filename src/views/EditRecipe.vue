@@ -3,6 +3,7 @@ import { getRecipe, useCreateRecipeMutation, useUpdateRecipeMutation } from '@/s
 import type { Recipe, Tag } from '@/types';
 import DOMPurify from 'dompurify';
 import { uploadImage } from '@/stores/cloudinary';
+// import { isMobile } from '@/stores/utility';
 import Button from '@/components/Button.vue';
 import ValidationMessage from '@/components/ValidationMessage.vue';
 import CategoryButton from '@/components/CategoryButton.vue';
@@ -41,6 +42,13 @@ const shouldSaveImage = ref(false);
 const savingIsError = ref(false);
 const savingErrorMessage = ref('');
 
+// const useMobile = isMobile();
+// const mdEditorSizes = {
+//   'ingredients': useMobile ? 200 : 400,
+//   'steps': useMobile ? 200 : 300,
+//   'notes': 100
+// }
+
 // -----------------------------------
 // INIT
 // -----------------------------------
@@ -70,18 +78,12 @@ async function onSaveClick() {
   if (!recipe.value) {
     return;
   }
-  // validation
   validateAll();
   if (anyInputHasError.value) {
     return;
   }
-  
   saveInProgress.value = true;
-
-  // transform tags
-  if (tags.value) {
-    recipe.value.tags = transformTags(tags.value, recipe.value.tags);
-  }
+  recipe.value.tags = transformTags(tags.value, recipe.value.tags);
 
   // upload image to cloudinary and set image props
   if (shouldSaveImage.value === true) {
@@ -104,6 +106,7 @@ async function onSaveClick() {
 
   // save recipe
   if (!savingIsError.value) {
+    console.log('tags: ', recipe.value.tags)
     try {
       let response:Recipe;
       if (props.id === 'new') {
@@ -140,6 +143,9 @@ function onCategoryChange(value: string) {
 }
 
 function transformTags(inputTags:string, recipeTags:Array<Tag> | undefined):Tag[] {
+  if (inputTags === '') {
+    return [];
+  }
   const newTags = inputTags.split(',').map(tag => { return { name: tag.trim() }});
   if (!recipeTags) {
     return newTags;
@@ -202,7 +208,7 @@ function onImageChange(imageSource:string) {
             @click="onSaveClick()"
             :disabled="saveInProgress"
           >
-            <SpinnerIcon v-if="saveInProgress" class="w-5 h-5 animate-spin mr-2"/>
+            <SpinnerIcon v-if="saveInProgress" class="w-6 h-6 animate-spin mr-1"/>
             Save
           </Button>
           <Button
@@ -263,7 +269,9 @@ function onImageChange(imageSource:string) {
             <span class="uppercase">Dish type*</span>
             <div class="flex items-center flex-wrap gap-3">
               <CategoryButton
-                :class="{'bg-sky-300 border-sky-300 text-white hover:border-sky-300 hover:text-white': recipe.category === category}"
+                :class="{
+                  'bg-sky-300 border-sky-300 text-white hover:border-sky-300 hover:text-white': recipe.category === category
+                }"
                 v-for="category in categories"
                 @click="onCategoryChange(category)"
               >
@@ -279,12 +287,15 @@ function onImageChange(imageSource:string) {
           <div class="flex">
             <div class="text-xl uppercase font-k2d mb-1">Ingredients</div><span>*</span>
           </div>
-          <MarkdownEditor
-            :content="recipe.ingredients"
-            :height="400"
-            placeholder="Add some ingredients"
-            @change="(event) => { onInputChange('ingredients', event); validate('steps', event) }"
-          />
+          <div class="h-auto md:h-64">
+            <MarkdownEditor
+              :content="recipe.ingredients"
+              placeholder="- ingredient 1 
+- ingredient 2
+- ..."
+              @change="(event) => { onInputChange('ingredients', event); validate('ingredients', event) }"
+            />
+          </div>
           <ValidationMessage v-if="inputValidations.ingredients.hasError">
             {{ inputValidations.ingredients.message }}
           </ValidationMessage>
@@ -293,22 +304,27 @@ function onImageChange(imageSource:string) {
           <div class="flex">
             <div class="text-xl uppercase font-k2d mb-1">Steps</div><span>*</span>
           </div>
-          <MarkdownEditor
-            :content="recipe.steps"
-            :height="300"
-            placeholder="Add steps"
-            @change="(event) => { onInputChange('steps', event); validate('steps', event) }"
-          />
+          <div class="h-auto md:h-64">
+            <MarkdownEditor
+              :content="recipe.steps"
+              placeholder="1. first step 
+2. second step
+3. ..."
+              @change="(event) => { onInputChange('steps', event); validate('steps', event) }"
+            />
+          </div>
+          
           <ValidationMessage v-if="inputValidations.steps.hasError">
             {{ inputValidations.steps.message }}
           </ValidationMessage>
           <div class="text-xl uppercase font-k2d mb-1 mt-3">Notes</div>
-          <MarkdownEditor
-            :content="recipe.notes"
-            :height="100"
-            placeholder="Add your notes"
-            @change="(event) => onInputChange('notes', event)"
-          />
+          <div class="h-auto">
+            <MarkdownEditor
+              :content="recipe.notes"
+              placeholder="Add your notes"
+              @change="(event) => onInputChange('notes', event)"
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -53,7 +53,7 @@ function onFocusout(event: Event) {
 <style scoped>
 .button {
   @apply items-center justify-center border-2 border-yellow-400 text-center font-medium
-  text-yellow-400 rounded-lg cursor-pointer px-3 py-1 select-none;
+  text-yellow-400 rounded-lg cursor-pointer px-3 py-1.5 md:py-1 select-none;
 }
 .button:disabled {
   @apply text-stone-300 border-stone-300 cursor-default;
@@ -62,11 +62,11 @@ function onFocusout(event: Event) {
   @apply bg-yellow-50;
 }
 .button.primary {
-  @apply bg-yellow-400 border-none text-center font-medium text-white
-  rounded-lg cursor-pointer px-3 py-1.5 select-none;
+  @apply bg-yellow-400 border-yellow-400 text-center font-medium text-white
+  rounded-lg cursor-pointer px-3 py-1.5 md:py-1 select-none;
 }
 .button.primary:disabled {
-  @apply text-stone-300 bg-stone-100 cursor-default;
+  @apply text-stone-300 bg-stone-100 border-stone-100 cursor-default;
 }
 .button.primary:hover:not(:disabled), .button:active {
   @apply bg-amber-300;

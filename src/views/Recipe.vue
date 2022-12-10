@@ -8,6 +8,7 @@ import FullStarIcon from '@/assets/icons/full-star.svg?component';
 import DeleteIcon from '@/assets/icons/trash-alt.svg?component';
 import EditIcon from '@/assets/icons/edit.svg?component';
 import SpinnerIcon from '@/assets/icons/spinner.svg?component';
+import BackIcon from '@/assets/icons/angle-left-b.svg?component';
 import ImagePlaceholder from '@/assets/image-placeholder.svg?component';
 import ErrorIcon from '@/assets/error.svg?component';
 import LoadingIcon from '@/assets/loading-pot.svg?component';
@@ -63,16 +64,17 @@ function onCounterClick(recipe: Recipe) {
       <!-- NAV & ACTIONS -->
       <div class="flex justify-between items-center mb-8">
         <Button class="uppercase" to="/">
+          <BackIcon class="w-6 h-6" />
           Back
         </Button>
         <div class="flex items-center">
           <Button class="mr-3" :to="`/edit/${props.id}`">
-            <EditIcon class="w-5 h-5 mr-2" />
+            <EditIcon class="w-6 h-6 mr-1" />
             Edit
           </Button>
           <Button @click="onDelete(recipe!)" :disabled="deleteRecipeMutation.isLoading.value">
-            <SpinnerIcon v-if="deleteRecipeMutation.isLoading.value" class="w-5 h-5 animate-spin mr-2"/>
-            <DeleteIcon v-else class="w-5 h-5 mr-2" />
+            <SpinnerIcon v-if="deleteRecipeMutation.isLoading.value" class="w-6 h-6 animate-spin mr-2"/>
+            <DeleteIcon v-else class="w-6 h-6 mr-1" />
             Delete
           </Button>
         </div>
@@ -91,17 +93,17 @@ function onCounterClick(recipe: Recipe) {
             {{ recipe.title }}
           </div>
           <!-- TAGS -->
-          <div class="mt-2 flex justify-center md:justify-start flex-wrap">
-            <span class="inline-block text-stone-400 uppercase mr-2">
+          <div class="mt-3 flex justify-center md:justify-start flex-wrap">
+            <span class="inline-block text-stone-400 uppercase mr-3">
               {{ recipe.category }}
             </span>
-            <div class="mr-2 flex items-center" v-for="tag in recipe.tags" :key="tag.id">
-              <span class="bg-stone-400 rounded-full w-1 h-1 mr-2 inline-block" />
+            <div class="flex items-center" v-for="tag in recipe.tags" :key="tag.id">
+              <span class="bg-stone-400 rounded-full w-1 h-1 mr-3 inline-block" />
               <span class="inline-block text-stone-400 uppercase">{{ tag.name }}</span>
             </div>
           </div>
           <!-- TIME & SERVINGS -->
-          <div class="mt-6 flex gap-x-6">
+          <div class="mt-3 flex gap-x-6">
             <div>
               <div>Total</div>
               <span>{{ totalTime }} min</span>
@@ -121,12 +123,12 @@ function onCounterClick(recipe: Recipe) {
           </div>
           <Button
             primary
-            class="w-full md:w-40 mt-4"
+            class="w-full md:w-40 mt-3"
             @click="onCounterClick(recipe!)"
             :disabled="updateRecipeMutation.isLoading.value"
           >
-            <EmptyStarIcon v-if="!isCounterClicked" class="w-5 h-5 mr-2 opacity-60" />
-            <FullStarIcon v-else class="w-5 h-5 mr-2 opacity-60" />
+            <EmptyStarIcon v-if="!isCounterClicked" class="w-6 h-6 mr-1 opacity-60" />
+            <FullStarIcon v-else class="w-6 h-6 mr-2 opacity-60" />
             I made it!
             ({{ recipe.cookedCount }})
           </Button>
@@ -135,7 +137,7 @@ function onCounterClick(recipe: Recipe) {
         <div class="my-6 md:my-0 w-full">
           <div class="text-xl uppercase font-k2d mb-1">Ingredients</div>
           <MarkdownRenderer :content="recipe.ingredients" />
-          <Button class="w-full mt-4">Add to groceries</Button>
+          <!-- <Button class="w-full mt-4">Add to shopping list</Button> -->
         </div>
         <!-- STEPS & NOTES -->
         <div class="md:col-span-2 my-6 md:my-0">

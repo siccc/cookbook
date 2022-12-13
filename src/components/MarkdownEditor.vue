@@ -37,6 +37,9 @@ const myTheme = EditorView.theme({
     'padding-bottom': '0.375rem',
     'fontSize': '16px',
   },
+  '.cm-placeholder': {
+    'color': '#a8a29e'
+  },
   '.cm-content': {
     'font-family': "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
   },

@@ -47,63 +47,103 @@ function onCounterClick(recipe: Recipe) {
   updateRecipeMutation.mutate(newRecipe);
 }
 
+function onBackClick() {
+  if (window.history.state.back) {
+    router.back();
+  } else {
+    router.push('/');
+  }
+}
+
 </script>
 
 <template>
-  <div class="p-4 max-w-screen-lg mx-auto">
-    <div v-if="isLoading" class="my-8 text-center font-k2d text-2xl text-yellow-400 flex flex-col justify-center items-center">
+  <div class="max-w-screen-lg mx-auto mb-6 md:mb-14 md:mt-14">
+    <div v-if="isLoading" class="py-12 text-center font-k2d text-2xl text-yellow-400 flex flex-col justify-center items-center">
         <LoadingIcon class="w-24 opacity-80 animate-bounce block" />
         <LoadingShadow class="w-24 opacity-80 block" />
       Loading...
     </div>
-    <div v-if="isError" class="my-8 text-center font-k2d text-xl text-red-300 flex justify-center items-center">
+    <div v-if="isError" class="py-12 text-center font-k2d text-xl text-red-300 flex justify-center items-center">
       <ErrorIcon class="w-24 h-24 opacity-50" />
       <div>{{ error }}</div>
     </div>
     <div v-else-if="!isLoading && recipe">
       <!-- NAV & ACTIONS -->
-      <div class="flex justify-between items-center mb-8">
-        <Button class="uppercase" to="/">
-          <BackIcon class="w-6 h-6" />
-          Back
-        </Button>
-        <div class="flex items-center">
-          <Button class="mr-3" :to="`/edit/${props.id}`">
-            <EditIcon class="w-6 h-6 mr-1" />
-            Edit
+      <!-- MOBILE -->
+      <div class="fixed w-full z-20 top-0 left-0 md:hidden">
+        <div class="flex justify-between items-center p-3">
+          <Button
+            :custom-style="true"
+            class="bg-white shadow p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
+            @click="onBackClick"
+          >
+            <BackIcon class="w-6 h-6" />
           </Button>
-          <Button @click="onDelete(recipe!)" :disabled="deleteRecipeMutation.isLoading.value">
-            <SpinnerIcon v-if="deleteRecipeMutation.isLoading.value" class="w-6 h-6 animate-spin mr-2"/>
-            <DeleteIcon v-else class="w-6 h-6 mr-1" />
-            Delete
-          </Button>
+          <div class="flex items-center">
+            <Button
+              :custom-style="true"
+              class="bg-white mr-6 shadow p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
+              :to="`/edit/${props.id}`"
+            >
+              <EditIcon class="w-6 h-6" />
+            </Button>
+            <Button
+              :custom-style="true"
+              class="bg-white shadow p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
+              @click="onDelete(recipe!)"
+              :disabled="deleteRecipeMutation.isLoading.value"
+            >
+              <DeleteIcon class="w-6 h-6" />
+            </Button>
+          </div>
         </div>
       </div>
-      <div class="md:grid md:grid-cols-3 md:gap-6 md:justify-items-start">
+      <!-- DESKTOP -->
+      <div class="hidden md:block">
+        <div class="flex justify-between items-center p-3 pt-6">
+          <Button class="uppercase" @click="onBackClick">
+            <BackIcon class="w-6 h-6" />
+            Back
+          </Button>
+          <div class="flex items-center">
+            <Button class="mr-3" :to="`/edit/${props.id}`">
+              <EditIcon class="w-6 h-6 mr-1" />
+              Edit
+            </Button>
+            <Button @click="onDelete(recipe!)" :disabled="deleteRecipeMutation.isLoading.value">
+              <SpinnerIcon v-if="deleteRecipeMutation.isLoading.value" class="w-6 h-6 animate-spin mr-2"/>
+              <DeleteIcon v-else class="w-6 h-6 mr-1" />
+              Delete
+            </Button>
+          </div>
+        </div>
+      </div>
+      <div class="md:grid md:grid-cols-3 md:justify-items-start flex flex-col">
         <!-- IMAGE -->
-        <div class="my-6 md:my-0 w-full">
-          <img v-if="recipe.imageUrl" class="w-full h-96 object-cover rounded-xl" :src="recipe.imageUrl" />
-          <div v-else class="w-full h-96 rounded-xl bg-stone-100 flex justify-center items-center">
+        <div class="w-full md:p-3">
+          <img v-if="recipe.imageUrl" class="w-full h-96 object-cover md:rounded-xl" :src="recipe.imageUrl" />
+          <div v-else class="w-full h-96 rounded-b-xl rounded-t-none md:rounded-xl bg-stone-100 flex justify-center items-center">
             <ImagePlaceholder class="opacity-10 w-40 h-40"/>
           </div>
         </div>
         <!-- INFO -->
-        <div class="md:col-span-2 my-6 md:my-0">
+        <div class="md:col-span-2 pt-6 md:pt-3 md:mt-0 p-3 rounded-t-3xl md:rounded-none -mt-10 bg-white">
           <div class="uppercase font-k2d text-2xl text-center md:text-start">
             {{ recipe.title }}
           </div>
           <!-- TAGS -->
           <div class="mt-3 flex justify-center md:justify-start flex-wrap">
-            <span class="inline-block text-stone-400 uppercase mr-3">
+            <span class="inline-block text-stone-400 uppercase">
               {{ recipe.category }}
             </span>
-            <div class="flex items-center" v-for="tag in recipe.tags" :key="tag.id">
+            <div class="flex items-center ml-3" v-for="tag in recipe.tags" :key="tag.id">
               <span class="bg-stone-400 rounded-full w-1 h-1 mr-3 inline-block" />
               <span class="inline-block text-stone-400 uppercase">{{ tag.name }}</span>
             </div>
           </div>
           <!-- TIME & SERVINGS -->
-          <div class="mt-3 flex gap-x-6">
+          <div class="mt-3 flex gap-x-6 justify-around md:justify-start">
             <div>
               <div>Total</div>
               <span>{{ totalTime }} min</span>
@@ -123,7 +163,7 @@ function onCounterClick(recipe: Recipe) {
           </div>
           <Button
             primary
-            class="w-full md:w-40 mt-3"
+            class="w-full md:w-40 mt-6 md:mt-3"
             @click="onCounterClick(recipe!)"
             :disabled="updateRecipeMutation.isLoading.value"
           >
@@ -134,13 +174,13 @@ function onCounterClick(recipe: Recipe) {
           </Button>
         </div>
         <!-- INGREDIENTS -->
-        <div class="my-6 md:my-0 w-full">
+        <div class="md:my-0 w-full p-3">
           <div class="text-xl uppercase font-k2d mb-1">Ingredients</div>
           <MarkdownRenderer :content="recipe.ingredients" />
           <!-- <Button class="w-full mt-4">Add to shopping list</Button> -->
         </div>
         <!-- STEPS & NOTES -->
-        <div class="md:col-span-2 my-6 md:my-0">
+        <div class="md:col-span-2 md:my-0 p-3">
           <div class="text-xl uppercase font-k2d mb-1">Steps</div>
           <MarkdownRenderer :content="recipe.steps" />
           <div v-if="recipe.notes">

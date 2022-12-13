@@ -56,7 +56,7 @@ useInfiniteScroll(
 </script>
 
 <template>
-  <main class="p-3 md:p-9 max-w-screen-xl mx-auto">
+  <main class="p-3 md:p-9 max-w-screen-xl mx-auto my-14">
     <div>Greetings! 👋</div>
     <div class="mt-3 mb-6 text-4xl">Let's cook something delicious!</div>
     <div class="mx-auto sm:flex sm:items-center sm:justify-between">
@@ -65,7 +65,7 @@ useInfiniteScroll(
         <input
           enterkeyhint="search"
           :value="searchText"
-          class="px-9 py-1.5 md:py-1 w-full border-2 border-stone-100
+          class="px-9 py-3 md:py-1.5 w-full border-2 border-stone-100
           bg-stone-100 focus:bg-stone-100 focus:text-stone-800"
           @input="onSearchTextInput"
           @change="onSearchTextChange"

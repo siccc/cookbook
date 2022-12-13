@@ -10,6 +10,7 @@ import CategoryButton from '@/components/CategoryButton.vue';
 import MarkdownEditor from '@/components/MarkdownEditor.vue';
 import ImageUploader from '@/components/ImageUploader.vue';
 import SpinnerIcon from '@/assets/icons/spinner.svg?component';
+import BackIcon from '@/assets/icons/angle-left-b.svg?component';
 import ErrorIcon from '@/assets/error.svg?component';
 import LoadingIcon from '@/assets/loading-pot.svg?component';
 import LoadingShadow from '@/assets/loading-shadow.svg?component';
@@ -127,7 +128,11 @@ async function onSaveClick() {
 }
 
 function onCancelClick() {
-  router.back();
+  if (window.history.state.back) {
+    router.back();
+  } else {
+    router.push('/');
+  }
 }
 
 function onInputChange(key:RecipeMDInputKeys, value:string) {
@@ -184,51 +189,99 @@ function onImageChange(imageSource:string) {
 </script>
 
 <template>
-  <div class="p-4 max-w-screen-lg mx-auto">
-    <div v-if="isLoading" class="my-8 text-center font-k2d text-2xl text-yellow-400 flex
+  <div class="max-w-screen-lg mx-auto mb-6 md:mb-14 md:mt-14">
+    <div v-if="isLoading" class="py-12 text-center font-k2d text-2xl text-yellow-400 flex
       flex-col justify-center items-center">
         <LoadingIcon class="w-24 opacity-80 animate-bounce block" />
         <LoadingShadow class="w-24 opacity-80 block" />
       Loading...
     </div>
-    <div v-if="isError" class="my-8 text-center font-k2d text-xl text-red-300 flex
+    <div v-if="isError" class="py-12 text-center font-k2d text-xl text-red-300 flex
       justify-center items-center">
       <ErrorIcon class="w-24 h-24 opacity-50" />
       <div>{{ error }}</div>
     </div>
     <div v-else-if="!isLoading && recipe">
-      <div class="flex justify-between items-center mb-8">
-        <Button class="uppercase" to="/">
-          Back
-        </Button>
-        <div class="flex items-center">
+      <!-- MOBILE -->
+      <div class="fixed w-full z-20 top-0 left-0 md:hidden">
+        <div
+          class="flex items-center p-3"
+          :class="{ 'justify-between': props.id === 'new', 'justify-end': props.id !== 'new' }"
+        >
           <Button
+            v-if="props.id === 'new'"
+            :custom-style="true"
+            class="bg-white shadow p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
+            to="/"
+          >
+            <BackIcon class="w-6 h-6" />
+          </Button>
+          <div class="flex items-center">
+            <Button
+              class="uppercase shadow bg-white p-3 rounded-lg hover:bg-yellow-400 hover:text-white font-medium"
+              :custom-style="true"
+              @click="onSaveClick()"
+              :disabled="saveInProgress"
+            >
+              <SpinnerIcon v-if="saveInProgress" class="w-6 h-6 animate-spin mr-1"/>
+              Save
+            </Button>
+            <Button
+              :custom-style="true"
+              v-if="props.id !== 'new'"
+              class="uppercase shadow ml-6 bg-white p-3 rounded-lg hover:bg-yellow-400 hover:text-white font-medium"
+              @click="onCancelClick()"
+              :disabled="saveInProgress"
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </div>
+      <!-- DESKTOP -->
+      <div class="hidden md:block">
+        <div
+          class="flex items-center p-3 pt-6"
+          :class="{ 'justify-between': props.id === 'new', 'justify-end': props.id !== 'new' }"
+        >
+          <Button
+            v-if="props.id === 'new'"
             class="uppercase"
-            primary
-            @click="onSaveClick()"
-            :disabled="saveInProgress"
+            to="/"
           >
-            <SpinnerIcon v-if="saveInProgress" class="w-6 h-6 animate-spin mr-1"/>
-            Save
+            Back
           </Button>
-          <Button
-            v-if="props.id !== 'new'"
-            class="uppercase ml-3"
-            @click="onCancelClick()"
-            :disabled="saveInProgress"
-          >
-            Cancel
-          </Button>
+          <div class="flex items-center">
+            <Button
+              class="uppercase"
+              primary
+              @click="onSaveClick()"
+              :disabled="saveInProgress"
+            >
+              <SpinnerIcon v-if="saveInProgress" class="w-6 h-6 animate-spin mr-1"/>
+              Save
+            </Button>
+            <Button
+              v-if="props.id !== 'new'"
+              class="uppercase ml-3"
+              @click="onCancelClick()"
+              :disabled="saveInProgress"
+            >
+              Cancel
+            </Button>
+          </div>
         </div>
       </div>
       <div v-if="savingIsError" class="my-8 text-center font-k2d text-xl text-red-300 flex
-        justify-center items-center">
+        justify-center items-center p-3">
         <ErrorIcon class="w-24 h-24 opacity-50" />
         <div>{{ savingErrorMessage }}</div>
       </div>
-      <div class="md:grid md:grid-cols-3 md:gap-6 md:justify-items-start">
+      <div class="md:grid md:grid-cols-3 md:justify-items-start flex flex-col">
+        <!-- IMAGE -->
         <ImageUploader :image-source="recipe.imageUrl" @change="onImageChange"/>
-        <div class="md:col-span-2 my-6 md:my-0">
+        <!-- INFO -->
+        <div class="md:col-span-2 pt-6 md:pt-3 md:mt-0 p-3 rounded-t-3xl md:rounded-none -mt-10 bg-white">
           <div>
             <span class="uppercase">Your recipe's name*</span>
             <input
@@ -240,10 +293,12 @@ function onImageChange(imageSource:string) {
           <ValidationMessage v-if="inputValidations.title.hasError">
             {{ inputValidations.title.message }}
           </ValidationMessage>
+          <!-- TAGS -->
           <div class="mt-3">
             <span class="uppercase">Tags</span>
             <input v-model="tags" placeholder="italian, comfort food"/>
           </div>
+          <!-- TIME & SERVINGS -->
           <div class="mt-6 flex items-center gap-3">
             <div>
               <span class="uppercase">Serving*</span>
@@ -283,11 +338,12 @@ function onImageChange(imageSource:string) {
             {{ inputValidations.category.message }}
           </ValidationMessage>
         </div>
-        <div class="my-6 md:my-0 w-full">
+        <!-- INGREDIENTS -->
+        <div class="md:my-0 w-full p-3">
           <div class="flex">
             <div class="text-xl uppercase font-k2d mb-1">Ingredients</div><span>*</span>
           </div>
-          <div class="h-auto md:h-64">
+          <div class="h-48 md:h-64">
             <MarkdownEditor
               :content="recipe.ingredients"
               placeholder="- ingredient 1 
@@ -300,11 +356,12 @@ function onImageChange(imageSource:string) {
             {{ inputValidations.ingredients.message }}
           </ValidationMessage>
         </div>
-        <div class="md:col-span-2 my-6 md:my-0 w-full">
+        <!-- STEPS & NOTES -->
+        <div class="md:col-span-2 md:my-0 w-full p-3">
           <div class="flex">
             <div class="text-xl uppercase font-k2d mb-1">Steps</div><span>*</span>
           </div>
-          <div class="h-auto md:h-64">
+          <div class="h-48 md:h-64">
             <MarkdownEditor
               :content="recipe.steps"
               placeholder="1. first step 

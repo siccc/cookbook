@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import ImagePlaceholder from '@/assets/image-placeholder.svg?component';
+import DeleteIcon from '@/assets/icons/trash-alt.svg?component';
+import ImageUploadIcon from '@/assets/icons/image-upload.svg?component';
 import { ref, type Ref } from 'vue';
 
 const props = defineProps<{
@@ -54,7 +56,7 @@ function validateFileSize(size:number) {
 </script>
 
 <template>
-  <div class="w-full">
+  <div class="w-full md:p-3">
     <input
       type="file"
       accept=".jpeg,.jpg,.png,image/jpeg,image/png"
@@ -66,7 +68,7 @@ function validateFileSize(size:number) {
     <!-- PLACEHOLDER IMAGE -->
     <div
       v-if="!imageSource"
-      class="w-full h-96 rounded-xl bg-stone-50 border-dashed border-2
+      class="w-full h-96 md:rounded-xl bg-stone-200 md:bg-stone-50 md:border-dashed md:border-2
         border-stone-300 flex flex-col justify-center items-center"
     >
       <ImagePlaceholder class="opacity-10 w-40 h-40"/>
@@ -77,8 +79,8 @@ function validateFileSize(size:number) {
     </div>
     <!-- IMAGE PREVIEW -->
     <div v-else class="w-full">
-      <img class="w-full h-96 object-cover rounded-xl" :src="imageSource" />
-      <div class="flex justify-between items-center">
+      <img class="w-full h-96 object-cover md:rounded-xl" :src="imageSource" />
+      <div class="md:justify-between md:items-center md:flex hidden">
         <label class="block cursor-pointer group p-2 text-stone-400" for="uploadImage">
           <span class="text-yellow-400 font-semibold group-hover:text-yellow-300">Upload</span>
            a photo of your dish
@@ -86,6 +88,21 @@ function validateFileSize(size:number) {
         <label class="text-stone-400 cursor-pointer p-2 block" @click="deleteImageUrl">
           <span class="text-red-400 font-semibold hover:text-red-300">Delete</span>
         </label>
+      </div>
+      <div class="flex justify-between items-center md:hidden -mt-24 mb-14 px-3">
+        <label
+          for="uploadImage"
+          class="bg-white shadow p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
+        >
+          <ImageUploadIcon class="w-6 h-6" />
+        </label>
+        <Button
+          :custom-style="true"
+          class="bg-white shadow p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
+          @click="deleteImageUrl"
+        >
+          <DeleteIcon class="w-6 h-6" />
+        </Button>
       </div>
     </div>
     <div v-if="hasFileSizeError" class="validationError">

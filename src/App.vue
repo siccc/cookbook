@@ -22,5 +22,5 @@ watch(isError, (newValue) => {
 
 <template>
   <Menu v-if="showMenu" />
-  <RouterView :class="{ 'my-14': showMenu }" />
+  <RouterView />
 </template>

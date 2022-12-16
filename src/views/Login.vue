@@ -35,9 +35,13 @@ function onSubmit() {
 
 <template>
   <div class="bg-sky-50 lg:bg-white absolute inset-0 flex">
-    <div class="flex-1 flex flex-col items-center justify-center rounded-xl p-3 m-4 sm:m-10 bg-white">
+    <div class="flex-1 flex flex-col items-center justify-center rounded-xl p-3 m-4 sm:m-10
+    bg-white"
+    >
       <DetailedLogo class="w-32 h-32 mt-3" />
-      <div class="text-2xl text-center my-6 font-k2d">Hey, welcome to Cookbook<sup class="text-sm">DEMO</sup></div>
+      <div class="text-2xl text-center my-6 font-k2d">
+        Hey, welcome to Cookbook<sup class="text-sm">DEMO</sup>
+      </div>
       <div class="sm:w-96 text-center mb-9">Bring your treasured family recipes into the digital
         age with my easy-to-use recipe app. Keep all of your favorite dishes in one convenient
         place and share them with loved ones near and far.
@@ -67,6 +71,9 @@ function onSubmit() {
         {{ createUserMutation.error.value }}
       </div>
     </div>
-    <img class="object-cover object-right rounded-xl w-1/3 m-4 hidden lg:block" src="@/assets/pexels-ella-olsson-1640774.jpg"/>
+    <img
+      class="object-cover object-right rounded-xl w-1/3 m-4 hidden lg:block"
+      src="@/assets/pexels-ella-olsson-1640774.jpg"
+    />
   </div>
 </template>

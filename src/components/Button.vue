@@ -5,6 +5,7 @@ const props = defineProps<{
   to?: string,
   disabled?: boolean,
   primary?: boolean,
+  danger?: boolean,
   customStyle?: boolean
 }>();
 
@@ -43,7 +44,7 @@ function onFocusout(event: Event) {
     :is="type"
     :to="to"
     :disabled="disabled"
-    :class="{ primary, 'button inline-flex': !customStyle }"
+    :class="{ primary, danger, 'button inline-flex': !customStyle }"
     v-on="computedListeners"
   >
     <slot />
@@ -53,22 +54,31 @@ function onFocusout(event: Event) {
 <style scoped>
 .button {
   @apply items-center justify-center border-2 border-yellow-400 text-center font-medium
-  text-yellow-400 rounded-lg cursor-pointer px-3 py-3 md:py-1.5 select-none;
+  text-amber-400 rounded-lg cursor-pointer px-3 py-3 md:py-1.5 select-none;
 }
 .button:disabled {
   @apply text-stone-300 border-stone-300 cursor-default;
 }
 .button:hover:not(:disabled), .button:active {
-  @apply bg-yellow-50;
+  @apply bg-amber-100;
 }
 .button.primary {
-  @apply bg-yellow-400 border-yellow-400 text-center font-medium text-white
-  rounded-lg cursor-pointer px-3 py-3 md:py-1.5 select-none;
+  @apply bg-yellow-400 border-yellow-400 text-white;
 }
 .button.primary:disabled {
-  @apply text-stone-300 bg-stone-100 border-stone-100 cursor-default;
+  @apply text-stone-300 bg-stone-100 border-stone-100;
 }
-.button.primary:hover:not(:disabled), .button:active {
-  @apply bg-amber-300;
+.button.primary:hover:not(:disabled), .button.primary:active {
+  @apply bg-amber-400 border-amber-400;
+}
+
+.button.danger {
+  @apply bg-red-400 border-red-400 text-white;
+}
+.button.danger:disabled {
+  @apply text-stone-300 bg-stone-100 border-stone-100;
+}
+.button.danger:hover:not(:disabled), .button.danger:active {
+  @apply bg-red-500 border-red-500;
 }
 </style>

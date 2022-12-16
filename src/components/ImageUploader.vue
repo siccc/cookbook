@@ -92,16 +92,18 @@ function validateFileSize(size:number) {
       <div class="flex justify-between items-center md:hidden -mt-24 mb-14 px-3">
         <label
           for="uploadImage"
-          class="bg-white shadow p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
+          class="bg-white flex items-center shadow p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
         >
           <ImageUploadIcon class="w-6 h-6" />
+          Upload
         </label>
         <Button
           :custom-style="true"
-          class="bg-white shadow p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
+          class="bg-white flex items-center shadow p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
           @click="deleteImageUrl"
         >
-          <DeleteIcon class="w-6 h-6" />
+          <DeleteIcon class="w-6 h-6 mr-1" />
+          Delete photo
         </Button>
       </div>
     </div>

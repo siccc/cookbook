@@ -14,7 +14,7 @@ const showMenu = computed(() => {
 
 watch(isError, (newValue) => {
   if (newValue === true) {
-    router.push('/login');
+    location.href = '/login';
   }
 });
 

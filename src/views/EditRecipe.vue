@@ -3,7 +3,6 @@ import { getRecipe, useCreateRecipeMutation, useUpdateRecipeMutation } from '@/s
 import type { Recipe, Tag } from '@/types';
 import DOMPurify from 'dompurify';
 import { uploadImage } from '@/stores/cloudinary';
-// import { isMobile } from '@/stores/utility';
 import Button from '@/components/Button.vue';
 import ValidationMessage from '@/components/ValidationMessage.vue';
 import CategoryButton from '@/components/CategoryButton.vue';
@@ -14,9 +13,10 @@ import BackIcon from '@/assets/icons/angle-left-b.svg?component';
 import ErrorIcon from '@/assets/error.svg?component';
 import LoadingIcon from '@/assets/loading-pot.svg?component';
 import LoadingShadow from '@/assets/loading-shadow.svg?component';
-import { ref, reactive, type Ref, watch } from 'vue';
+import { ref, reactive, type Ref, watch, onMounted } from 'vue';
 import { forEach, find } from 'lodash';
 import { useRouter } from 'vue-router';
+import { useThrottleFn } from '@vueuse/core';
 
 type RecipeMDInputKeys = 'ingredients' | 'steps' | 'notes';
 type ValidationKeys = 'title' | 'category' | 'servings' | 'ingredients' | 'steps';
@@ -27,6 +27,8 @@ const updateRecipeMutation = useUpdateRecipeMutation();
 const props = defineProps<{
   id: string
 }>();
+
+const scrollPosition = ref(0);
 const router = useRouter();
 const inputValidations = reactive({
   title: { hasError: false, message: 'Enter the title of your recipe.'},
@@ -42,13 +44,6 @@ const anyInputHasError = ref(false);
 const shouldSaveImage = ref(false);
 const savingIsError = ref(false);
 const savingErrorMessage = ref('');
-
-// const useMobile = isMobile();
-// const mdEditorSizes = {
-//   'ingredients': useMobile ? 200 : 400,
-//   'steps': useMobile ? 200 : 300,
-//   'notes': 100
-// }
 
 // -----------------------------------
 // INIT
@@ -186,6 +181,14 @@ function onImageChange(imageSource:string) {
   }
 }
 
+const updateScroll = useThrottleFn(() => {
+  scrollPosition.value = window.scrollY;
+}, 100);
+
+onMounted(() => {
+  window.addEventListener('scroll', updateScroll);
+});
+
 </script>
 
 <template>
@@ -203,7 +206,10 @@ function onImageChange(imageSource:string) {
     </div>
     <div v-else-if="!isLoading && recipe">
       <!-- MOBILE -->
-      <div class="fixed w-full z-20 top-0 left-0 md:hidden">
+      <div
+        class="fixed w-full z-20 top-0 left-0 md:hidden transition-colors duration-200"
+        :class="{ 'bg-white border-b border-stone-200 shadow-sm': scrollPosition > 100 }"
+        >
         <div
           class="flex items-center p-3"
           :class="{ 'justify-between': props.id === 'new', 'justify-end': props.id !== 'new' }"
@@ -211,14 +217,14 @@ function onImageChange(imageSource:string) {
           <Button
             v-if="props.id === 'new'"
             :custom-style="true"
-            class="bg-white shadow p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
+            class="bg-white shadow shadow-stone-900/20 p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
             to="/"
           >
             <BackIcon class="w-6 h-6" />
           </Button>
           <div class="flex items-center">
             <Button
-              class="uppercase shadow bg-white p-3 rounded-lg hover:bg-yellow-400 hover:text-white font-medium"
+              class="uppercase shadow shadow-stone-900/20 bg-white p-3 rounded-lg hover:bg-yellow-400 hover:text-white font-medium"
               :custom-style="true"
               @click="onSaveClick()"
               :disabled="saveInProgress"
@@ -229,7 +235,7 @@ function onImageChange(imageSource:string) {
             <Button
               :custom-style="true"
               v-if="props.id !== 'new'"
-              class="uppercase shadow ml-6 bg-white p-3 rounded-lg hover:bg-yellow-400 hover:text-white font-medium"
+              class="uppercase shadow shadow-stone-900/20 ml-6 bg-white p-3 rounded-lg hover:bg-yellow-400 hover:text-white font-medium"
               @click="onCancelClick()"
               :disabled="saveInProgress"
             >

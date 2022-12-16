@@ -2,6 +2,7 @@
 import { getRecipe, useDeleteRecipeMutation, useUpdateRecipeMutation } from '@/stores/recipes';
 import type { Recipe } from '@/types';
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
+import Modal from '@/components/Modal.vue';
 import Button from '@/components/Button.vue';
 import EmptyStarIcon from '@/assets/icons/star.svg?component';
 import FullStarIcon from '@/assets/icons/full-star.svg?component';
@@ -14,14 +15,17 @@ import ErrorIcon from '@/assets/error.svg?component';
 import LoadingIcon from '@/assets/loading-pot.svg?component';
 import LoadingShadow from '@/assets/loading-shadow.svg?component';
 import { useRouter } from 'vue-router';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { useThrottleFn } from '@vueuse/core';
 
 const props = defineProps<{
   id: number
 }>();
 
+const scrollPosition = ref(0);
 const router = useRouter();
 const isCounterClicked = ref(false);
+const showModal = ref(false);
 const { isLoading, isError, data:recipe, error } = getRecipe(props.id);
 const deleteRecipeMutation = useDeleteRecipeMutation();
 const updateRecipeMutation = useUpdateRecipeMutation();
@@ -33,7 +37,12 @@ const totalTime = computed<number>(() => {
   return (recipe.value.cookTime || 0) + (recipe.value.prepTime || 0);
 });
 
+// -----------------------------------
+// METHODS
+// -----------------------------------
+
 function onDelete(recipe: Recipe) {
+  document.body.classList.remove('modalOpen');
   deleteRecipeMutation.mutate(
     recipe,
     { onSuccess: () => router.push('/') }
@@ -55,6 +64,24 @@ function onBackClick() {
   }
 }
 
+function onClickShowModal() {
+  showModal.value = true;
+  document.body.classList.add('modalOpen');
+}
+
+function onClickCancelModal() {
+  showModal.value = false;
+  document.body.classList.remove('modalOpen');
+}
+
+const updateScroll = useThrottleFn(() => {
+  scrollPosition.value = window.scrollY;
+}, 100);
+
+onMounted(() => {
+  window.addEventListener('scroll', updateScroll);
+});
+
 </script>
 
 <template>
@@ -71,11 +98,13 @@ function onBackClick() {
     <div v-else-if="!isLoading && recipe">
       <!-- NAV & ACTIONS -->
       <!-- MOBILE -->
-      <div class="fixed w-full z-20 top-0 left-0 md:hidden">
+      <div class="fixed w-full z-20 top-0 left-0 md:hidden transition-colors duration-200"
+        :class="{ 'bg-white border-b border-stone-200 shadow-sm': scrollPosition > 100 }"
+      >
         <div class="flex justify-between items-center p-3">
           <Button
             :custom-style="true"
-            class="bg-white shadow p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
+            class="bg-white shadow shadow-stone-900/20 p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
             @click="onBackClick"
           >
             <BackIcon class="w-6 h-6" />
@@ -83,15 +112,15 @@ function onBackClick() {
           <div class="flex items-center">
             <Button
               :custom-style="true"
-              class="bg-white mr-6 shadow p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
+              class="bg-white mr-6 shadow shadow-stone-900/20 p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
               :to="`/edit/${props.id}`"
             >
               <EditIcon class="w-6 h-6" />
             </Button>
             <Button
               :custom-style="true"
-              class="bg-white shadow p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
-              @click="onDelete(recipe!)"
+              class="bg-white shadow shadow-stone-900/20 p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
+              @click="onClickShowModal"
               :disabled="deleteRecipeMutation.isLoading.value"
             >
               <DeleteIcon class="w-6 h-6" />
@@ -111,7 +140,7 @@ function onBackClick() {
               <EditIcon class="w-6 h-6 mr-1" />
               Edit
             </Button>
-            <Button @click="onDelete(recipe!)" :disabled="deleteRecipeMutation.isLoading.value">
+            <Button @click="onClickShowModal" :disabled="deleteRecipeMutation.isLoading.value">
               <SpinnerIcon v-if="deleteRecipeMutation.isLoading.value" class="w-6 h-6 animate-spin mr-2"/>
               <DeleteIcon v-else class="w-6 h-6 mr-1" />
               Delete
@@ -119,6 +148,19 @@ function onBackClick() {
           </div>
         </div>
       </div>
+      <Teleport to="body">
+        <Modal
+          :show="showModal"
+          confirm-label="Delete"
+          :is-confirm-danger="true"
+          @close="onClickCancelModal"
+          @cancel="onClickCancelModal"
+          @confirm="onDelete(recipe!)"
+          title="Delete recipe?"
+        >
+          Are you sure you want to permanently delete this recipe? You can't undo this action.
+        </Modal>
+      </Teleport>
       <div class="md:grid md:grid-cols-3 md:justify-items-start flex flex-col">
         <!-- IMAGE -->
         <div class="w-full md:p-3">

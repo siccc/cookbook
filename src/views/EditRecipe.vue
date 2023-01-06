@@ -37,7 +37,7 @@ const inputValidations = reactive({
   ingredients: { hasError: false, message: 'Add at least one the ingredient.'},
   steps: { hasError: false, message: 'Add at least one step.'},
 });
-const categories = ['breakfast', 'lunch', 'dinner', 'snack', 'dessert', 'side dish'];
+const categories = ['breakfast', 'soup', 'main dish', 'side dish', 'pasta', 'bread', 'souce', 'snack', 'dessert'];
 const tags = ref('');
 const saveInProgress = ref(false);
 const anyInputHasError = ref(false);
@@ -102,7 +102,6 @@ async function onSaveClick() {
 
   // save recipe
   if (!savingIsError.value) {
-    console.log('tags: ', recipe.value.tags)
     try {
       let response:Recipe;
       if (props.id === 'new') {
@@ -183,7 +182,7 @@ function onImageChange(imageSource:string) {
 
 const updateScroll = useThrottleFn(() => {
   scrollPosition.value = window.scrollY;
-}, 100);
+}, 100, true);
 
 onMounted(() => {
   window.addEventListener('scroll', updateScroll);
@@ -214,18 +213,13 @@ onMounted(() => {
           class="flex items-center p-3"
           :class="{ 'justify-between': props.id === 'new', 'justify-end': props.id !== 'new' }"
         >
-          <Button
-            v-if="props.id === 'new'"
-            :custom-style="true"
-            class="bg-white shadow shadow-stone-900/20 p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
-            to="/"
-          >
+          <Button v-if="props.id === 'new'" white to="/">
             <BackIcon class="w-6 h-6" />
           </Button>
           <div class="flex items-center">
             <Button
-              class="uppercase shadow shadow-stone-900/20 bg-white p-3 rounded-lg hover:bg-yellow-400 hover:text-white font-medium"
-              :custom-style="true"
+              class="uppercase"
+              white
               @click="onSaveClick()"
               :disabled="saveInProgress"
             >
@@ -233,9 +227,9 @@ onMounted(() => {
               Save
             </Button>
             <Button
-              :custom-style="true"
+              class="uppercase ml-6"
+              white
               v-if="props.id !== 'new'"
-              class="uppercase shadow shadow-stone-900/20 ml-6 bg-white p-3 rounded-lg hover:bg-yellow-400 hover:text-white font-medium"
               @click="onCancelClick()"
               :disabled="saveInProgress"
             >

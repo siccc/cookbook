@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ImagePlaceholder from '@/assets/image-placeholder.svg?component';
 import DeleteIcon from '@/assets/icons/trash-alt.svg?component';
+import Button from '@/components/Button.vue';
 import ImageUploadIcon from '@/assets/icons/image-upload.svg?component';
 import { ref, type Ref } from 'vue';
 
@@ -97,11 +98,7 @@ function validateFileSize(size:number) {
           <ImageUploadIcon class="w-6 h-6" />
           Upload
         </label>
-        <Button
-          :custom-style="true"
-          class="bg-white flex items-center shadow p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
-          @click="deleteImageUrl"
-        >
+        <Button white @click="deleteImageUrl">
           <DeleteIcon class="w-6 h-6 mr-1" />
           Delete photo
         </Button>

@@ -7,6 +7,8 @@ import Button from '@/components/Button.vue';
 import EmptyStarIcon from '@/assets/icons/star.svg?component';
 import FullStarIcon from '@/assets/icons/full-star.svg?component';
 import DeleteIcon from '@/assets/icons/trash-alt.svg?component';
+import ClockIcon from '@/assets/icons/clock.svg?component';
+import ServingsIcon from '@/assets/icons/utensils.svg?component';
 import EditIcon from '@/assets/icons/edit.svg?component';
 import SpinnerIcon from '@/assets/icons/spinner.svg?component';
 import BackIcon from '@/assets/icons/angle-left-b.svg?component';
@@ -76,7 +78,7 @@ function onClickCancelModal() {
 
 const updateScroll = useThrottleFn(() => {
   scrollPosition.value = window.scrollY;
-}, 100);
+}, 100, true);
 
 onMounted(() => {
   window.addEventListener('scroll', updateScroll);
@@ -103,23 +105,21 @@ onMounted(() => {
       >
         <div class="flex justify-between items-center p-3">
           <Button
-            :custom-style="true"
-            class="bg-white shadow shadow-stone-900/20 p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
+            white
             @click="onBackClick"
           >
             <BackIcon class="w-6 h-6" />
           </Button>
           <div class="flex items-center">
             <Button
-              :custom-style="true"
-              class="bg-white mr-6 shadow shadow-stone-900/20 p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
+              white
+              class="mr-6"
               :to="`/edit/${props.id}`"
             >
               <EditIcon class="w-6 h-6" />
             </Button>
             <Button
-              :custom-style="true"
-              class="bg-white shadow shadow-stone-900/20 p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
+              white
               @click="onClickShowModal"
               :disabled="deleteRecipeMutation.isLoading.value"
             >
@@ -170,7 +170,7 @@ onMounted(() => {
           </div>
         </div>
         <!-- INFO -->
-        <div class="md:col-span-2 pt-6 md:pt-3 md:mt-0 p-3 rounded-t-3xl md:rounded-none -mt-10 bg-white">
+        <div class="md:col-span-2 pt-6 md:pt-3 md:mt-0 p-3 rounded-t-3xl md:rounded-none -mt-10 bg-white w-full">
           <div class="uppercase font-k2d text-2xl text-center md:text-start">
             {{ recipe.title }}
           </div>
@@ -185,49 +185,69 @@ onMounted(() => {
             </div>
           </div>
           <!-- TIME & SERVINGS -->
-          <div class="mt-3 flex gap-x-6 justify-around md:justify-start">
-            <div>
-              <div>Total</div>
-              <span>{{ totalTime }} min</span>
+          <div class="mt-3 grid grid-cols-3 md:grid-cols-4 gap-3 justify-around md:justify-start p-3 rounded-lg border-2 border-sky-100">
+            <div class="hidden md:block">
+              <div class="uppercase text-stone-300">Servings</div>
+              <div class="flex items-center">
+                <ServingsIcon class="w-6 h-6 text-sky-200 mr-1" />
+                <span>{{ recipe.servings }}</span>
+              </div>
             </div>
             <div>
-              <div>Prep</div>
-              <span>{{ recipe.prepTime }} min</span>
+              <div class="uppercase text-stone-300">Prep</div>
+              <div class="flex items-center">
+                <ClockIcon class="w-6 h-6 text-yellow-300 mr-1" />
+                <span>{{ recipe.prepTime }} min</span>
+              </div>
             </div>
             <div>
-              <div>Cook</div>
-              <span>{{ recipe.cookTime }} min</span>
+              <div class="uppercase text-stone-300">Cook</div>
+              <div class="flex items-center">
+                <ClockIcon class="w-6 h-6 text-yellow-300 mr-1" />
+                <span>{{ recipe.cookTime }} min</span>
+              </div>
             </div>
             <div>
-              <div>Servings</div>
-              <span>{{ recipe.servings }}</span>
+              <div class="uppercase text-stone-300">Total</div>
+              <div class="flex items-center">
+                <ClockIcon class="w-6 h-6 text-yellow-300 mr-1" />
+                <span>{{ totalTime }} min</span>
+              </div>
             </div>
           </div>
-          <Button
-            primary
-            class="w-full md:w-40 mt-6 md:mt-3"
-            @click="onCounterClick(recipe!)"
-            :disabled="updateRecipeMutation.isLoading.value"
-          >
-            <EmptyStarIcon v-if="!isCounterClicked" class="w-6 h-6 mr-1 opacity-60" />
-            <FullStarIcon v-else class="w-6 h-6 mr-2 opacity-60" />
-            I made it!
-            ({{ recipe.cookedCount }})
-          </Button>
         </div>
         <!-- INGREDIENTS -->
         <div class="md:my-0 w-full p-3">
-          <div class="text-xl uppercase font-k2d mb-1">Ingredients</div>
+          <div class="flex items-center justify-between mb-1">
+            <div class="text-xl uppercase font-k2d">Ingredients</div>
+            <div class="flex md:hidden px-3 py-1.5 rounded-md bg-sky-50">
+              <ServingsIcon class="w-6 h-6 text-sky-200 mr-1" />
+              <span>{{ recipe.servings }}</span>
+            </div>
+          </div>
           <MarkdownRenderer :content="recipe.ingredients" />
           <!-- <Button class="w-full mt-4">Add to shopping list</Button> -->
         </div>
         <!-- STEPS & NOTES -->
-        <div class="md:col-span-2 md:my-0 p-3">
+        <div class="md:col-span-2 md:my-0 p-3 w-full">
           <div class="text-xl uppercase font-k2d mb-1">Steps</div>
           <MarkdownRenderer :content="recipe.steps" />
           <div v-if="recipe.notes">
             <div class="text-xl uppercase font-k2d mb-1 mt-6">Notes</div>
             <MarkdownRenderer :content="recipe.notes" />
+          </div>
+          <div class="flex justify-center">
+            <Button
+              primary
+              class="w-full md:w-60 mt-6 md:mt-6"
+              @click="onCounterClick(recipe!)"
+              :disabled="updateRecipeMutation.isLoading.value"
+            >
+              <EmptyStarIcon v-if="!isCounterClicked" class="w-6 h-6 mr-1 opacity-60" />
+              <FullStarIcon v-else class="w-6 h-6 mr-2 opacity-60" />
+              I made it!
+              ({{ recipe.cookedCount }})
+            </Button>
           </div>
         </div>
       </div>

@@ -1,51 +1,57 @@
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "vue-query";
 import type { Recipe, RecipeExtract, DBRecipeExtract, DBRecipe } from '@/types';
 import type { Ref } from 'vue';
-import { reactive, computed } from 'vue';
 import { useCloudinary } from '@/stores/cloudinary';
 import { fill } from '@cloudinary/url-gen/actions/resize';
 
 const cloudinary = useCloudinary();
+let searchText = '';
 
 // -----------------------------------
 // LIST & SEARCH RECIPES -- WITH CURSOR
 // -----------------------------------
 
-type  recipeFetcherOptions = {
+type  infiniteQueryFetcherFnOptions = {
   searchKeywords: Ref<string>,
+  category: Ref<string>,
   cursor: string
 };
 
-type DBQueryResult = {
-  recipes: DBRecipeExtract[],
-  nextId: number | undefined
-};
-const recipeListFetcher = async ({ searchKeywords, cursor = '' }: recipeFetcherOptions): Promise<DBQueryResult> => {
-  const response = await fetch(`/api/recipes?search=${searchKeywords.value ? searchKeywords.value : ''}&cursor=${cursor}`, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Basic ${authToken()}`
-    }
-  })
-  if (!response.ok) {
-    throw new Error('An error occurred while fetching a recipe.');
-  }
-  return response.json();
-}
-
-type TransformRecipeOptions = {
-  pages: DBQueryResult[],
+type TransformDBRecipeExtractsFnOptions = {
+  pages: DBInfiniteQueryResult[],
   pageParams: unknown[]
 };
 
-type TransformedQueryResult = {
+type DBInfiniteQueryResult = {
+  recipes: DBRecipeExtract[],
+  nextId: number | undefined
+};
+
+type TransformedInfiniteQueryResult = {
   pages: {
     recipes: RecipeExtract[],
     nextId: number | undefined
   }[],
   pageParams: unknown[]
 };
-function transformRecipeExtracts(data: TransformRecipeOptions): TransformedQueryResult {
+
+
+const recipeListFetcher = async ({ searchKeywords, category, cursor = '' }: infiniteQueryFetcherFnOptions): Promise<DBInfiniteQueryResult> => {
+  const search = searchKeywords.value ? searchKeywords.value : '';
+  const cat = category.value === 'all' ? '' : category.value;
+  const response = await fetch(`/api/recipes?search=${search}&category=${cat}&cursor=${cursor}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Basic ${authToken()}`
+    }
+  })
+  if (!response.ok) {
+    throw new Error('An error occurred while fetching the recipes.');
+  }
+  return response.json();
+}
+
+function transformDBRecipeExtractsForInfiniteList(data: TransformDBRecipeExtractsFnOptions): TransformedInfiniteQueryResult {
   const transformedRecipeExtracts = data.pages.map(page => {
     return {
       recipes: page.recipes.map(extract => {
@@ -56,17 +62,26 @@ function transformRecipeExtracts(data: TransformRecipeOptions): TransformedQuery
       }),
       nextId: page.nextId
     }
-    
   });
   return { pages: transformedRecipeExtracts, pageParams: data.pageParams };
 }
 
-export function listRecipes(searchKeywords: Ref<string>) {
-  const { isLoading, isError, data, error, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery(
-    ['recipes', searchKeywords],
-    ({ pageParam }) => recipeListFetcher({searchKeywords, cursor: pageParam}),
+export function listRecipes(searchKeywords: Ref<string>, category: Ref<string>) {
+  const {
+    isLoading,
+    isError,
+    data,
+    error,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage
+  } = useInfiniteQuery(
+    ['recipes', searchKeywords, category],
+    ({ pageParam }) => recipeListFetcher({
+      searchKeywords, category, cursor: pageParam
+    }),
     {
-      select: transformRecipeExtracts,
+      select: transformDBRecipeExtractsForInfiniteList,
       getNextPageParam: (lastPage) => lastPage.nextId ?? false
     }
   );
@@ -226,8 +241,8 @@ export function useDeleteRecipeMutation() {
     recipeDeleter, {
       onMutate: async (deletedRecipe: Recipe) => {
         await queryClient.cancelQueries(['recipes', '']);
-        const previousRecipes = queryClient.getQueryData<TransformedQueryResult>(['recipes', '']);
-        queryClient.setQueryData<TransformedQueryResult|undefined>(['recipes', ''], (prevData) => {
+        const previousRecipes = queryClient.getQueryData<TransformedInfiniteQueryResult>(['recipes', '']);
+        queryClient.setQueryData<TransformedInfiniteQueryResult|undefined>(['recipes', ''], (prevData) => {
           if (!prevData) {
             return prevData;
           }
@@ -245,7 +260,7 @@ export function useDeleteRecipeMutation() {
       },
       onError: (err, variables, context) => {
         if (context?.previousRecipes) {
-          queryClient.setQueryData<TransformedQueryResult>(['recipes', ''], context.previousRecipes);
+          queryClient.setQueryData<TransformedInfiniteQueryResult>(['recipes', ''], context.previousRecipes);
         }
       },
       onSettled: () => {
@@ -253,6 +268,51 @@ export function useDeleteRecipeMutation() {
       }
     }
   );
+}
+
+// -----------------------------------
+// GET RECIPE INSPIRATION
+// -----------------------------------
+
+const threeRandomRecipesFetcher = async (category: Ref<string>): Promise<DBRecipe[]> => {
+  const cat = category.value === 'all' ? '' : category.value;
+  const response = await fetch(`/api/recipe-selection?category=${cat}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Basic ${authToken()}`
+    }
+  })
+  if (!response.ok) {
+    throw new Error('An error occurred while fetching the recipes.');
+  }
+  return response.json();
+}
+
+function transformRecipes(dbRecipes: DBRecipe[]): Recipe[] {
+  return dbRecipes.map(dbRecipe => transformRecipe(dbRecipe));
+}
+
+export function getThreeRandomRecipes(category: Ref<string>) {
+  const { isLoading, isError, data, error, isFetching, refetch } = useQuery(
+    ['randomRecipes', category],
+    () => threeRandomRecipesFetcher(category), {
+      select: transformRecipes,
+      staleTime: Infinity
+    }
+  );
+  return { isLoading, isError, data, error, isFetching, refetch };
+}
+
+// -----------------------------------
+// SEARCH TEXT MEMO
+// -----------------------------------
+
+export function setSearchText(text: string) {
+  searchText = text;
+}
+
+export function getSearchText(): string {
+  return searchText;
 }
 
 // -----------------------------------
@@ -273,6 +333,4 @@ function getImageUrl(imagePublicId?: string) {
 
 function authToken() {
   return localStorage.getItem('userId') || '';
- 
 }
-//headers: authHeader(url)

@@ -55,7 +55,6 @@ const extensions = [
   EditorView.lineWrapping,
   EditorView.domEventHandlers({
     blur() {
-      console.log('Codemirror blur');
       emitChange();
     }
   }),

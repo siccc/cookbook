@@ -12,53 +12,55 @@ import { isMobile } from '@/stores/utility';
 const router = useRouter();
 const useMobile = isMobile();
 const showMenu = computed(() => {
-  return !useMobile || router.currentRoute.value.path === '/';
+  return !useMobile
+    || router.currentRoute.value.name === 'home'
+    || router.currentRoute.value.name === 'inspiration';
 });
 
 </script>
 
 <template>
-  <div v-if="showMenu" class="h-14 px-2 md:px-4 py-2.5 bg-white fixed w-full z-20 top-0 left-0 border-b border-stone-200 navbar">
+  <!-- DESKTOP MENU -->
+  <div v-if="showMenu" class="h-14 px-2 md:px-4 py-2.5 bg-white fixed w-full z-20 top-0 left-0 border-b border-stone-200 top-menu">
     <div class="container mx-auto px-4 flex justify-center md:justify-between items-center">
       <div class="flex-shrink-0">
         <RouterLink to="/">
           <Logo class="mr-4 h-9" alt="Cookbook Logo" />
         </RouterLink>
       </div>
-      <div class="items-center ml-4 hidden md:flex">
-        <RouterLink to="/" class="ml-4 link-underline link-underline-yellow uppercase">Home</RouterLink>
-        <RouterLink to="/shopping-list" class="ml-4 uppercase cursor-default text-stone-400">Shopping list
-        </RouterLink>
-        <RouterLink to="/fridge" class="ml-4 uppercase cursor-default text-stone-400">What's in the fridge
-        </RouterLink>
-        <RouterLink to="/season" class="ml-4 uppercase cursor-default text-stone-400">In season</RouterLink>
+      <div class="items-center ml-4 hidden md:flex uppercase leading-relaxed">
+        <RouterLink to="/" class="ml-4 link-underline link-underline-yellow">Home</RouterLink>
+        <RouterLink to="/inspiration" class="ml-4 link-underline link-underline-yellow">Inspiration</RouterLink>
+        <RouterLink to="/shopping-list" class="ml-4 cursor-default text-stone-400">Shopping list</RouterLink>
+        <RouterLink to="/season" class="ml-4 cursor-default text-stone-400">In season</RouterLink>
       </div>
     </div>
   </div>
+  <!-- MOBILE MENU -->
   <div v-if="showMenu" class="w-full fixed bottom-0 z-20 border-t border-stone-200 bg-white md:hidden bottom-menu">
     <div class="flex justify-around items-center text-stone-500 h-full my-1">
       <RouterLink to="/" class="w-1/5">
-        <div class="flex flex-col items-center text-yellow-400">
+        <div class="flex flex-col items-center">
           <HomeIcon class="w-6 h-6" />
           <div class="text-xs">Home</div>
         </div>
       </RouterLink>
-      <RouterLink to="/" class="w-1/5">
-        <div class="flex flex-col items-center text-stone-200">
-          <GroceryIcon class="w-6 h-6"/>
-          <div class="text-xs">Shopping list</div>
+      <RouterLink to="/inspiration" class="w-1/5">
+        <div class="flex flex-col items-center">
+          <FridgeIcon class="w-6 h-6"/>
+          <div class="text-xs">Inspo</div>
         </div>
       </RouterLink>
       <RouterLink to="/edit/new" class="w-1/5">
-        <div class="flex flex-col items-center text-stone-400">
+        <div class="flex flex-col items-center">
           <PlusIcon class="w-6 h-6"/>
           <div class="text-xs">Create</div>
         </div>
       </RouterLink>
       <RouterLink to="/" class="w-1/5">
         <div class="flex flex-col items-center text-stone-200">
-          <FridgeIcon class="w-6 h-6"/>
-          <div class="text-xs">Fridge</div>
+          <GroceryIcon class="w-6 h-6"/>
+          <div class="text-xs">Shopping list</div>
         </div>
       </RouterLink>
       <RouterLink to="/" class="w-1/5">
@@ -91,10 +93,14 @@ const showMenu = computed(() => {
 }
 
 .bottom-menu {
+  @apply text-stone-400;
   padding-bottom: env(safe-area-inset-bottom);
 }
+.bottom-menu .router-link-active {
+  @apply text-yellow-400;
+}
 
-.navbar .router-link-active {
+.top-menu .router-link-active {
   border-bottom-width: 0;
   background-size: 100% 3px;
   background-position: 0 100%;

@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { PrismaClient } from '@prisma/client';
 import fetch from 'cross-fetch';
-import { differenceBy} from 'lodash';
+import { differenceBy, sampleSize } from 'lodash';
 
 const prisma = new PrismaClient();
 
@@ -11,11 +11,12 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   if (!userId) {
     return res.status(403);
   }
-  if (query.resource === 'recipes') {
+  if (query.resource === 'recipes' && query.mode !== 'selection') {
     // LIST RECIPES
     if (method === 'GET' && !query.id) {
       let recipes;
       const limit = 20;
+      const category = query.category as string ?? '';
       const cursor = query.cursor as string ?? '';
       const cursorObj = cursor === '' ? undefined : { id: Number(cursor) };
       // SEARCH
@@ -28,6 +29,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           where: {
             AND: [
               { title: { search: preprocessSearchKeywords(query.search) } },
+              { category: { contains: category } },
               { userId: { equals: userId } }
             ]
           },
@@ -47,7 +49,10 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           cursor: cursorObj,
           orderBy: { id: 'asc' },
           where: {
-            userId: { equals: userId }
+            AND: [
+              { category: { contains: category } },
+              { userId: { equals: userId } }
+            ]
           },
           select: {
             id: true,
@@ -183,6 +188,40 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       } catch (error) {
         return res.status(404).send('');
       }
+    }
+  } else if (query.resource === 'recipes' && query.mode === 'selection') {
+    // get ids by category
+    const category = query.category as string ?? '';
+    const recipeIds = await prisma.recipe.findMany({
+      where: {
+        AND: [
+          { category: { contains: category } },
+          { userId: { equals: userId } }
+        ]
+      },
+      select: {
+        id: true
+      }
+    });
+    // choose 3 random id
+    const selectedIds = sampleSize(recipeIds, 3);
+    // return with those recipes
+    try {
+      const recipes = await prisma.recipe.findMany({
+        where: {
+          id: { in: selectedIds.map(v => v.id) }
+        },
+        select: {
+          id: true,
+          title: true,
+          category: true,
+          imagePublicId: true
+        },
+      });
+      return res.json(recipes);
+    } catch (error) {
+      console.log(error);
+      return res.status(404).send('');
     }
   }
   return res.status(404).send('');

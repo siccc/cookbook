@@ -9,6 +9,10 @@
       "destination": "/api/api?resource=recipes&mode=selection"
     },
     {
+      "source": "/api/shopping-list/:id?",
+      "destination": "/api/api?resource=shopping-list&id=:id"
+    },
+    {
       "source": "/api/user/:id?",
       "destination": "/api/user?id=:id"
     },

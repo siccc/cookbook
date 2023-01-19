@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import GroceryIcon from '@/assets/icons/grocery.svg?component';
 import FridgeIcon from '@/assets/icons/fridge.svg?component';
+import IdeaIcon from '@/assets/icons/lightbulb-alt.svg?component';
 import SeasonIcon from '@/assets/icons/season.svg?component';
 import HomeIcon from '@/assets/icons/home.svg?component';
 import PlusIcon from '@/assets/icons/plus.svg?component';
@@ -14,7 +15,8 @@ const useMobile = isMobile();
 const showMenu = computed(() => {
   return !useMobile
     || router.currentRoute.value.name === 'home'
-    || router.currentRoute.value.name === 'inspiration';
+    || router.currentRoute.value.name === 'inspiration'
+    || router.currentRoute.value.name === 'shoppingList';
 });
 
 </script>
@@ -25,13 +27,13 @@ const showMenu = computed(() => {
     <div class="container mx-auto px-4 flex justify-center md:justify-between items-center">
       <div class="flex-shrink-0">
         <RouterLink to="/">
-          <Logo class="mr-4 h-9" alt="Cookbook Logo" />
+          <Logo class="mr-4 h-9 cursor-pointer" alt="Cookbook Logo" />
         </RouterLink>
       </div>
       <div class="items-center ml-4 hidden md:flex uppercase leading-relaxed">
         <RouterLink to="/" class="ml-4 link-underline link-underline-yellow">Home</RouterLink>
         <RouterLink to="/inspiration" class="ml-4 link-underline link-underline-yellow">Inspiration</RouterLink>
-        <RouterLink to="/shopping-list" class="ml-4 cursor-default text-stone-400">Shopping list</RouterLink>
+        <RouterLink to="/shopping-list" class="ml-4 link-underline link-underline-yellow">Shopping list</RouterLink>
         <RouterLink to="/season" class="ml-4 cursor-default text-stone-400">In season</RouterLink>
       </div>
     </div>
@@ -47,7 +49,7 @@ const showMenu = computed(() => {
       </RouterLink>
       <RouterLink to="/inspiration" class="w-1/5">
         <div class="flex flex-col items-center">
-          <FridgeIcon class="w-6 h-6"/>
+          <IdeaIcon class="w-6 h-6"/>
           <div class="text-xs">Inspo</div>
         </div>
       </RouterLink>
@@ -57,8 +59,8 @@ const showMenu = computed(() => {
           <div class="text-xs">Create</div>
         </div>
       </RouterLink>
-      <RouterLink to="/" class="w-1/5">
-        <div class="flex flex-col items-center text-stone-200">
+      <RouterLink to="/shopping-list" class="w-1/5">
+        <div class="flex flex-col items-center">
           <GroceryIcon class="w-6 h-6"/>
           <div class="text-xs">Shopping list</div>
         </div>
@@ -66,7 +68,7 @@ const showMenu = computed(() => {
       <RouterLink to="/" class="w-1/5">
         <div class="flex flex-col items-center text-stone-200">
           <SeasonIcon class="w-6 h-6"/>
-          <div class="text-xs">Season</div>
+          <div class="text-xs">Seasonal</div>
         </div>
       </RouterLink>
     </div>

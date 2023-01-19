@@ -57,3 +57,13 @@ export interface User {
   id: string,
   createdAt: string
 };
+
+export interface ShoppingList {
+  id: string,
+  items: ShoppingListItem[]
+}
+
+export interface ShoppingListItem {
+  checked: boolean,
+  name: string
+}

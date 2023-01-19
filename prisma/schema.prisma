@@ -42,3 +42,12 @@ model User {
   id              String          @id @unique
   createdAt       DateTime        @default(now())
 }
+
+model ShoppingList {
+  id              String          @id @unique
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  name            String          @default("Shopping List")
+  items           Json            @default("[]")
+  userId          String
+}

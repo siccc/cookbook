@@ -76,8 +76,7 @@ useInfiniteScroll(
         <input
           enterkeyhint="search"
           :value="searchText"
-          class="px-9 py-3 md:py-1.5 w-full border-2 border-stone-100
-          bg-stone-100 focus:bg-stone-100 focus:text-stone-800"
+          class="inputWithIcon"
           @input="onSearchTextInput"
           @change="onSearchTextChange"
           placeholder="Search for recipes..."

@@ -6,8 +6,7 @@ const props = defineProps<{
   disabled?: boolean,
   primary?: boolean,
   white?: boolean,
-  danger?: boolean,
-  customStyle?: boolean
+  danger?: boolean
 }>();
 
 const emit = defineEmits<{

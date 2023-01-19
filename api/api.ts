@@ -223,7 +223,57 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       console.log(error);
       return res.status(404).send('');
     }
+  } else if (query.resource === 'shopping-list') {
+    // CREATE SHOPPING LIST
+    if (method === 'POST' && !query.id) {
+      try {
+        const shoppingList = await prisma.shoppingList.create({
+          data: {
+            ...req.body,
+            userId
+          }
+        });
+        return res.json(shoppingList);
+      } catch (error) {
+        return res.status(404).send('');
+      }
+    }
+    // GET SHOPPING LIST
+    else if (method === 'GET' && !query.id) {
+      try {
+        const shoppingList = await prisma.shoppingList.findFirst({
+          where: {
+            userId
+          },
+          select: {
+            id: true,
+            items: true
+          }
+        });
+        return res.json(shoppingList);
+      } catch (error) {
+        return res.status(404).send('');
+      }
+    }
+    // UPDATE SHOPPING LIST
+    else if (method === 'PUT' && query.id) {
+      try {
+        const shoppingList = await prisma.shoppingList.update({
+          where: {
+            id: query.id as string,
+            userId
+          },
+          data: {
+            items: req.body
+          }
+        });
+        return res.json(shoppingList);
+      } catch (error) {
+        return res.status(404).send('');
+      }
+    }
   }
+
   return res.status(404).send('');
 };
 

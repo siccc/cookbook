@@ -36,6 +36,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       });
 
       await setCloudinaryFolderForUser(userId);
+      await createShoppingList(userId);
       await generateRecipes(userId);
       return res.json(user);
     } catch (error) {
@@ -105,6 +106,22 @@ const generateRecipes = async (userId: string) => {
       });
       console.log(`Created recipe with id: ${d.id}`);
     }
+  } catch (err) {
+    console.log(err);
+  }
+  await prisma.$disconnect();
+}
+
+const createShoppingList = async (userId: string) => {
+  try {
+    const id = generateId();
+    const shoppingList = await prisma.shoppingList.create({
+      data: {
+        id: `sl${id}`,
+        userId
+      }
+    });
+    console.log(`Created shopping list with id: ${shoppingList.id}`);
   } catch (err) {
     console.log(err);
   }

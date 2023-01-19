@@ -4,6 +4,7 @@ import type { Recipe } from '@/types';
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
 import Modal from '@/components/Modal.vue';
 import Button from '@/components/Button.vue';
+import AddToShoppingListModal from '@/components/AddToShoppingListModal.vue';
 import EmptyStarIcon from '@/assets/icons/star.svg?component';
 import FullStarIcon from '@/assets/icons/full-star.svg?component';
 import DeleteIcon from '@/assets/icons/trash-alt.svg?component';
@@ -27,7 +28,8 @@ const props = defineProps<{
 const scrollPosition = ref(0);
 const router = useRouter();
 const isCounterClicked = ref(false);
-const showModal = ref(false);
+const showDeleteConfirmModal = ref(false);
+const showAddToShoppingListModal = ref(false);
 const { isLoading, isError, data:recipe, error } = getRecipe(props.id);
 const deleteRecipeMutation = useDeleteRecipeMutation();
 const updateRecipeMutation = useUpdateRecipeMutation();
@@ -66,13 +68,23 @@ function onBackClick() {
   }
 }
 
-function onClickShowModal() {
-  showModal.value = true;
+function onDeleteConfirmShow() {
+  showDeleteConfirmModal.value = true;
   document.body.classList.add('modalOpen');
 }
 
-function onClickCancelModal() {
-  showModal.value = false;
+function onDeleteConfirmCancel() {
+  showDeleteConfirmModal.value = false;
+  document.body.classList.remove('modalOpen');
+}
+
+function onAddToShoppingListShow() {
+  showAddToShoppingListModal.value = true;
+  document.body.classList.add('modalOpen');
+}
+
+function onAddToShoppingListCancel() {
+  showAddToShoppingListModal.value = false;
   document.body.classList.remove('modalOpen');
 }
 
@@ -88,12 +100,20 @@ onMounted(() => {
 
 <template>
   <div class="max-w-screen-lg mx-auto mb-6 md:mb-14 md:mt-14">
-    <div v-if="isLoading" class="py-12 text-center font-k2d text-2xl text-yellow-400 flex flex-col justify-center items-center">
+    <div
+      v-if="isLoading"
+      class="py-12 text-center font-k2d text-2xl text-yellow-400 flex flex-col justify-center
+      items-center"
+    >
         <LoadingIcon class="w-24 opacity-80 animate-bounce block" />
         <LoadingShadow class="w-24 opacity-80 block" />
       Loading...
     </div>
-    <div v-if="isError" class="py-12 text-center font-k2d text-xl text-red-300 flex justify-center items-center">
+    <div
+      v-if="isError"
+      class="py-12 text-center font-k2d text-xl text-red-300 flex
+      justify-center items-center"
+    >
       <ErrorIcon class="w-24 h-24 opacity-50" />
       <div>{{ error }}</div>
     </div>
@@ -120,7 +140,7 @@ onMounted(() => {
             </Button>
             <Button
               white
-              @click="onClickShowModal"
+              @click="onDeleteConfirmShow"
               :disabled="deleteRecipeMutation.isLoading.value"
             >
               <DeleteIcon class="w-6 h-6" />
@@ -140,7 +160,7 @@ onMounted(() => {
               <EditIcon class="w-6 h-6 mr-1" />
               Edit
             </Button>
-            <Button @click="onClickShowModal" :disabled="deleteRecipeMutation.isLoading.value">
+            <Button @click="onDeleteConfirmShow" :disabled="deleteRecipeMutation.isLoading.value">
               <SpinnerIcon v-if="deleteRecipeMutation.isLoading.value" class="w-6 h-6 animate-spin mr-2"/>
               <DeleteIcon v-else class="w-6 h-6 mr-1" />
               Delete
@@ -150,11 +170,11 @@ onMounted(() => {
       </div>
       <Teleport to="body">
         <Modal
-          :show="showModal"
+          :show="showDeleteConfirmModal"
           confirm-label="Delete"
           :is-confirm-danger="true"
-          @close="onClickCancelModal"
-          @cancel="onClickCancelModal"
+          @close="onDeleteConfirmCancel"
+          @cancel="onDeleteConfirmCancel"
           @confirm="onDelete(recipe!)"
           title="Delete recipe?"
         >
@@ -164,13 +184,19 @@ onMounted(() => {
       <div class="md:grid md:grid-cols-3 md:justify-items-start flex flex-col">
         <!-- IMAGE -->
         <div class="w-full md:p-3">
-          <img v-if="recipe.imageUrl" class="w-full h-96 object-cover md:rounded-xl" :src="recipe.imageUrl" />
-          <div v-else class="w-full h-96 rounded-b-xl rounded-t-none md:rounded-xl bg-stone-100 flex justify-center items-center">
+          <img
+            v-if="recipe.imageUrl"
+            class="w-full h-96 object-cover md:rounded-xl"
+            :src="recipe.imageUrl"
+          />
+          <div v-else class="w-full h-96 rounded-b-xl rounded-t-none md:rounded-xl bg-stone-100
+            flex justify-center items-center">
             <ImagePlaceholder class="opacity-10 w-40 h-40"/>
           </div>
         </div>
         <!-- INFO -->
-        <div class="md:col-span-2 pt-6 md:pt-3 md:mt-0 p-3 rounded-t-3xl md:rounded-none -mt-10 bg-white w-full">
+        <div class="md:col-span-2 pt-6 md:pt-3 md:mt-0 p-3 rounded-t-3xl md:rounded-none -mt-10
+          bg-white w-full">
           <div class="uppercase font-k2d text-2xl text-center md:text-start">
             {{ recipe.title }}
           </div>
@@ -185,7 +211,8 @@ onMounted(() => {
             </div>
           </div>
           <!-- TIME & SERVINGS -->
-          <div class="mt-3 grid grid-cols-3 md:grid-cols-4 gap-3 justify-around md:justify-start p-3 rounded-lg border-2 border-sky-100">
+          <div class="mt-3 grid grid-cols-3 md:grid-cols-4 gap-3 justify-around md:justify-start
+            p-3 rounded-lg border-2 border-sky-100">
             <div class="hidden md:block">
               <div class="uppercase text-stone-300">Servings</div>
               <div class="flex items-center">
@@ -226,8 +253,18 @@ onMounted(() => {
             </div>
           </div>
           <MarkdownRenderer :content="recipe.ingredients" />
-          <!-- <Button class="w-full mt-4">Add to shopping list</Button> -->
+          <Button class="w-full mt-4" @click="onAddToShoppingListShow">
+            Add to shopping list
+          </Button>
         </div>
+        <AddToShoppingListModal
+          v-if="showAddToShoppingListModal"
+          :show="showAddToShoppingListModal"
+          :ingredient-list="recipe.ingredients"
+          @close="onAddToShoppingListCancel"
+          @cancel="onAddToShoppingListCancel"
+          @confirm="onAddToShoppingListCancel"
+        />
         <!-- STEPS & NOTES -->
         <div class="md:col-span-2 md:my-0 p-3 w-full">
           <div class="text-xl uppercase font-k2d mb-1">Steps</div>

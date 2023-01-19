@@ -49,27 +49,29 @@ function onConfirm(event: Event) {
     <div class="absolute w-full h-full bg-stone-800/80" @mousedown="onCancel" />
     <div class="rounded-xl px-6 py-6 bg-white w-96 text-center z-20 outline-none">
       <div class="font-medium text-xl">{{ title }}</div>
-      <div class="text-stone-600 py-3">
+      <div class="text-stone-600 py-6">
         <slot>
           {{ message }}
         </slot>
       </div>
       <!-- FOOTER -->
-      <div class="mt-3 flex justify-between items-center gap-3">
-        <Button
-          class="flex-1 uppercase"
-          @click="onCancel"
-        >
-          {{ cancelLabel || 'Cancel' }}
-        </Button>
-        <Button
-          class="flex-1 uppercase"
-          :primary="isConfirmPrimary"
-          :danger="isConfirmDanger"
-          @click="onConfirm"
-        >
-          {{ confirmLabel || 'OK' }}
-        </Button>
+      <div class="ßmt-3 flex justify-between items-center gap-3">
+        <slot name="footer">
+          <Button
+            class="flex-1 uppercase"
+            @click="onCancel"
+          >
+            {{ cancelLabel || 'Cancel' }}
+          </Button>
+          <Button
+            class="flex-1 uppercase"
+            :primary="isConfirmPrimary"
+            :danger="isConfirmDanger"
+            @click="onConfirm"
+          >
+            {{ confirmLabel || 'OK' }}
+          </Button>
+        </slot>
       </div>
     </div>
   </div>

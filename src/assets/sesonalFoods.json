@@ -1,0 +1,481 @@
+{
+  "vegetables": [
+    {
+      "name_EN": "artichoke",
+      "name_HU": "articsóka",
+      "inSeason": [0,0,1,1,1,1,1,1,1,0,0,0]
+    },
+    {
+        "name_EN": "asparagus",
+        "name_HU": "spárga",
+        "inSeason": [0,0,0,1,1,1,0,0,0,0,0,0]
+    },
+    {
+        "name_EN": "beetroot",
+        "name_HU": "cékla",
+        "inSeason": [1,1,1,0,0,0,0,0,0,1,1,1]
+    },
+    {
+        "name_EN": "black radish",
+        "name_HU": "fekete retek",
+        "inSeason": [0,0,0,0,1,1,1,1,1,1,0,0]
+    },
+    {
+        "name_EN": "bell pepper",
+        "name_HU": "kaliforniai paprika",
+        "inSeason": [0,0,0,0,0,1,1,1,1,1,0,0]
+    },
+    {
+        "name_EN": "broady bean",
+        "name_HU": "lóbab",
+        "inSeason": [0,0,0,1,1,1,1,1,1,0,0,0]
+    },
+    {
+        "name_EN": "broccoli",
+        "name_HU": "brokkoli",
+        "inSeason": [0,0,0,0,0,1,1,1,1,1,1,0]
+    },
+    {
+        "name_EN": "brussels sprout",
+        "name_HU": "kelbimbó",
+        "inSeason": [1,1,1,0,0,0,0,0,1,1,1,1]
+    },
+    {
+        "name_EN": "butternut squash",
+        "name_HU": "pézsmatök",
+        "inSeason": [0,0,0,0,0,0,0,1,1,1,1,1]
+    },
+    {
+        "name_EN": "cabbage",
+        "name_HU": "káposzta",
+        "inSeason": [1,1,1,1,0,0,0,0,0,1,1,1]
+    },
+    {
+        "name_EN": "carrot",
+        "name_HU": "sárgarépa",
+        "inSeason": [1,1,1,0,0,0,0,1,1,1,1,1]
+    },
+    {
+        "name_EN": "cauliflower",
+        "name_HU": "karfiol",
+        "inSeason": [1,1,1,1,0,0,0,0,1,1,1,1]
+    },
+    {
+        "name_EN": "celeriac",
+        "name_HU": "zeller",
+        "inSeason": [1,1,1,0,0,0,0,0,0,1,1,1]
+    },
+    {
+        "name_EN": "celery",
+        "name_HU": "szárzeller",
+        "inSeason": [1,0,0,0,0,0,1,1,1,1,1,1]
+    },
+    {
+      "name_EN": "chanterelle mushroom",
+      "name_HU": "sárga rókagomba",
+      "inSeason": [0,0,0,0,0,1,1,1,1,0,0,0]
+    },
+    {
+      "name_EN": "chard",
+      "name_HU": "mángold",
+      "inSeason": [0,0,0,0,1,1,1,1,1,1,1,0]
+    },
+    {
+      "name_EN": "chinese cabbage",
+      "name_HU": "kínai kel",
+      "inSeason": [1,1,1,1,1,1,1,1,1,1,1,1]
+    },
+    {
+      "name_EN": "corn",
+      "name_HU": "kukorica",
+      "inSeason": [0,0,0,0,0,0,1,1,1,1,0,0]
+    },
+    {
+      "name_EN": "courgette (zucchini)",
+      "name_HU": "cukkini",
+      "inSeason": [0,0,0,0,1,1,1,1,1,0,0,0]
+    },
+    {
+      "name_EN": "cucumber",
+      "name_HU": "uborka",
+      "inSeason": [0,0,0,0,1,1,1,1,1,1,1,0]
+    },
+    {
+      "name_EN": "eggplant (aubergine)",
+      "name_HU": "padlizsán",
+      "inSeason": [0,0,0,0,0,1,1,1,1,0,0,0]
+    },
+    {
+      "name_EN": "endive",
+      "name_HU": "endívia saláta",
+      "inSeason": [1,1,1,1,0,0,0,0,0,1,1,1]
+    },
+    {
+      "name_EN": "enoki mushroom",
+      "name_HU": "téli fülőke gomba",
+      "inSeason": [1,1,1,0,0,0,0,0,0,1,1,1]
+    },
+    {
+      "name_EN": "fennel",
+      "name_HU": "édeskömény",
+      "inSeason": [0,0,0,0,1,1,1,1,1,1,1,1]
+    },
+    {
+      "name_EN": "garlic",
+      "name_HU": "fokhagyma",
+      "inSeason": [0,0,0,0,1,1,1,1,1,1,0,0]
+    },
+    {
+      "name_EN": "green bean",
+      "name_HU": "zöldbab",
+      "inSeason": [0,0,0,0,0,1,1,1,1,0,0,0]
+    },
+    {
+      "name_EN": "iceberg lettuce",
+      "name_HU": "jégsaláta",
+      "inSeason": [0,0,0,0,1,1,1,1,1,1,0,0]
+    },
+    {
+      "name_EN": "kale",
+      "name_HU": "kelkáposzta",
+      "inSeason": [0,0,0,0,0,0,1,1,1,1,1,0]
+    },
+    {
+      "name_EN": "kohlrabi",
+      "name_HU": "karalábé",
+      "inSeason": [0,0,0,0,1,1,1,1,1,1,0,0]
+    },
+    {
+      "name_EN": "lamb's lettuce",
+      "name_HU": "madársaláta",
+      "inSeason": [1,1,1,1,1,1,1,1,1,0,0,0]
+    },
+    {
+      "name_EN": "lettuce",
+      "name_HU": "kerti saláta",
+      "inSeason": [1,1,1,1,1,1,1,1,1,0,0,0]
+    },
+    {
+      "name_EN": "leek",
+      "name_HU": "póréhagyma",
+      "inSeason": [1,1,1,1,0,0,0,0,1,1,1,1]
+    },
+    {
+      "name_EN": "lentils",
+      "name_HU": "lencse",
+      "inSeason": [1,1,1,0,0,0,0,0,0,0,1,1]
+    },
+    {
+      "name_EN": "champignon mushroom",
+      "name_HU": "csiperkegomba",
+      "inSeason": [1,1,1,1,1,1,0,0,1,1,1,1]
+    },
+    {
+      "name_EN": "onion",
+      "name_HU": "hagyma",
+      "inSeason": [0,0,0,0,1,1,1,1,1,1,0,0]
+    },
+    {
+      "name_EN": "oyster mushroom",
+      "name_HU": "laskagomba",
+      "inSeason": [1,1,0,0,0,0,0,0,0,1,1,1]
+    },
+    {
+      "name_EN": "pak choi",
+      "name_HU": "pak choi",
+      "inSeason": [0,0,0,1,1,1,1,1,1,1,1,1]
+    },
+    {
+      "name_EN": "parsley root",
+      "name_HU": "petrezselyem gyökér",
+      "inSeason": [0,0,0,0,0,0,1,1,1,1,0,0]
+    },
+    {
+      "name_EN": "parsnip",
+      "name_HU": "paszternák",
+      "inSeason": [1,1,0,0,0,0,0,0,0,1,1,1]
+    },
+    {
+      "name_EN": "pattypan squash",
+      "name_HU": "patisszon",
+      "inSeason": [0,0,0,0,0,0,1,1,1,0,0,0]
+    },
+    {
+      "name_EN": "pea",
+      "name_HU": "borsó",
+      "inSeason": [0,0,0,0,1,1,0,0,0,0,0,0]
+    },
+    {
+      "name_EN": "potato",
+      "name_HU": "burgonya",
+      "inSeason": [0,0,0,0,1,1,1,1,1,1,0,0]
+    },
+    {
+      "name_EN": "pumpkin",
+      "name_HU": "sütőtök",
+      "inSeason": [1,0,0,0,0,0,0,0,0,1,1,1]
+    },
+    {
+      "name_EN": "radish",
+      "name_HU": "retek",
+      "inSeason": [0,0,1,1,1,1,0,0,0,0,0,0]
+    },
+    {
+      "name_EN": "red cabbage",
+      "name_HU": "vöröshagyma",
+      "inSeason": [0,0,0,0,0,1,1,1,1,1,1,1]
+    },
+    {
+      "name_EN": "rhubarb",
+      "name_HU": "rebarbara",
+      "inSeason": [0,0,0,0,1,1,0,0,0,0,0,0]
+    },
+    {
+      "name_EN": "rucola",
+      "name_HU": "rukkola",
+      "inSeason": [0,0,0,1,1,1,0,0,0,0,0,0]
+    },
+    {
+      "name_EN": "rutabaga",
+      "name_HU": "karórépa",
+      "inSeason": [1,1,1,1,0,0,0,0,0,1,1,1]
+    },
+    {
+      "name_EN": "scallion (spring onion)",
+      "name_HU": "újhagyma",
+      "inSeason": [0,0,0,0,1,1,1,1,1,1,0,0]
+    },
+    {
+      "name_EN": "snow pea",
+      "name_HU": "cukorborsó",
+      "inSeason": [0,0,0,0,0,0,1,1,1,1,1,1]
+    },
+    {
+      "name_EN": "sorrel",
+      "name_HU": "sóska",
+      "inSeason": [0,0,0,1,1,1,1,1,1,1,1,0]
+    },
+    {
+      "name_EN": "spinach",
+      "name_HU": "spenót",
+      "inSeason": [1,1,1,1,1,1,0,0,1,1,1,1]
+    },
+    {
+      "name_EN": "spaghetti squash",
+      "name_HU": "spagetti tök",
+      "inSeason": [1,0,0,0,0,0,0,0,0,1,1,1]
+    },
+    {
+      "name_EN": "sweet potato",
+      "name_HU": "édesburgonya",
+      "inSeason": [1,1,1,1,1,1,1,1,1,1,1,1]
+    },
+    {
+      "name_EN": "tomato",
+      "name_HU": "paradicsom",
+      "inSeason": [0,0,0,0,1,1,1,1,1,0,0,0]
+    },
+    {
+      "name_EN": "turnip",
+      "name_HU": "tarlórépa",
+      "inSeason": [0,0,0,0,0,1,1,1,1,0,0,0]
+    },
+    {
+      "name_EN": "truffle",
+      "name_HU": "szarvasgomba",
+      "inSeason": [1,1,1,0,0,0,0,0,1,1,1,1]
+    },
+    {
+      "name_EN": "watercress",
+      "name_HU": "vízitorma",
+      "inSeason": [0,0,0,0,1,1,1,1,1,0,0,0]
+    },
+    {
+      "name_EN": "Jerusalem artichoke",
+      "name_HU": "csicsóka",
+      "inSeason": [1,1,0,0,1,1,1,1,1,1,1,1]
+    }
+  ],
+  "fruits": [
+    {
+      "name_EN": "apple",
+      "name_HU": "alma",
+      "inSeason": [1,1,1,1,1,0,0,0,1,1,1,1]
+    },
+    {
+      "name_EN": "blackthorn",
+      "name_HU": "kökény",
+      "inSeason": [1,1,0,0,0,0,0,0,0,0,0,1]
+    },
+    {
+      "name_EN": "medlar",
+      "name_HU": "naspolya",
+      "inSeason": [1,1,0,0,0,0,0,0,0,0,1,1]
+    },
+    {
+      "name_EN": "blackcurrant",
+      "name_HU": "fekete ribizli",
+      "inSeason": [0,0,0,0,1,0,0,0,0,0,0,0]
+    },
+    {
+      "name_EN": "cherry",
+      "name_HU": "cseresznye",
+      "inSeason": [0,0,0,0,1,1,0,0,0,0,0,0]
+    },
+    {
+      "name_EN": "gooseberry",
+      "name_HU": "piszke",
+      "inSeason": [0,0,0,0,1,1,0,0,0,0,0,0]
+    },
+    {
+      "name_EN": "raspberry",
+      "name_HU": "málna",
+      "inSeason": [0,0,0,0,1,1,0,0,0,0,0,0]
+    },
+    {
+      "name_EN": "redcurrant",
+      "name_HU": "ribizli",
+      "inSeason": [0,0,0,0,1,1,0,0,0,0,0,0]
+    },
+    {
+      "name_EN": "strawberry",
+      "name_HU": "eper",
+      "inSeason": [0,0,0,0,1,1,1,0,0,0,0,0]
+    },
+    {
+      "name_EN": "ananas (pineapple)",
+      "name_HU": "ananász",
+      "inSeason": [1,1,1,1,0,0,0,0,0,1,1,1]
+    },
+    {
+      "name_EN": "avocado",
+      "name_HU": "avokádó",
+      "inSeason": [1,1,1,1,0,0,0,0,0,1,1,1]
+    },
+    {
+      "name_EN": "banana",
+      "name_HU": "banán",
+      "inSeason": [1,1,1,1,1,1,1,1,1,1,1,1]
+    },
+    {
+      "name_EN": "clementine",
+      "name_HU": "mandarin",
+      "inSeason": [1,0,0,0,0,0,0,0,0,0,1,1]
+    },
+    {
+      "name_EN": "coconut",
+      "name_HU": "kókusz",
+      "inSeason": [1,1,0,0,0,0,0,0,0,0,1,1]
+    },
+    {
+      "name_EN": "kiwi",
+      "name_HU": "kivi",
+      "inSeason": [1,1,1,1,1,0,0,0,0,0,1,1]
+    },
+    {
+      "name_EN": "litchi",
+      "name_HU": "licsi",
+      "inSeason": [1,0,0,0,0,0,0,0,0,0,1,1]
+    },
+    {
+      "name_EN": "orange",
+      "name_HU": "narancs",
+      "inSeason": [1,1,1,1,0,0,0,0,0,0,0,1]
+    },
+    {
+      "name_EN": "passion fruit (maracuja)",
+      "name_HU": "maracuja",
+      "inSeason": [1,1,1,1,0,0,0,0,0,1,1,1]
+    },
+    {
+      "name_EN": "physalis (goldenberry)",
+      "name_HU": "földicseresznye",
+      "inSeason": [1,1,0,0,0,0,0,0,0,0,1,1]
+    },
+    {
+      "name_EN": "pomegranate",
+      "name_HU": "granátalma",
+      "inSeason": [1,1,0,0,0,0,0,0,0,0,1,1]
+    },
+    {
+      "name_EN": "pomelo",
+      "name_HU": "pomelo",
+      "inSeason": [1,1,1,1,1,0,0,0,0,0,0,0]
+    },
+    {
+      "name_EN": "khaki",
+      "name_HU": "kakiszilva",
+      "inSeason": [0,1,0,0,0,0,0,0,0,1,1,1]
+    },
+    {
+      "name_EN": "lemon",
+      "name_HU": "citrom",
+      "inSeason": [0,1,1,1,1,1,1,1,1,1,1,1]
+    },
+    {
+      "name_EN": "lime",
+      "name_HU": "lime",
+      "inSeason": [0,1,1,1,1,1,1,1,1,1,1,1]
+    },
+    {
+      "name_EN": "mango",
+      "name_HU": "mangó",
+      "inSeason": [0,0,0,1,1,1,1,0,0,0,0,0]
+    },
+    {
+      "name_EN": "peach",
+      "name_HU": "őszibarack",
+      "inSeason": [0,0,0,0,0,0,1,1,1,0,0,0]
+    },
+    {
+      "name_EN": "apricot",
+      "name_HU": "sárgabarack",
+      "inSeason": [0,0,0,0,0,0,1,1,0,0,0,0]
+    },
+    {
+      "name_EN": "watermelon",
+      "name_HU": "görögdinnye",
+      "inSeason": [0,0,0,0,0,1,1,1,0,0,0,0]
+    },
+    {
+      "name_EN": "melon",
+      "name_HU": "sárgadinnye",
+      "inSeason": [0,0,0,0,0,0,1,1,1,0,0,0]
+    },
+    {
+      "name_EN": "fig",
+      "name_HU": "füge",
+      "inSeason": [0,0,0,0,0,0,1,1,1,1,0,0]
+    },
+    {
+      "name_EN": "plum",
+      "name_HU": "szilva",
+      "inSeason": [0,0,0,0,0,0,1,1,1,0,0,0]
+    },
+    {
+      "name_EN": "grape",
+      "name_HU": "szőlő",
+      "inSeason": [0,0,0,0,0,0,0,1,1,1,0,0]
+    },
+    {
+      "name_EN": "mirabelle (greengage)",
+      "name_HU": "ringló szilva",
+      "inSeason": [0,0,0,0,0,0,0,1,1,0,0,0]
+    },
+    {
+      "name_EN": "pear",
+      "name_HU": "körte",
+      "inSeason": [0,0,0,0,0,0,1,1,1,1,0,0]
+    },
+    {
+      "name_EN": "papaya",
+      "name_HU": "papaya",
+      "inSeason": [0,0,0,0,0,0,0,0,0,1,1,1]
+    },
+    {
+      "name_EN": "date",
+      "name_HU": "datolya",
+      "inSeason": [0,0,0,0,0,0,0,0,0,1,1,1]
+    }
+  ]
+}

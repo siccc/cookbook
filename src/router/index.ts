@@ -37,6 +37,11 @@ const router = createRouter({
       component: () => import('@/views/ShoppingList.vue')
     },
     {
+      name: 'seasonalFoods',
+      path: '/seasonal-foods',
+      component: () => import('@/views/Seasonal.vue')
+    },
+    {
       name: 'openRecipe',
       path: '/recipe/:id',
       component: () => import('@/views/Recipe.vue'),

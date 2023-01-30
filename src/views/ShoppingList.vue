@@ -152,7 +152,7 @@ function saveChanges() {
           @is-editing-change="(event) => setShowItemDelete(event)"
         />
         <div v-show="showItemDelete" class="py-0.5 px-2 cursor-pointer" @click="removeItem(item)">
-          <CloseIcon class="w-4 h-4 text-stone-500" />
+          <CloseIcon class="w-5 h-5 text-stone-400" />
         </div>
       </div>
     </div>

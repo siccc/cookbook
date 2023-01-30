@@ -11,15 +11,17 @@ export interface Props {
   isConfirmDanger?: boolean,
   showConfirmButton?: boolean,
   showCancelButton?: boolean,
+  showTitle?: boolean
 }
 
-const {
-  message,
-  isConfirmPrimary = false,
-  isConfirmDanger = false,
-  showConfirmButton = true,
-  showCancelButton = true,
-} = defineProps<Props>();
+
+const props = withDefaults(defineProps<Props>(), {
+  isConfirmPrimary: false,
+  isConfirmDanger: false,
+  showConfirmButton: true,
+  showCancelButton: true,
+  showTitle: true
+})
 
 
 const emit = defineEmits<{
@@ -42,34 +44,38 @@ function onConfirm(event: Event) {
 
 <template>
   <div
-    v-if="show"
-    class="fixed z-50 top-0 left-0 flex flex-col items-center justify-center
-      w-screen h-screen p-6"
+    v-if="props.show"
+    class="fixed z-50 top-0 left-0 flex flex-col items-center justify-center w-screen h-screen p-6"
   >
     <div class="absolute w-full h-full bg-stone-800/80" @mousedown="onCancel" />
-    <div class="rounded-xl px-6 py-6 bg-white w-96 text-center z-20 outline-none">
-      <div class="font-medium text-xl">{{ title }}</div>
+    <div
+      class="px-6 py-6 bg-white sm:w-96 text-center z-20 outline-none
+        w-full absolute bottom-0 rounded-t-xl sm:rounded-b-xl sm:relative sm:bottom-auto"
+    >
+      <div class="font-medium text-xl" v-if="props.showTitle">{{ props.title }}</div>
       <div class="text-stone-600 py-6">
         <slot>
-          {{ message }}
+          {{ props.message }}
         </slot>
       </div>
       <!-- FOOTER -->
-      <div class="ßmt-3 flex justify-between items-center gap-3">
+      <div class="flex justify-between items-center gap-3">
         <slot name="footer">
           <Button
+            v-if="props.showCancelButton"
             class="flex-1 uppercase"
             @click="onCancel"
           >
-            {{ cancelLabel || 'Cancel' }}
+            {{ props.cancelLabel || 'Cancel' }}
           </Button>
           <Button
+            v-if="props.showConfirmButton"
             class="flex-1 uppercase"
-            :primary="isConfirmPrimary"
-            :danger="isConfirmDanger"
+            :primary="props.isConfirmPrimary"
+            :danger="props.isConfirmDanger"
             @click="onConfirm"
           >
-            {{ confirmLabel || 'OK' }}
+            {{ props.confirmLabel || 'OK' }}
           </Button>
         </slot>
       </div>

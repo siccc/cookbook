@@ -16,7 +16,8 @@ const showMenu = computed(() => {
   return !useMobile
     || router.currentRoute.value.name === 'home'
     || router.currentRoute.value.name === 'inspiration'
-    || router.currentRoute.value.name === 'shoppingList';
+    || router.currentRoute.value.name === 'shoppingList'
+    || router.currentRoute.value.name === 'seasonalFoods';
 });
 
 </script>
@@ -34,7 +35,7 @@ const showMenu = computed(() => {
         <RouterLink to="/" class="ml-4 link-underline link-underline-yellow">Home</RouterLink>
         <RouterLink to="/inspiration" class="ml-4 link-underline link-underline-yellow">Inspiration</RouterLink>
         <RouterLink to="/shopping-list" class="ml-4 link-underline link-underline-yellow">Shopping list</RouterLink>
-        <RouterLink to="/season" class="ml-4 cursor-default text-stone-400">In season</RouterLink>
+        <RouterLink to="/seasonal-foods" class="ml-4 link-underline link-underline-yellow">What's in season</RouterLink>
       </div>
     </div>
   </div>
@@ -65,8 +66,8 @@ const showMenu = computed(() => {
           <div class="text-xs">Shopping list</div>
         </div>
       </RouterLink>
-      <RouterLink to="/" class="w-1/5">
-        <div class="flex flex-col items-center text-stone-200">
+      <RouterLink to="/seasonal-foods" class="w-1/5">
+        <div class="flex flex-col items-center">
           <SeasonIcon class="w-6 h-6"/>
           <div class="text-xs">Seasonal</div>
         </div>

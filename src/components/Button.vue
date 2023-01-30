@@ -58,7 +58,7 @@ function onFocusout(event: Event) {
 /* DEFAULT - YELLOW OUTLINED */
 .button {
   @apply items-center justify-center border-2 border-yellow-400 text-center font-medium
-  text-amber-400 rounded-lg cursor-pointer px-3 py-3 md:py-1.5 select-none;
+  text-amber-400 rounded-lg cursor-pointer px-3 py-2 md:py-1.5 select-none;
 }
 .button:disabled {
   @apply text-stone-300 border-stone-300 cursor-default;

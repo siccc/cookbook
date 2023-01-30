@@ -40,6 +40,7 @@ function confirmEditingItem() {
   if (newName.value) {
     isEditing.value = false;
     emit('nameChange', newName.value);
+    emit('isEditingChange', isEditing.value);
   }
 }
 
@@ -61,7 +62,7 @@ function setItemChecked(item: ShoppingListItem, event: Event) {
         @click="(event: Event) => setItemChecked(props.item, event)"
       />
       <div class="py-0.5 px-2 cursor-pointer" @click="editItem(props.item)">
-        <EditIcon class="w-4 h-4 text-stone-500" />
+        <EditIcon class="w-5 h-5 text-stone-400" />
       </div>
     </div>
     <div v-if="isEditing" class="flex justify-between items-center w-full">
@@ -72,10 +73,11 @@ function setItemChecked(item: ShoppingListItem, event: Event) {
         @keyup.esc="cancelEditingItem"
       />
       <div
-        class="ml-1 py-3 px-3 sm:p-2 cursor-pointer bg-yellow-400 rounded-md"
+        class="ml-1 p-2 sm:p-1.5 cursor-pointer bg-yellow-400 border border-yellow-400
+          rounded-md"
         @click="confirmEditingItem"
       >
-        <CheckIcon class="w-5 h-5 text-white" />
+        <CheckIcon class="w-6 h-6 text-white" />
       </div>
     </div>
   </div>

@@ -14,9 +14,9 @@ const props = defineProps<{
   ingredientList: string
 }>();
 
-const { data} = getShoppingList();
+const { data } = getShoppingList();
 const updateShoppingListMutation = useUpdateShoppingListMutation();
-const showSaveSuccessMessage =ref(false);
+const showSaveSuccessMessage = ref(false);
 const list = ref<ShoppingListItem[]>([]);
 const shoppingList = ref<ShoppingListItem[]>([]);
 

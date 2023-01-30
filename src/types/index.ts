@@ -67,3 +67,14 @@ export interface ShoppingListItem {
   checked: boolean,
   name: string
 }
+
+export interface FoodList {
+  vegetables: Food[],
+  fruits: Food[]
+}
+
+export interface Food {
+  name_EN: string,
+  name_HU: string,
+  inSeason: number[]
+}

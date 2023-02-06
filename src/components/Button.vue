@@ -58,12 +58,12 @@ function onFocusout(event: Event) {
 /* DEFAULT - YELLOW OUTLINED */
 .button {
   @apply items-center justify-center border-2 border-yellow-400 text-center font-medium
-  text-amber-400 rounded-lg cursor-pointer px-3 py-2 md:py-1.5 select-none;
+  text-amber-400 rounded-lg cursor-pointer px-2 py-2 md:py-1.5 select-none;
 }
 .button:disabled {
   @apply text-stone-300 border-stone-300 cursor-default;
 }
-.button:hover:not(:disabled), .button:active {
+.button:hover:not(:disabled), .button:active:not(:disabled) {
   @apply bg-amber-100;
 }
 
@@ -75,7 +75,7 @@ function onFocusout(event: Event) {
 .button.primary:disabled {
   @apply text-stone-300 bg-stone-100 border-stone-100;
 }
-.button.primary:hover:not(:disabled), .button.primary:active {
+.button.primary:hover:not(:disabled), .button.primary:active:not(:disabled) {
   @apply bg-amber-400 border-amber-400;
 }
 
@@ -87,14 +87,14 @@ function onFocusout(event: Event) {
 .button.danger:disabled {
   @apply text-stone-300 bg-stone-100 border-stone-100;
 }
-.button.danger:hover:not(:disabled), .button.danger:active {
+.button.danger:hover:not(:disabled), .button.danger:active:not(:disabled) {
   @apply bg-red-500 border-red-500;
 }
 
 /* SIMPLE - WHITE */
 
 .button.white {
-  @apply bg-white shadow shadow-stone-900/20 border-none text-stone-800;
+  @apply bg-white shadow shadow-stone-900/20 border-none text-stone-700;
 }
 .button.white:disabled {
   @apply text-stone-300 bg-stone-100 border-stone-100;

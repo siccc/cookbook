@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { inject, type RendererElement, type App, ref } from 'vue';
+import { markdown } from '@codemirror/lang-markdown';
 import { Codemirror } from 'vue-codemirror';
-import VueCodemirror from 'vue-codemirror';
 import { minimalSetup } from 'codemirror';
 import {EditorView} from "@codemirror/view";
-import { markdown } from '@codemirror/lang-markdown';
+import VueCodemirror from 'vue-codemirror';
 
 const props = defineProps<{
   content: string,

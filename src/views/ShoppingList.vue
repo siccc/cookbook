@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import Button from '@/components/Button.vue';
-import EditableCheckboxInput from '@/components/EditableCheckboxInput.vue';
 import { ref, computed, watch, onMounted, Teleport } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
-import PlusIcon from '@/assets/icons/plus.svg?component';
-import CloseIcon from '@/assets/icons/close.svg?component';
-import ErrorIcon from '@/assets/error.svg?component';
-import Modal from '@/components/Modal.vue';
-import LoadingIcon from '@/assets/loading-pot.svg?component';
-import LoadingShadow from '@/assets/loading-shadow.svg?component';
 import { isMobile } from '@/stores/utility';
 import { getShoppingList, useUpdateShoppingListMutation } from '@/stores/shoppingList';
 import type { ShoppingList, ShoppingListItem } from '@/types';
+import Button from '@/components/Button.vue';
+import IconButton from '@/components/IconButton.vue';
+import EditableCheckboxInput from '@/components/EditableCheckboxInput.vue';
+import PlusIcon from '@/assets/icons/plus.svg?component';
+import CloseIcon from '@/assets/icons/close.svg?component';
+import Modal from '@/components/Modal.vue';
+import ErrorState from '@/components/ErrorState.vue';
+import EmptyState from '@/components/EmptyState.vue';
+import LoadingState from '@/components/LoadingState.vue';
 
 const useMobile = isMobile();
 const showModal = ref(false);
@@ -36,7 +37,7 @@ watch(
     }
   },
   { immediate:true }
-)
+);
 
 const listLength = computed(() => {
   return list.value && list.value ? list.value.length : 0;
@@ -85,12 +86,10 @@ function addItems(event: Event) {
 
 function onClickShowModal() {
   showModal.value = true;
-  document.body.classList.add('modalOpen');
 }
 
 function onClickCancelModal() {
   showModal.value = false;
-  document.body.classList.remove('modalOpen');
 }
 
 const debouncedSaveChanges = useDebounceFn(() => {
@@ -112,25 +111,16 @@ function saveChanges() {
 <template>
   <main class="p-6 md:p-9 max-w-screen-sm mx-auto my-14">
     <div class="mt-3 mb-6 flex items-center justify-between">
-      <div class="text-2xl text-center md:text-left">
+      <h1 class="text-2xl text-center md:text-left">
         Shopping list
-      </div>
+      </h1>
       <Button v-if="listLength !== 0" @click="onClickShowModal">Delete all checked</Button>
     </div>
-    <div v-if="isLoading" class="py-12 text-center font-k2d text-2xl text-yellow-400 flex
-      flex-col justify-center items-center">
-        <LoadingIcon class="w-24 opacity-80 animate-bounce block" />
-        <LoadingShadow class="w-24 opacity-80 block" />
-      Loading...
-    </div>
-    <div v-if="isError" class="py-12 text-center font-k2d text-xl text-red-300 flex
-      justify-center items-center">
-      <ErrorIcon class="w-24 h-24 opacity-50" />
-      <div>{{ error }}</div>
-    </div>
+    <LoadingState v-if="isLoading" />
+    <ErrorState v-else-if="isError" :error="error" />
     <Teleport to="body">
       <Modal
-        :show="showModal"
+        v-if="showModal"
         confirm-label="Delete"
         :is-confirm-danger="true"
         @close="onClickCancelModal"
@@ -142,7 +132,7 @@ function saveChanges() {
       </Modal>
     </Teleport>
     <div class="divide-y" v-auto-animate>
-      <div v-for="(item) in list" class="py-4 md:py-3 flex items-center">
+      <div v-for="(item) in list" class="py-3 flex items-center">
         <EditableCheckboxInput
           class="flex-1"
           :item="item"
@@ -151,13 +141,22 @@ function saveChanges() {
           @name-change="(event) => setItemName(item, event)"
           @is-editing-change="(event) => setShowItemDelete(event)"
         />
-        <div v-show="showItemDelete" class="py-0.5 px-2 cursor-pointer" @click="removeItem(item)">
-          <CloseIcon class="w-5 h-5 text-stone-400" />
-        </div>
+        <IconButton
+          v-show="showItemDelete"
+          class="ml-2"
+          @click="removeItem(item)"
+          aria-label="Delete item"
+        >
+          <CloseIcon class="w-5 h-5" />
+        </IconButton>
       </div>
     </div>
     <div class="mt-3 md:mt-6 flex items-center relative" v-if="!isLoading">
-      <PlusIcon class="w-5 h-5 text-stone-300 absolute left-0 ml-3"/>
+      <PlusIcon
+        class="w-5 h-5 text-stone-300 absolute left-0 ml-3"
+        aria-hidden="true"
+        focusable="false"
+      />
       <input
         ref="newItemInputEl"
         class="inputWithIcon"
@@ -166,13 +165,10 @@ function saveChanges() {
         @keypress.enter="addItems"
       />
     </div>
-    <div
+    <EmptyState
       v-if="listLength === 0 && !isLoading"
-      class="mx-auto max-w-sm p-6 text-center flex flex-col justify-center items-center opacity-70"
-    >
-      <LoadingIcon class="w-24" />
-      <LoadingShadow class="w-24" />
-      Your shopping list is empty. Start adding products you need to buy.
-    </div>
+      message="Your shopping list is empty. Start adding products you need to buy."
+      type="default"
+    />
   </main>
 </template>

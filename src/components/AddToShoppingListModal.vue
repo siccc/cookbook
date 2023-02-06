@@ -1,16 +1,15 @@
 <script setup lang="ts">
+import { ref, watch } from 'vue';
+import { trimStart } from 'lodash';
+import { getShoppingList, useUpdateShoppingListMutation } from '@/stores/shoppingList';
+import type { ShoppingList, ShoppingListItem } from '@/types';
 import Modal from '@/components/Modal.vue';
 import EditableCheckboxInput from '@/components/EditableCheckboxInput.vue';
 import SpinnerIcon from '@/assets/icons/spinner.svg?component';
 import CheckIcon from '@/assets/icons/check.svg?component';
 import Button from '@/components/Button.vue';
-import { ref, watch } from 'vue';
-import { trimStart } from 'lodash';
-import { getShoppingList, useUpdateShoppingListMutation } from '@/stores/shoppingList';
-import type { ShoppingList, ShoppingListItem } from '@/types';
 
 const props = defineProps<{
-  show: boolean,
   ingredientList: string
 }>();
 
@@ -34,7 +33,8 @@ watch(
     }
   },
   { immediate:true }
-)
+);
+
 
 if (props.ingredientList) {
   let name = '';
@@ -99,12 +99,12 @@ async function showSuccessMessage() {
 <template>
   <Teleport to="body">
     <Modal
-      :show="show"
       confirm-label="Add items"
       :is-confirm-primary="true"
       @cancel="onCancel"
       @confirm="onConfirm"
       title="Add to shopping list"
+      :is-scrollable="true"
     > 
       <div class="text-left divide-y" v-show="!showSaveSuccessMessage">
         <div v-for="item in list" class="flex justify-between items-center py-4 md:py-3">
@@ -119,7 +119,7 @@ async function showSuccessMessage() {
       <div
         v-if="showSaveSuccessMessage"
         class="p-3 rounded-lg bg-sky-50 text-sky-800 text-sm text-center flex items-center
-          justify-between"
+          justify-between my-3"
       >
         <div class="bg-sky-200 p-1.5 rounded-lg">
           <CheckIcon class="w-6 h-6 text-white" />

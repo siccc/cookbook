@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { ref, type Ref } from 'vue';
 import ImagePlaceholder from '@/assets/image-placeholder.svg?component';
 import DeleteIcon from '@/assets/icons/trash-alt.svg?component';
 import Button from '@/components/Button.vue';
 import ImageUploadIcon from '@/assets/icons/image-upload.svg?component';
-import { ref, type Ref } from 'vue';
 
 const props = defineProps<{
   imageSource?: string
@@ -17,6 +17,12 @@ const imageSource:Ref<string> = ref(props.imageSource || '');
 const fileInput:Ref<HTMLInputElement | null> = ref(null);
 const hasFileSizeError:Ref<Boolean> = ref(false);
 const fileSizeErrorMessage:string = `Maximum allowed file size is 50 MB.`
+
+function clickFileInput() {
+  if(fileInput && fileInput.value) {
+    fileInput.value.click();
+  }
+}
 
 async function onFileSelect(event:Event) {
   const target= event.target as HTMLInputElement;
@@ -59,12 +65,12 @@ function validateFileSize(size:number) {
 <template>
   <div class="w-full md:p-3">
     <input
+      ref="fileInput"
       type="file"
       accept=".jpeg,.jpg,.png,image/jpeg,image/png"
       @change="onFileSelect"
       id="uploadImage"
       hidden
-      :for="fileInput"
     />
     <!-- PLACEHOLDER IMAGE -->
     <div
@@ -72,28 +78,52 @@ function validateFileSize(size:number) {
       class="w-full h-96 md:rounded-xl bg-stone-200 md:bg-stone-50 md:border-dashed md:border-2
         border-stone-300 flex flex-col justify-center items-center"
     >
-      <ImagePlaceholder class="opacity-10 w-40 h-40"/>
-      <label class="text-stone-400 cursor-pointer p-2 group" for="uploadImage">
-        <span class="text-yellow-400 font-semibold group-hover:text-yellow-300">Upload</span>
+      <ImagePlaceholder class="opacity-10 w-40 h-40" aria-hidden="true"/>
+      <label
+        class="text-stone-400 cursor-pointer p-2 group"
+        for="uploadImage"
+        role="button"
+        tabindex="0"
+        @keydown.enter="clickFileInput"
+        @keydown.space="clickFileInput"
+      >
+        <span class="text-yellow-400 font-semibold group-hover:text-yellow-300">
+          Upload
+        </span>
          a photo of your dish
       </label>
     </div>
     <!-- IMAGE PREVIEW -->
     <div v-else class="w-full">
-      <img class="w-full h-96 object-cover md:rounded-xl" :src="imageSource" />
+      <img
+        class="w-full h-96 object-cover md:rounded-xl"
+        :src="imageSource"
+        alt="preview of the uploaded image"
+      />
       <div class="md:justify-between md:items-center md:flex hidden">
-        <label class="block cursor-pointer group p-2 text-stone-400" for="uploadImage">
+        <label
+          class="block cursor-pointer group p-2 text-stone-400"
+          for="uploadImage"
+          role="button"
+          tabindex="0"
+          @keydown.enter="clickFileInput"
+          @keydown.space="clickFileInput"
+        >
           <span class="text-yellow-400 font-semibold group-hover:text-yellow-300">Upload</span>
            a photo of your dish
         </label>
-        <label class="text-stone-400 cursor-pointer p-2 block" @click="deleteImageUrl">
-          <span class="text-red-400 font-semibold hover:text-red-300">Delete</span>
-        </label>
+        <button 
+          class="p-2 text-red-400 font-semibold hover:text-red-300"
+          @click="deleteImageUrl"
+        >
+          Delete
+        </button>
       </div>
       <div class="flex justify-between items-center md:hidden -mt-24 mb-14 px-3">
         <label
           for="uploadImage"
-          class="bg-white flex items-center shadow p-3 rounded-lg hover:bg-yellow-400 hover:text-white"
+          class="bg-white flex items-center shadow px-3 py-2 rounded-lg hover:bg-yellow-400
+          hover:text-white"
         >
           <ImageUploadIcon class="w-6 h-6" />
           Upload

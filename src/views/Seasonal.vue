@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { getCurrentMonth, getSeasonalFoodsByMonth, getMonths } from '@/stores/seasonalFoods';
 import { getShoppingList, useUpdateShoppingListMutation } from '@/stores/shoppingList';
-import type { Food, FoodList } from '@/types';
 import { computed, ref, watch } from 'vue';
 import { useScroll } from '@vueuse/core';
+import type { Food, FoodList, ShoppingList } from '@/types';
 import Modal from '@/components/Modal.vue';
 import SelectInput from '@/components/SelectInput.vue';
 import SeasonIcon from '@/assets/icons/season.svg?component';
-import type { ShoppingList } from '@/types';
 import Button from '@/components/Button.vue';
 import SpinnerIcon from '@/assets/icons/spinner.svg?component';
+import EggplantIcon from '@/assets/icons/foods/eggplant.svg?component';
 import CheckIcon from '@/assets/icons/check.svg?component';
 
 const showModal = ref(false);
@@ -73,14 +73,12 @@ function onClickShowModal(food: Food, foodType: string) {
   selectedFood.value = food;
   selectedFoodType.value = foodType;
   showModal.value = true;
-  document.body.classList.add('modalOpen');
 }
 
 function onClickCancelModal() {
   selectedFood.value = null;
   selectedFoodType.value = '';
   showModal.value = false;
-  document.body.classList.remove('modalOpen');
 }
 
 async function onConfirm(event: Event) {
@@ -121,122 +119,128 @@ async function showSuccessMessage() {
 </script>
 
 <template>
-  <div class="mx-auto max-w-screen-xl h-72 relative top-12 md:top-20 md:h-96 -z-10">
-    <div
-      ref="parallaxEl"
-      class="absolute inset-0 bg-cover bg-bottom bg-no-repeat md:rounded-3xl"
-      :class="[sesonalBgClass]"
-    />
-  </div>
-  <div class="max-w-screen-xl mx-auto mb-16 -mt-6 md:mt-0">
-    <div class="text-2xl text-center font-k2d md:text-left px-6 md:mb-12 mb-6 text-white md:ml-3">
-      <span class="bg-sky-900/40 px-3 rounded-sm">Seasonal foods in {{ selectedMonth }}</span>
+  <main class="mx-auto max-w-screen-xl mb-16">
+    <div class="h-72 relative top-12 md:top-20 md:h-96 -z-10">
+      <div
+        ref="parallaxEl"
+        class="absolute inset-0 bg-cover bg-bottom bg-no-repeat md:rounded-3xl"
+        :class="[sesonalBgClass]"
+      />
     </div>
-    <div class="bg-white pt-3  rounded-t-3xl">
-      <div class="flex justify-between items-center my-6 px-6">
-        <div class="text-xl">Veggies</div>
-        <div class="flex items-center">
-          <div class="mr-3">Month:</div>
-          <SelectInput
-            class="w-32"
-            :value="selectedMonth"
-            :options="months"
-            @change="onSelectedMonthChange"
-          />
-        </div>
-      </div>
-      <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 px-6">
-        <div
-          class="p-3 text-sky-800 bg-sky-100 rounded-lg leading-none flex items-center"
-          @click="onClickShowModal(veggie, 'vegetable')"
-          v-for="veggie in foods.vegetables"
-        >
-          <div class="p-1 rounded-lg bg-sky-200/50 mr-3 text-sky-800/20">
-            <SeasonIcon class="w-8 h-8"/>
-          </div>
-          <div>
-            <div>{{ veggie.name_EN }}</div>
-            <!-- <div class="text-xs mt-0.5">{{ veggie.name_HU }}</div> -->
+    <div class="-mt-6 md:mt-0">
+      <h1 class="text-center md:text-left px-6 md:mb-12 mb-6 md:ml-3">
+        <span class="bg-sky-900/40 px-3 rounded-sm font-k2d text-2xl text-white">
+          Seasonal foods in {{ selectedMonth }}
+        </span>
+      </h1>
+      <div class="bg-white pt-3  rounded-t-3xl">
+        <div class="flex justify-between items-center my-6 px-6">
+          <div class="text-xl">Veggies</div>
+          <div class="flex items-center">
+            <div class="mr-3">Month:</div>
+            <SelectInput
+              class="w-32"
+              :value="selectedMonth"
+              :options="months"
+              @change="onSelectedMonthChange"
+            />
           </div>
         </div>
-      </div>
-      <div class="text-xl mt-9 mb-6 px-6">Fruits</div>
-      <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 px-6">
-        <div
-          class="p-3 text-yellow-600 bg-amber-200 rounded-lg leading-none flex
-          items-center"
-          @click="onClickShowModal(fruit, 'fruit')"
-          v-for="fruit in foods.fruits"
-        >
-          <div class="p-1 rounded-lg bg-amber-300/50 mr-3 text-yellow-800/20">
-            <SeasonIcon class="w-8 h-8"/>
-          </div>
-          <div>
-            <div>{{ fruit.name_EN }}</div>
-            <!-- <div class="text-xs mt-0.5">{{ fruit.name_HU }}</div> -->
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- FOOD DETAILS MODAL -->
-    <Teleport to="body">
-      <Modal
-        :show="showModal"
-        @close="onClickCancelModal"
-        @cancel="onClickCancelModal"
-        :show-title="false"
-        confirm-label="Add to shopping list"
-        title="Food details"
-      >
-        <div v-if="selectedFood && !showSaveSuccessMessage" class="flex flex-col items-center">
-          <div
-            class="uppercase font-k2d"
-            :class="{
-              'text-sky-600': selectedFoodType === 'vegetable',
-              'text-yellow-500': selectedFoodType === 'fruit'
-            }"
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 px-6">
+          <button
+            class="p-1 text-sky-800 bg-sky-100 rounded-lg leading-none flex items-center cursor-pointer"
+            @click="onClickShowModal(veggie, 'vegetable')"
+            v-for="veggie in foods.vegetables"
+            :aria-label="`Open ${ veggie.name_EN } details`"
           >
-            {{ selectedFood.name_EN }}
-          </div>
-          <!-- <div class="text-sm text-stone-400">{{ selectedFood.name_HU }}</div> -->
-          <div class="text-sm mt-3 grid grid-cols-12 gap-3">
+            <div class="p-1 rounded-lg mr-1 text-sky-800/50">
+              <EggplantIcon class="w-10 h-10" aria-hidden="true" focusable="false"/>
+            </div>
+            <div>
+              <div>{{ veggie.name_EN }}</div>
+              <!-- <div class="text-xs mt-0.5">{{ veggie.name_HU }}</div> -->
+            </div>
+          </button>
+        </div>
+        <div class="text-xl mt-9 mb-6 px-6">Fruits</div>
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 px-6">
+          <button
+            class="p-1 text-yellow-600 bg-amber-200 rounded-lg leading-none flex
+            items-center cursor-pointer"
+            @click="onClickShowModal(fruit, 'fruit')"
+            v-for="fruit in foods.fruits"
+            :aria-label="`Open ${fruit.name_EN} details`"
+          >
+            <div class="p-1 rounded-lg mr-1 text-yellow-800/50">
+              <EggplantIcon class="w-10 h-10" aria-hidden="true" focusable="false"/>
+            </div>
+            <div>
+              <div>{{ fruit.name_EN }}</div>
+              <!-- <div class="text-xs mt-0.5">{{ fruit.name_HU }}</div> -->
+            </div>
+          </button>
+        </div>
+      </div>
+      <!-- FOOD DETAILS MODAL -->
+      <Teleport to="body">
+        <Modal
+          v-if="showModal"
+          @close="onClickCancelModal"
+          @cancel="onClickCancelModal"
+          :show-title="false"
+          confirm-label="Add to shopping list"
+          title="Food details"
+        >
+          <div v-if="selectedFood && !showSaveSuccessMessage" class="flex flex-col items-center">
             <div
-              v-for="(value, monthIndex) in selectedFood.inSeason"
-              class="rounded-sm px-3 py-0.5 flex items-center justify-center"
+              class="uppercase font-k2d"
               :class="{
-                'bg-sky-200 text-sky-600': value && selectedFoodType === 'vegetable',
-                'bg-amber-200 text-yellow-500': value && selectedFoodType === 'fruit',
-                'bg-stone-100 text-stone-400': !value}"
+                'text-sky-600': selectedFoodType === 'vegetable',
+                'text-yellow-500': selectedFoodType === 'fruit'
+              }"
             >
-              {{ shortMonths[monthIndex] }}
+              {{ selectedFood.name_EN }}
+            </div>
+            <!-- <div class="text-sm text-stone-400">{{ selectedFood.name_HU }}</div> -->
+            <div class="text-sm mt-6 grid grid-cols-12 gap-3">
+              <div
+                v-for="(value, monthIndex) in selectedFood.inSeason"
+                class="rounded-sm px-3 py-0.5 flex items-center justify-center"
+                :class="{
+                  'bg-sky-200 text-sky-600': value && selectedFoodType === 'vegetable',
+                  'bg-amber-200 text-yellow-500': value && selectedFoodType === 'fruit',
+                  'bg-stone-100 text-stone-400': !value}"
+              >
+                {{ shortMonths[monthIndex] }}
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          v-if="showSaveSuccessMessage"
-          class="p-3 rounded-lg bg-sky-50 text-sky-800 text-sm text-center flex items-center
-            justify-between"
-        >
-          <div class="bg-sky-200 p-1.5 rounded-lg">
-            <CheckIcon class="w-6 h-6 text-white" />
-          </div>
-          Item added successfully to shopping list.
-        </div>
-        <template v-slot:footer>
-          <Button
-            class="flex-1 uppercase"
-            @click="onConfirm"
-            v-show="!showSaveSuccessMessage"
+          <div
+            v-if="showSaveSuccessMessage"
+            class="p-3 rounded-lg bg-sky-50 text-sky-800 text-sm text-center flex items-center
+              justify-between"
           >
-            <SpinnerIcon
-              v-if="updateShoppingListMutation.isLoading.value"
-              class="w-6 h-6 animate-spin mr-2"
-            />
-            <span v-if="updateShoppingListMutation.isLoading.value">Saving...</span>
-            <span v-else class="uppercase">Add to shopping list</span>
-          </Button>
-        </template>
-      </Modal>
-    </Teleport>
-  </div>
+            <div class="bg-sky-200 p-1.5 rounded-lg">
+              <CheckIcon class="w-6 h-6 text-white" />
+            </div>
+            Item added successfully to shopping list.
+          </div>
+          <template v-slot:footer>
+            <Button
+              class="flex-1 uppercase"
+              @click="onConfirm"
+              v-show="!showSaveSuccessMessage"
+            >
+              <SpinnerIcon
+                v-if="updateShoppingListMutation.isLoading.value"
+                class="w-6 h-6 animate-spin mr-2"
+              />
+              <span v-if="updateShoppingListMutation.isLoading.value">Saving...</span>
+              <span v-else class="uppercase">Add to shopping list</span>
+            </Button>
+          </template>
+        </Modal>
+      </Teleport>
+    </div>
+  </main>
 </template>

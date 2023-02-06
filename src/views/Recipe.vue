@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
+import { computed, onMounted, ref } from 'vue';
+import { useThrottleFn } from '@vueuse/core';
 import { getRecipe, useDeleteRecipeMutation, useUpdateRecipeMutation } from '@/stores/recipes';
 import type { Recipe } from '@/types';
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
@@ -14,12 +17,8 @@ import EditIcon from '@/assets/icons/edit.svg?component';
 import SpinnerIcon from '@/assets/icons/spinner.svg?component';
 import BackIcon from '@/assets/icons/angle-left-b.svg?component';
 import ImagePlaceholder from '@/assets/image-placeholder.svg?component';
-import ErrorIcon from '@/assets/error.svg?component';
-import LoadingIcon from '@/assets/loading-pot.svg?component';
-import LoadingShadow from '@/assets/loading-shadow.svg?component';
-import { useRouter } from 'vue-router';
-import { computed, onMounted, ref } from 'vue';
-import { useThrottleFn } from '@vueuse/core';
+import ErrorState from '@/components/ErrorState.vue';
+import LoadingState from '@/components/LoadingState.vue';
 
 const props = defineProps<{
   id: number
@@ -30,7 +29,12 @@ const router = useRouter();
 const isCounterClicked = ref(false);
 const showDeleteConfirmModal = ref(false);
 const showAddToShoppingListModal = ref(false);
-const { isLoading, isError, data:recipe, error } = getRecipe(props.id);
+const {
+  isLoading,
+  isError,
+  data:recipe,
+  error
+} = getRecipe(props.id);
 const deleteRecipeMutation = useDeleteRecipeMutation();
 const updateRecipeMutation = useUpdateRecipeMutation();
 
@@ -46,7 +50,6 @@ const totalTime = computed<number>(() => {
 // -----------------------------------
 
 function onDelete(recipe: Recipe) {
-  document.body.classList.remove('modalOpen');
   deleteRecipeMutation.mutate(
     recipe,
     { onSuccess: () => router.push('/') }
@@ -70,22 +73,18 @@ function onBackClick() {
 
 function onDeleteConfirmShow() {
   showDeleteConfirmModal.value = true;
-  document.body.classList.add('modalOpen');
 }
 
 function onDeleteConfirmCancel() {
   showDeleteConfirmModal.value = false;
-  document.body.classList.remove('modalOpen');
 }
 
 function onAddToShoppingListShow() {
   showAddToShoppingListModal.value = true;
-  document.body.classList.add('modalOpen');
 }
 
 function onAddToShoppingListCancel() {
   showAddToShoppingListModal.value = false;
-  document.body.classList.remove('modalOpen');
 }
 
 const updateScroll = useThrottleFn(() => {
@@ -99,24 +98,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="max-w-screen-lg mx-auto mb-6 md:mb-14 md:mt-14">
-    <div
-      v-if="isLoading"
-      class="py-12 text-center font-k2d text-2xl text-yellow-400 flex flex-col justify-center
-      items-center"
-    >
-        <LoadingIcon class="w-24 opacity-80 animate-bounce block" />
-        <LoadingShadow class="w-24 opacity-80 block" />
-      Loading...
-    </div>
-    <div
-      v-if="isError"
-      class="py-12 text-center font-k2d text-xl text-red-300 flex
-      justify-center items-center"
-    >
-      <ErrorIcon class="w-24 h-24 opacity-50" />
-      <div>{{ error }}</div>
-    </div>
+  <main class="max-w-screen-lg mx-auto mb-6 md:mb-14 md:mt-14">
+    <LoadingState v-if="isLoading" class="p-12" />
+    <ErrorState v-if="isError" :error="error" />
     <div v-else-if="!isLoading && recipe">
       <!-- NAV & ACTIONS -->
       <!-- MOBILE -->
@@ -131,11 +115,7 @@ onMounted(() => {
             <BackIcon class="w-6 h-6" />
           </Button>
           <div class="flex items-center">
-            <Button
-              white
-              class="mr-6"
-              :to="`/edit/${props.id}`"
-            >
+            <Button white class="mr-6" :to="`/edit/${props.id}`">
               <EditIcon class="w-6 h-6" />
             </Button>
             <Button
@@ -151,7 +131,7 @@ onMounted(() => {
       <!-- DESKTOP -->
       <div class="hidden md:block">
         <div class="flex justify-between items-center p-3 pt-6">
-          <Button class="uppercase" @click="onBackClick">
+          <Button @click="onBackClick">
             <BackIcon class="w-6 h-6" />
             Back
           </Button>
@@ -161,7 +141,10 @@ onMounted(() => {
               Edit
             </Button>
             <Button @click="onDeleteConfirmShow" :disabled="deleteRecipeMutation.isLoading.value">
-              <SpinnerIcon v-if="deleteRecipeMutation.isLoading.value" class="w-6 h-6 animate-spin mr-2"/>
+              <SpinnerIcon
+                v-if="deleteRecipeMutation.isLoading.value"
+                class="w-6 h-6 animate-spin mr-2"
+              />
               <DeleteIcon v-else class="w-6 h-6 mr-1" />
               Delete
             </Button>
@@ -170,7 +153,7 @@ onMounted(() => {
       </div>
       <Teleport to="body">
         <Modal
-          :show="showDeleteConfirmModal"
+          v-if="showDeleteConfirmModal"
           confirm-label="Delete"
           :is-confirm-danger="true"
           @close="onDeleteConfirmCancel"
@@ -188,6 +171,7 @@ onMounted(() => {
             v-if="recipe.imageUrl"
             class="w-full h-96 object-cover md:rounded-xl"
             :src="recipe.imageUrl"
+            alt=""
           />
           <div v-else class="w-full h-96 rounded-b-xl rounded-t-none md:rounded-xl bg-stone-100
             flex justify-center items-center">
@@ -216,28 +200,44 @@ onMounted(() => {
             <div class="hidden md:block">
               <div class="uppercase text-stone-300">Servings</div>
               <div class="flex items-center">
-                <ServingsIcon class="w-6 h-6 text-sky-200 mr-1" />
+                <ServingsIcon
+                  class="w-6 h-6 text-sky-200 mr-1"
+                  aria-hidden="true"
+                  focusable="false"
+                />
                 <span>{{ recipe.servings }}</span>
               </div>
             </div>
             <div>
               <div class="uppercase text-stone-300">Prep</div>
               <div class="flex items-center">
-                <ClockIcon class="w-6 h-6 text-yellow-300 mr-1" />
+                <ClockIcon
+                  class="w-6 h-6 text-yellow-300 mr-1"
+                  aria-hidden="true"
+                  focusable="false"
+                />
                 <span>{{ recipe.prepTime }} min</span>
               </div>
             </div>
             <div>
               <div class="uppercase text-stone-300">Cook</div>
               <div class="flex items-center">
-                <ClockIcon class="w-6 h-6 text-yellow-300 mr-1" />
+                <ClockIcon
+                  class="w-6 h-6 text-yellow-300 mr-1"
+                  aria-hidden="true"
+                  focusable="false"
+                />
                 <span>{{ recipe.cookTime }} min</span>
               </div>
             </div>
             <div>
               <div class="uppercase text-stone-300">Total</div>
               <div class="flex items-center">
-                <ClockIcon class="w-6 h-6 text-yellow-300 mr-1" />
+                <ClockIcon
+                  class="w-6 h-6 text-yellow-300 mr-1"
+                  aria-hidden="true"
+                  focusable="false"
+                />
                 <span>{{ totalTime }} min</span>
               </div>
             </div>
@@ -259,7 +259,6 @@ onMounted(() => {
         </div>
         <AddToShoppingListModal
           v-if="showAddToShoppingListModal"
-          :show="showAddToShoppingListModal"
           :ingredient-list="recipe.ingredients"
           @close="onAddToShoppingListCancel"
           @cancel="onAddToShoppingListCancel"
@@ -280,8 +279,23 @@ onMounted(() => {
               @click="onCounterClick(recipe!)"
               :disabled="updateRecipeMutation.isLoading.value"
             >
-              <EmptyStarIcon v-if="!isCounterClicked" class="w-6 h-6 mr-1 opacity-60" />
-              <FullStarIcon v-else class="w-6 h-6 mr-2 opacity-60" />
+              <SpinnerIcon
+                v-if="updateRecipeMutation.isLoading.value"
+                class="w-6 h-6 animate-spin mr-1"
+                aria-label="Loading"
+              />
+              <EmptyStarIcon
+                v-else-if="!isCounterClicked"
+                class="w-6 h-6 mr-1 opacity-60"
+                aria-hidden="true"
+                focusable="false"
+              />
+              <FullStarIcon
+                v-else-if="isCounterClicked"
+                class="w-6 h-6 mr-2 opacity-60"
+                aria-hidden="true"
+                focusable="false"
+              />
               I made it!
               ({{ recipe.cookedCount }})
             </Button>
@@ -289,5 +303,5 @@ onMounted(() => {
         </div>
       </div>
     </div>
-  </div>
+  </main>
 </template>

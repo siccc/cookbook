@@ -39,16 +39,21 @@ type TransformedInfiniteQueryResult = {
 const recipeListFetcher = async ({ searchKeywords, category, cursor = '' }: infiniteQueryFetcherFnOptions): Promise<DBInfiniteQueryResult> => {
   const search = searchKeywords.value ? searchKeywords.value : '';
   const cat = category.value === 'all' ? '' : category.value;
-  const response = await fetch(`/api/recipes?search=${search}&category=${cat}&cursor=${cursor}`, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Basic ${authToken()}`
+  try {
+    const response = await fetch(`/api/recipes?search=${search}&category=${cat}&cursor=${cursor}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Basic ${authToken()}`
+      }
+    })
+    if (!response.ok) {
+      throw new Error('An error occurred while fetching the recipes.');
     }
-  })
-  if (!response.ok) {
+    return response.json();
+  } catch (error) {
+    console.log(error);
     throw new Error('An error occurred while fetching the recipes.');
   }
-  return response.json();
 }
 
 function transformDBRecipeExtractsForInfiniteList(data: TransformDBRecipeExtractsFnOptions): TransformedInfiniteQueryResult {
@@ -110,16 +115,21 @@ const recipeFetcher = async (id: number | 'new'): Promise<DBRecipe> => {
     };
     return Promise.resolve(recipe);
   }
-  const response = await fetch(`/api/recipes/${id}`, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Basic ${authToken()}`
+  try {
+    const response = await fetch(`/api/recipes/${id}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Basic ${authToken()}`
+      }
+    });
+    if (!response.ok) {
+      throw new Error('An error occurred while fetching a recipe.');
     }
-  });
-  if (!response.ok) {
+    return response.json();
+  } catch (error) {
+    console.log(error);
     throw new Error('An error occurred while fetching a recipe.');
   }
-  return response.json();
 }
 
 function transformRecipe(dbRecipe: DBRecipe): Recipe {
@@ -178,18 +188,23 @@ export function useCreateRecipeMutation() {
 const recipeUpdater = async (updatedRecipe: Recipe): Promise<Recipe> => {
   const dbRecipe = JSON.parse(JSON.stringify(updatedRecipe));
   delete dbRecipe.imageUrl;
-  const response = await fetch(`/api/recipes/${updatedRecipe.id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Basic ${authToken()}`
-    },
-    body: JSON.stringify(dbRecipe),
-  });
-  if (!response.ok) {
+  try {
+    const response = await fetch(`/api/recipes/${updatedRecipe.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${authToken()}`
+      },
+      body: JSON.stringify(dbRecipe),
+    });
+    if (!response.ok) {
+      throw new Error('An error occurred while updating the recipe. Try again later.');
+    }
+    return response.json();
+  } catch (error) {
+    console.log(error);
     throw new Error('An error occurred while updating the recipe. Try again later.');
   }
-  return response.json();
 }
 
 export function useUpdateRecipeMutation() {
@@ -221,18 +236,23 @@ export function useUpdateRecipeMutation() {
 // -----------------------------------
 
 const recipeDeleter = async (deletedRecipe: Recipe): Promise<Recipe> => {
-  const response = await fetch(`/api/recipes/${deletedRecipe.id}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Basic ${authToken()}`
-    },
-    body: JSON.stringify(deletedRecipe),
-  });
-  if (!response.ok) {
+  try {
+    const response = await fetch(`/api/recipes/${deletedRecipe.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${authToken()}`
+      },
+      body: JSON.stringify(deletedRecipe),
+    });
+    if (!response.ok) {
+      throw new Error('An error occurred while deleting the recipe. Try again later.');
+    }
+    return response.json();
+  } catch (error) {
+    console.log(error);
     throw new Error('An error occurred while deleting the recipe. Try again later.');
   }
-  return response.json();
 }
 
 export function useDeleteRecipeMutation() {
@@ -276,16 +296,21 @@ export function useDeleteRecipeMutation() {
 
 const threeRandomRecipesFetcher = async (category: Ref<string>): Promise<DBRecipe[]> => {
   const cat = category.value === 'all' ? '' : category.value;
-  const response = await fetch(`/api/recipe-selection?category=${cat}`, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Basic ${authToken()}`
+  try {
+    const response = await fetch(`/api/recipe-selection?category=${cat}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Basic ${authToken()}`
+      }
+    })
+    if (!response.ok) {
+      throw new Error('An error occurred while fetching the recipes.');
     }
-  })
-  if (!response.ok) {
+    return response.json();
+  } catch (error) {
+    console.log(error);
     throw new Error('An error occurred while fetching the recipes.');
   }
-  return response.json();
 }
 
 function transformRecipes(dbRecipes: DBRecipe[]): Recipe[] {

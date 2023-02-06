@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import Button from '@/components/Button.vue';
-import DetailedLogo from '@/assets/detailed-logo.svg?component';
-import SpinnerIcon from '@/assets/icons/spinner.svg?component';
 import { useCreateUserMutation } from '@/stores/user';
 import { VueRecaptcha } from 'vue-recaptcha';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import Button from '@/components/Button.vue';
+import DetailedLogo from '@/assets/detailed-logo.svg?component';
+import SpinnerIcon from '@/assets/icons/spinner.svg?component';
 
 const router = useRouter();
 const recaptcha = ref(null);
@@ -34,7 +34,7 @@ function onSubmit() {
 </script>
 
 <template>
-  <div class="bg-sky-50 lg:bg-white absolute inset-0 flex">
+  <main class="bg-sky-50 lg:bg-white absolute inset-0 flex">
     <div class="flex-1 flex flex-col items-center justify-center rounded-xl p-3 m-4 sm:m-10
     bg-white"
     >
@@ -74,6 +74,7 @@ function onSubmit() {
     <img
       class="object-cover object-right rounded-xl w-1/3 m-4 hidden lg:block"
       src="@/assets/pexels-ella-olsson-1640774.jpg"
+      alt=""
     />
-  </div>
+  </main>
 </template>

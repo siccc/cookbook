@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { ref, nextTick } from 'vue';
+import type { ShoppingListItem } from '@/types';
 import Checkbox from '@/components/Checkbox.vue';
+import Button from '@/components/Button.vue';
+import IconButton from '@/components/IconButton.vue';
 import EditIcon from '@/assets/icons/pen.svg?component';
 import CheckIcon from '@/assets/icons/check.svg?component';
-import type { ShoppingListItem } from '@/types';
-import { ref, nextTick } from 'vue';
 
 const props = defineProps<{
   item: ShoppingListItem,
@@ -61,9 +63,13 @@ function setItemChecked(item: ShoppingListItem, event: Event) {
         :line-through-if-checked="lineThroughIfChecked"
         @click="(event: Event) => setItemChecked(props.item, event)"
       />
-      <div class="py-0.5 px-2 cursor-pointer" @click="editItem(props.item)">
-        <EditIcon class="w-5 h-5 text-stone-400" />
-      </div>
+      <IconButton
+        class="ml-2"
+        @click="editItem(props.item)"
+        aria-label="Edit item"
+      >
+        <EditIcon class="w-5 h-5" />
+      </IconButton>
     </div>
     <div v-if="isEditing" class="flex justify-between items-center w-full">
       <input
@@ -72,13 +78,9 @@ function setItemChecked(item: ShoppingListItem, event: Event) {
         @keypress.enter="confirmEditingItem"
         @keyup.esc="cancelEditingItem"
       />
-      <div
-        class="ml-1 p-2 sm:p-1.5 cursor-pointer bg-yellow-400 border border-yellow-400
-          rounded-md"
-        @click="confirmEditingItem"
-      >
+      <Button primary @click="confirmEditingItem" class="ml-1" aria-label="Confirm editing">
         <CheckIcon class="w-6 h-6 text-white" />
-      </div>
+      </Button>
     </div>
   </div>
 </template>

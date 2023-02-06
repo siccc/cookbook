@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import Button from '@/components/Button.vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 
 export interface Props {
-  show: boolean,
   title: string,
   message?: string
   cancelLabel?: string
@@ -11,18 +11,33 @@ export interface Props {
   isConfirmDanger?: boolean,
   showConfirmButton?: boolean,
   showCancelButton?: boolean,
-  showTitle?: boolean
+  showTitle?: boolean,
+  isScrollable?: boolean
 }
 
-
+const appEl = document.getElementById('app') as HTMLElement;
+const modalEl = ref<HTMLElement | null>(null);
 const props = withDefaults(defineProps<Props>(), {
   isConfirmPrimary: false,
   isConfirmDanger: false,
+  isScrollable: false,
   showConfirmButton: true,
   showCancelButton: true,
   showTitle: true
-})
+});
 
+onMounted(() => {
+  appEl.setAttribute('inert', 'true');
+  document.body.classList.add('modalOpen');
+  if (modalEl.value) {
+    modalEl.value.focus();
+  }
+});
+
+onUnmounted(() => {
+  appEl.removeAttribute('inert');
+  document.body.classList.remove('modalOpen');
+});
 
 const emit = defineEmits<{
   (e: 'cancel', event: Event): void
@@ -44,24 +59,44 @@ function onConfirm(event: Event) {
 
 <template>
   <div
-    v-if="props.show"
-    class="fixed z-50 top-0 left-0 flex flex-col items-center justify-center w-screen h-screen p-6"
+    ref="modalEl"
+    role="dialog"
+    aria-modal="true"
+    :aria-label="props.title"
+    tabindex="0"
+    @keyup.esc="onCancel"
+    class="fixed z-50 top-0 left-0 flex flex-col items-center justify-center w-screen h-screen"
+    :class="{ 'scrollable': props.isScrollable }"
   >
     <div class="absolute w-full h-full bg-stone-800/80" @mousedown="onCancel" />
     <div
-      class="px-6 py-6 bg-white sm:w-96 text-center z-20 outline-none
-        w-full absolute bottom-0 rounded-t-xl sm:rounded-b-xl sm:relative sm:bottom-auto"
+      class="modalContent bg-white sm:w-96 text-center z-20 outline-none
+        w-full absolute bottom-0 rounded-t-xl sm:rounded-b-xl sm:relative sm:bottom-auto
+        pb-9 sm:pb-6 flex flex-col"
     >
-      <div class="font-medium text-xl" v-if="props.showTitle">{{ props.title }}</div>
-      <div class="text-stone-600 py-6">
+      <div
+        class="modalHeader font-medium text-xl p-6"
+        :class="{ 'border-b': props.isScrollable }"
+        v-if="props.showTitle"
+      >
+        {{ props.title }}
+      </div>
+      <div
+        class="modalBody flex-1 text-stone-600 px-6 overflow-y-auto"
+        :class="{ 'pt-6': !props.showTitle }"
+      >
         <slot>
           {{ props.message }}
         </slot>
       </div>
       <!-- FOOTER -->
-      <div class="flex justify-between items-center gap-3">
+      <div
+        class="modalFooter flex justify-between items-center gap-3 px-6 pt-6"
+        :class="{ 'border-t': props.isScrollable }"
+      >
         <slot name="footer">
           <Button
+            ref="cancelButton"
             v-if="props.showCancelButton"
             class="flex-1 uppercase"
             @click="onCancel"
@@ -69,6 +104,7 @@ function onConfirm(event: Event) {
             {{ props.cancelLabel || 'Cancel' }}
           </Button>
           <Button
+            ref="confirmButton"
             v-if="props.showConfirmButton"
             class="flex-1 uppercase"
             :primary="props.isConfirmPrimary"
@@ -82,3 +118,12 @@ function onConfirm(event: Event) {
     </div>
   </div>
 </template>
+
+<style scoped>
+.modalFooter {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.scrollable .modalContent {
+  max-height: calc(100% - 3.5rem);
+}
+</style>

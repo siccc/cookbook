@@ -1,22 +1,20 @@
 <script setup lang="ts">
-import { getRecipe, useCreateRecipeMutation, useUpdateRecipeMutation } from '@/stores/recipes';
-import type { Recipe, Tag } from '@/types';
-import DOMPurify from 'dompurify';
-import { uploadImage } from '@/stores/cloudinary';
-import Button from '@/components/Button.vue';
-import ValidationMessage from '@/components/ValidationMessage.vue';
-import CategoryButton from '@/components/CategoryButton.vue';
-import MarkdownEditor from '@/components/MarkdownEditor.vue';
-import ImageUploader from '@/components/ImageUploader.vue';
-import SpinnerIcon from '@/assets/icons/spinner.svg?component';
-import BackIcon from '@/assets/icons/angle-left-b.svg?component';
-import ErrorIcon from '@/assets/error.svg?component';
-import LoadingIcon from '@/assets/loading-pot.svg?component';
-import LoadingShadow from '@/assets/loading-shadow.svg?component';
 import { ref, reactive, type Ref, watch, onMounted } from 'vue';
 import { forEach, find } from 'lodash';
 import { useRouter } from 'vue-router';
 import { useThrottleFn } from '@vueuse/core';
+import { getRecipe, useCreateRecipeMutation, useUpdateRecipeMutation } from '@/stores/recipes';
+import { uploadImage } from '@/stores/cloudinary';
+import type { Recipe, Tag } from '@/types';
+import DOMPurify from 'dompurify';
+import Button from '@/components/Button.vue';
+import ValidationMessage from '@/components/ValidationMessage.vue';
+import ErrorState from '@/components/ErrorState.vue';
+import LoadingState from '@/components/LoadingState.vue';
+import MarkdownEditor from '@/components/MarkdownEditor.vue';
+import ImageUploader from '@/components/ImageUploader.vue';
+import SpinnerIcon from '@/assets/icons/spinner.svg?component';
+import BackIcon from '@/assets/icons/angle-left-b.svg?component';
 
 type RecipeMDInputKeys = 'ingredients' | 'steps' | 'notes';
 type ValidationKeys = 'title' | 'category' | 'servings' | 'ingredients' | 'steps';
@@ -50,7 +48,7 @@ const savingErrorMessage = ref('');
 // -----------------------------------
 
 const id = props.id === 'new' ? props.id : Number(props.id);
-const { isLoading, isError, data, error } = getRecipe(id);
+const { isLoading, isError: fetchingIsError, data, error: fetchingError } = getRecipe(id);
 const recipe:Ref<Recipe|undefined> = ref(undefined);
 
 // copy recipe data to be able to mutate it's properties
@@ -191,18 +189,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="max-w-screen-lg mx-auto mb-6 md:mb-14 md:mt-14">
-    <div v-if="isLoading" class="py-12 text-center font-k2d text-2xl text-yellow-400 flex
-      flex-col justify-center items-center">
-        <LoadingIcon class="w-24 opacity-80 animate-bounce block" />
-        <LoadingShadow class="w-24 opacity-80 block" />
-      Loading...
-    </div>
-    <div v-if="isError" class="py-12 text-center font-k2d text-xl text-red-300 flex
-      justify-center items-center">
-      <ErrorIcon class="w-24 h-24 opacity-50" />
-      <div>{{ error }}</div>
-    </div>
+  <main class="max-w-screen-lg mx-auto mb-6 md:mb-14 md:mt-14">
+    <LoadingState v-if="isLoading" />
+    <ErrorState v-if="fetchingIsError" :error="fetchingError" />
     <div v-else-if="!isLoading && recipe">
       <!-- MOBILE -->
       <div
@@ -218,7 +207,6 @@ onMounted(() => {
           </Button>
           <div class="flex items-center">
             <Button
-              class="uppercase"
               white
               @click="onSaveClick()"
               :disabled="saveInProgress"
@@ -227,7 +215,7 @@ onMounted(() => {
               Save
             </Button>
             <Button
-              class="uppercase ml-6"
+              class="ml-6"
               white
               v-if="props.id !== 'new'"
               @click="onCancelClick()"
@@ -246,14 +234,12 @@ onMounted(() => {
         >
           <Button
             v-if="props.id === 'new'"
-            class="uppercase"
             to="/"
           >
             Back
           </Button>
           <div class="flex items-center">
             <Button
-              class="uppercase"
               primary
               @click="onSaveClick()"
               :disabled="saveInProgress"
@@ -263,7 +249,7 @@ onMounted(() => {
             </Button>
             <Button
               v-if="props.id !== 'new'"
-              class="uppercase ml-3"
+              class="ml-3"
               @click="onCancelClick()"
               :disabled="saveInProgress"
             >
@@ -272,19 +258,23 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <div v-if="savingIsError" class="my-8 text-center font-k2d text-xl text-red-300 flex
-        justify-center items-center p-3">
-        <ErrorIcon class="w-24 h-24 opacity-50" />
-        <div>{{ savingErrorMessage }}</div>
-      </div>
-      <div class="md:grid md:grid-cols-3 md:justify-items-start flex flex-col">
+      <ErrorState v-if="savingIsError" :error="savingErrorMessage" />
+      <form
+        class="md:grid md:grid-cols-3 md:justify-items-start flex flex-col"
+        aria-label="Recipe details"
+        autocomplete="off"
+      >
         <!-- IMAGE -->
         <ImageUploader :image-source="recipe.imageUrl" @change="onImageChange"/>
         <!-- INFO -->
         <div class="md:col-span-2 pt-6 md:pt-3 md:mt-0 p-3 rounded-t-3xl md:rounded-none -mt-10 bg-white">
           <div>
-            <span class="uppercase">Your recipe's name*</span>
+            <label for="recipeName" class="uppercase">Your recipe's name*</label>
             <input
+              type="text"
+              name="recipeName"
+              id="recipeName"
+              required
               v-model="recipe.title"
               placeholder="My favorite bolognese sauce"
               @change="validate('title', recipe!.title)"
@@ -295,26 +285,48 @@ onMounted(() => {
           </ValidationMessage>
           <!-- TAGS -->
           <div class="mt-3">
-            <span class="uppercase">Tags</span>
-            <input v-model="tags" placeholder="italian, comfort food"/>
+            <label class="uppercase" for="tags">Tags</label>
+            <input
+              type="text"
+              name="tags"
+              id="tags"
+              v-model="tags"
+              placeholder="italian, comfort food"
+            />
           </div>
           <!-- TIME & SERVINGS -->
-          <div class="mt-6 flex items-center gap-3">
+          <div class="mt-3 flex items-center gap-3">
             <div>
-              <span class="uppercase">Serving*</span>
+              <label for="servings" class="uppercase">Serving*</label>
               <input
+                type="text"
+                name="servings"
+                id="servings"
+                required
                 v-model="recipe.servings"
                 placeholder="4 servings"
                 @change="validate('servings', recipe!.servings)"
               />
             </div>
             <div>
-              <span class="uppercase">Prep time</span>
-              <input type="number" min="0" v-model="recipe.prepTime" />
+              <label for="prepTime" class="uppercase">Prep time</label>
+              <input
+                type="number"
+                name="prepTime"
+                id="prepTime"
+                min="0"
+                v-model="recipe.prepTime"
+              />
             </div>
             <div>
-              <span class="uppercase">Cook time</span>
-              <input type="number" min="0" v-model="recipe.cookTime" />
+              <label for="cookTime" class="uppercase">Cook time</label>
+              <input
+                type="number"
+                name="cookTime"
+                id="cookTime"
+                min="0"
+                v-model="recipe.cookTime"
+              />
             </div>
           </div>
           <ValidationMessage v-if="inputValidations.servings.hasError">
@@ -322,8 +334,13 @@ onMounted(() => {
           </ValidationMessage>
           <div class="mt-6">
             <span class="uppercase">Dish type*</span>
-            <div class="flex items-center flex-wrap gap-3">
-              <CategoryButton
+            <section
+              class="flex items-center flex-wrap gap-3"
+              aria-label="select a main category for the recipe"
+            >
+              <button
+                class="border border-stone-300 uppercase px-3 py-2 md:py-1.5 rounded-lg
+                  cursor-pointer hover:border-sky-300 hover:text-sky-400"
                 :class="{
                   'bg-sky-300 border-sky-300 text-white hover:border-sky-300 hover:text-white': recipe.category === category
                 }"
@@ -331,8 +348,8 @@ onMounted(() => {
                 @click="onCategoryChange(category)"
               >
                 {{ category }}
-              </CategoryButton>
-            </div>
+              </button>
+            </section>
           </div>
           <ValidationMessage v-if="inputValidations.category.hasError">
             {{ inputValidations.category.message }}
@@ -341,10 +358,11 @@ onMounted(() => {
         <!-- INGREDIENTS -->
         <div class="md:my-0 w-full p-3">
           <div class="flex">
-            <div class="text-xl uppercase font-k2d mb-1">Ingredients</div><span>*</span>
+            <label for="ingredients" class="text-xl uppercase font-k2d mb-1">Ingredients<sup>*</sup></label>
           </div>
           <div class="h-48 md:h-64">
             <MarkdownEditor
+              
               :content="recipe.ingredients"
               placeholder="- ingredient 1 
 - ingredient 2
@@ -359,7 +377,7 @@ onMounted(() => {
         <!-- STEPS & NOTES -->
         <div class="md:col-span-2 md:my-0 w-full p-3">
           <div class="flex">
-            <div class="text-xl uppercase font-k2d mb-1">Steps</div><span>*</span>
+            <label for="steps" class="text-xl uppercase font-k2d mb-1">Steps<sup>*</sup></label>
           </div>
           <div class="h-48 md:h-64">
             <MarkdownEditor
@@ -374,16 +392,18 @@ onMounted(() => {
           <ValidationMessage v-if="inputValidations.steps.hasError">
             {{ inputValidations.steps.message }}
           </ValidationMessage>
-          <div class="text-xl uppercase font-k2d mb-1 mt-3">Notes</div>
-          <div class="h-auto">
-            <MarkdownEditor
-              :content="recipe.notes"
-              placeholder="Add your notes"
-              @change="(event) => onInputChange('notes', event)"
-            />
+          <div class="mt-3">
+            <label for="notes" class="text-xl uppercase font-k2d mb-1">Notes</label>
+            <div class="h-auto">
+              <MarkdownEditor
+                :content="recipe.notes"
+                placeholder="Add your notes"
+                @change="(event) => onInputChange('notes', event)"
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </form>
     </div>
-  </div>
+  </main>
 </template>

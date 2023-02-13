@@ -6,10 +6,10 @@ import { useScroll } from '@vueuse/core';
 import type { Food, FoodList, ShoppingList } from '@/types';
 import Modal from '@/components/Modal.vue';
 import SelectInput from '@/components/SelectInput.vue';
-import SeasonIcon from '@/assets/icons/season.svg?component';
 import Button from '@/components/Button.vue';
 import SpinnerIcon from '@/assets/icons/spinner.svg?component';
 import EggplantIcon from '@/assets/icons/foods/eggplant.svg?component';
+import SvgSprite from '@/components/SvgSprite.vue';
 import CheckIcon from '@/assets/icons/check.svg?component';
 
 const showModal = ref(false);
@@ -119,7 +119,7 @@ async function showSuccessMessage() {
 </script>
 
 <template>
-  <main class="mx-auto max-w-screen-xl mb-16">
+  <main class="mx-auto max-w-screen-xl mb-20">
     <div class="h-72 relative top-12 md:top-20 md:h-96 -z-10">
       <div
         ref="parallaxEl"
@@ -148,15 +148,20 @@ async function showSuccessMessage() {
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 px-6">
           <button
-            class="p-1 text-sky-800 bg-sky-100 rounded-lg leading-none flex items-center cursor-pointer"
+            class="p-3 md:p-1 text-sky-800 bg-sky-100 rounded-lg leading-none flex
+              items-center cursor-pointer"
             @click="onClickShowModal(veggie, 'vegetable')"
             v-for="veggie in foods.vegetables"
             :aria-label="`Open ${ veggie.name_EN } details`"
           >
             <div class="p-1 rounded-lg mr-1 text-sky-800/50">
-              <EggplantIcon class="w-10 h-10" aria-hidden="true" focusable="false"/>
+              <SvgSprite
+                :symbol="veggie.imageId || 'salad'"
+                class="w-10 h-10"
+                :class="{ 'text-sky-800/20': !veggie.imageId }"
+              />
             </div>
-            <div>
+            <div class="text-left">
               <div>{{ veggie.name_EN }}</div>
               <!-- <div class="text-xs mt-0.5">{{ veggie.name_HU }}</div> -->
             </div>
@@ -165,16 +170,20 @@ async function showSuccessMessage() {
         <div class="text-xl mt-9 mb-6 px-6">Fruits</div>
         <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 px-6">
           <button
-            class="p-1 text-yellow-600 bg-amber-200 rounded-lg leading-none flex
-            items-center cursor-pointer"
+            class="p-3 md:p-1 text-yellow-600 bg-amber-200 rounded-lg leading-none flex
+              items-center cursor-pointer"
             @click="onClickShowModal(fruit, 'fruit')"
             v-for="fruit in foods.fruits"
             :aria-label="`Open ${fruit.name_EN} details`"
           >
-            <div class="p-1 rounded-lg mr-1 text-yellow-800/50">
-              <EggplantIcon class="w-10 h-10" aria-hidden="true" focusable="false"/>
+            <div class="p-1 rounded-lg mr-1 text-amber-800/50">
+              <SvgSprite
+                :symbol="fruit.imageId || 'apple'"
+                class="w-10 h-10"
+                :class="{ 'text-amber-800/20': !fruit.imageId }"
+              />
             </div>
-            <div>
+            <div class="text-left">
               <div>{{ fruit.name_EN }}</div>
               <!-- <div class="text-xs mt-0.5">{{ fruit.name_HU }}</div> -->
             </div>
@@ -204,7 +213,7 @@ async function showSuccessMessage() {
             <!-- <div class="text-sm text-stone-400">{{ selectedFood.name_HU }}</div> -->
             <div class="text-sm mt-6 grid grid-cols-12 gap-3">
               <div
-                v-for="(value, monthIndex) in selectedFood.inSeason"
+                v-for="(value, monthIndex) in selectedFood.inSeason_HU"
                 class="rounded-sm px-3 py-0.5 flex items-center justify-center"
                 :class="{
                   'bg-sky-200 text-sky-600': value && selectedFoodType === 'vegetable',

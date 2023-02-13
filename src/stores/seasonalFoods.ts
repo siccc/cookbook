@@ -27,10 +27,10 @@ export function getSeasonalFoodsByMonth(month: string): FoodList {
   const foods = getSeasonalFoods();
   return {
     fruits: foods.fruits
-      .filter((fruit: Food) => !!fruit.inSeason[monthIndex])
+      .filter((fruit: Food) => !!fruit.inSeason_HU && !!fruit.inSeason_HU[monthIndex])
       .sort((a: Food, b: Food) => a.name_EN.localeCompare(b.name_EN)),
     vegetables: foods.vegetables
-      .filter((veggie: Food) => !!veggie.inSeason[monthIndex])
+      .filter((veggie: Food) => !!veggie.inSeason_HU && !!veggie.inSeason_HU[monthIndex])
       .sort((a: Food, b: Food) => a.name_EN.localeCompare(b.name_EN))
   };
 }

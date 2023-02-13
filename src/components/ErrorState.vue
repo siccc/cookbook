@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import ErrorIcon from '@/assets/error.svg?component';
-  import { computed, defineProps } from 'vue';
+  import { computed } from 'vue';
 
   const props = defineProps<{
     error: any;

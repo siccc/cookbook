@@ -65,7 +65,7 @@ useInfiniteScroll(
 </script>
 
 <template>
-  <main class="p-3 md:p-9 max-w-screen-xl mx-auto my-14">
+  <main class="p-3 md:p-9 max-w-screen-xl mx-auto mt-14 mb-20">
     <div>Greetings! 👋</div>
     <h1 class="mt-3 mb-6 text-4xl">Let's cook something delicious!</h1>
     <div class="mx-auto sm:flex sm:items-center sm:justify-between">

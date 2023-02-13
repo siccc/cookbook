@@ -76,5 +76,7 @@ export interface FoodList {
 export interface Food {
   name_EN: string,
   name_HU: string,
-  inSeason: number[]
+  inSeason_HU: number[],
+  inSeason_NL: number[],
+  imageId?: string
 }

@@ -9,6 +9,7 @@ import CheckIcon from '@/assets/icons/check.svg?component';
 
 const props = defineProps<{
   item: ShoppingListItem,
+  disabled?: boolean,
   lineThroughIfChecked?: boolean
 }>();
 const isEditing = ref(false);
@@ -18,13 +19,13 @@ const newName = ref('');
 const emit = defineEmits<{
   (e: 'nameChange', newValue: string): void
   (e: 'checkedChange', newValue: boolean): void
-  (e: 'isEditingChange', newValue: boolean): void
+  (e: 'isEditingChange', newValue: boolean, item: ShoppingListItem ): void
 }>();
 
 async function editItem(item: ShoppingListItem) {
   isEditing.value = true;
   newName.value = item.name;
-  emit('isEditingChange', isEditing.value);
+  emit('isEditingChange', isEditing.value, props.item);
 
   await nextTick();
   if (editedItemInputEl.value) {
@@ -35,14 +36,14 @@ async function editItem(item: ShoppingListItem) {
 function cancelEditingItem() {
   isEditing.value = false;
   newName.value = '';
-  emit('isEditingChange', isEditing.value);
+  emit('isEditingChange', isEditing.value, props.item);
 }
 
 function confirmEditingItem() {
   if (newName.value) {
     isEditing.value = false;
     emit('nameChange', newName.value);
-    emit('isEditingChange', isEditing.value);
+    emit('isEditingChange', isEditing.value, props.item);
   }
 }
 
@@ -60,10 +61,11 @@ function setItemChecked(item: ShoppingListItem, event: Event) {
         class="flex-1"
         :value="props.item.checked"
         :label="props.item.name"
-        :line-through-if-checked="lineThroughIfChecked"
+        :line-through-if-checked="props.lineThroughIfChecked"
         @click="(event: Event) => setItemChecked(props.item, event)"
       />
       <IconButton
+        v-if="!props.disabled"
         class="ml-2"
         @click="editItem(props.item)"
         aria-label="Edit item"

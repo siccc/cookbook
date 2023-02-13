@@ -107,7 +107,7 @@ async function showSuccessMessage() {
       :is-scrollable="true"
     > 
       <div class="text-left divide-y" v-show="!showSaveSuccessMessage">
-        <div v-for="item in list" class="flex justify-between items-center py-4 md:py-3">
+        <div v-for="item in list" class="flex justify-between items-center py-2 md:py-1.5">
           <EditableCheckboxInput
             class="flex-1"
             :item="item"

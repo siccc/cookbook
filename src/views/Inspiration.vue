@@ -30,9 +30,9 @@ function onRefetchClick() {
 </script>
 
 <template>
-  <main class="p-3 md:p-9 max-w-screen-xl mx-auto mt-14 mb-14">
-    <h1 class="mt-3 mb-6 text-2xl text-center md:text-left">
-      Which category you want to be inspired by? ✨
+  <main class="p-3 md:p-9 max-w-screen-xl mx-auto mt-14 mb-20">
+    <h1 class="mb-6 text-2xl text-center md:text-left">
+      Which category you want to see ideas from? ✨
     </h1>
     <CategoryListWithSelector
       class="mt-6"
@@ -57,7 +57,7 @@ function onRefetchClick() {
         <div v-if="data?.length > 0" class="flex justify-center">
           <Button primary class="mx-auto mt-6" @click="onRefetchClick" :disabled="isFetching">
             <SpinnerIcon v-if="isFetching" class="w-6 h-6 animate-spin mr-1"/>
-            Give me other ideas
+            Give me another 3
           </Button>
         </div>
       </div>

@@ -17,6 +17,7 @@ import LoadingState from '@/components/LoadingState.vue';
 const useMobile = isMobile();
 const showModal = ref(false);
 const showItemDelete = ref(true);
+const editedItem = ref<ShoppingListItem|undefined>(undefined);
 const newItemInputEl = ref<HTMLInputElement | null>(null);
 const newItem = ref('');
 const { isLoading, isError, data, error} = getShoppingList();
@@ -40,11 +41,16 @@ watch(
 );
 
 const listLength = computed(() => {
-  return list.value && list.value ? list.value.length : 0;
+  return list.value ? list.value.length : 0;
 });
 
-function setShowItemDelete(isEditing: boolean) {
+const checkedListLenght = computed(() => {
+  return list.value ? list.value.filter(item => item.checked).length : 0;
+});
+
+function onIsEditingChange(isEditing: boolean, item: ShoppingListItem) {
   showItemDelete.value = !isEditing;
+  editedItem.value = isEditing ? item : undefined;
 }
 
 function setItemChecked(item: ShoppingListItem, newValue: boolean) {
@@ -109,12 +115,40 @@ function saveChanges() {
 </script>
 
 <template>
-  <main class="p-6 md:p-9 max-w-screen-sm mx-auto my-14">
-    <div class="mt-3 mb-6 flex items-center justify-between">
-      <h1 class="text-2xl text-center md:text-left">
-        Shopping list
-      </h1>
-      <Button v-if="listLength !== 0" @click="onClickShowModal">Delete all checked</Button>
+  <main class="px-6 md:px-9 max-w-screen-sm mx-auto mt-14 mb-20">
+    <div class="sticky top-14 bg-white z-10 pt-6">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl text-center md:text-left my-1">
+          Shopping list
+        </h1>
+        <Button
+          v-if="checkedListLenght !== 0"
+          @click="onClickShowModal"
+          :disabled="editedItem !== undefined"
+        >
+          Delete all checked
+        </Button>
+      </div>
+
+      <div v-if="!isLoading"
+        class="py-6"
+      >
+      <div class="flex items-center relative">
+        <PlusIcon
+          class="w-5 h-5 text-stone-300 absolute left-0 ml-3"
+          aria-hidden="true"
+          focusable="false"
+        />
+        <input
+          enterkeyhint="done"
+          ref="newItemInputEl"
+          class="inputWithIcon"
+          :value="newItem"
+          placeholder="Add new items (separated by &quot;,&quot; )"
+          @keypress.enter="addItems"
+        />
+      </div>
+    </div>
     </div>
     <LoadingState v-if="isLoading" />
     <ErrorState v-else-if="isError" :error="error" />
@@ -132,14 +166,15 @@ function saveChanges() {
       </Modal>
     </Teleport>
     <div class="divide-y" v-auto-animate>
-      <div v-for="(item) in list" class="py-3 flex items-center">
+      <div v-for="(item) in list" class="py-1.5 flex items-center">
         <EditableCheckboxInput
-          class="flex-1"
+          class="flex-1 ml-1"
           :item="item"
           :line-through-if-checked="true"
           @checked-change="(event) => setItemChecked(item, event)"
           @name-change="(event) => setItemName(item, event)"
-          @is-editing-change="(event) => setShowItemDelete(event)"
+          @is-editing-change="(isEditing, item) => onIsEditingChange(isEditing, item)"
+          :disabled="editedItem !== undefined && editedItem !== item"
         />
         <IconButton
           v-show="showItemDelete"
@@ -150,20 +185,6 @@ function saveChanges() {
           <CloseIcon class="w-5 h-5" />
         </IconButton>
       </div>
-    </div>
-    <div class="mt-3 md:mt-6 flex items-center relative" v-if="!isLoading">
-      <PlusIcon
-        class="w-5 h-5 text-stone-300 absolute left-0 ml-3"
-        aria-hidden="true"
-        focusable="false"
-      />
-      <input
-        ref="newItemInputEl"
-        class="inputWithIcon"
-        :value="newItem"
-        placeholder="Add new items (separated by &quot;,&quot; )"
-        @keypress.enter="addItems"
-      />
     </div>
     <EmptyState
       v-if="listLength === 0 && !isLoading"

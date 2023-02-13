@@ -35,7 +35,8 @@ const inputValidations = reactive({
   ingredients: { hasError: false, message: 'Add at least one the ingredient.'},
   steps: { hasError: false, message: 'Add at least one step.'},
 });
-const categories = ['breakfast', 'soup', 'main dish', 'side dish', 'pasta', 'bread', 'souce', 'snack', 'dessert'];
+const categories = ['breakfast', 'soup', 'main dish', 'side dish', 'pasta', 'bread', 'sauce',
+  'snack', 'dessert'];
 const tags = ref('');
 const saveInProgress = ref(false);
 const anyInputHasError = ref(false);
@@ -189,7 +190,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="max-w-screen-lg mx-auto mb-6 md:mb-14 md:mt-14">
+  <main class="max-w-screen-lg mx-auto mb-6 md:mb-20 md:mt-14">
     <LoadingState v-if="isLoading" />
     <ErrorState v-if="fetchingIsError" :error="fetchingError" />
     <div v-else-if="!isLoading && recipe">
@@ -259,10 +260,9 @@ onMounted(() => {
         </div>
       </div>
       <ErrorState v-if="savingIsError" :error="savingErrorMessage" />
-      <form
+      <section
         class="md:grid md:grid-cols-3 md:justify-items-start flex flex-col"
         aria-label="Recipe details"
-        autocomplete="off"
       >
         <!-- IMAGE -->
         <ImageUploader :image-source="recipe.imageUrl" @change="onImageChange"/>
@@ -274,7 +274,7 @@ onMounted(() => {
               type="text"
               name="recipeName"
               id="recipeName"
-              required
+              aria-required="true"
               v-model="recipe.title"
               placeholder="My favorite bolognese sauce"
               @change="validate('title', recipe!.title)"
@@ -302,7 +302,7 @@ onMounted(() => {
                 type="text"
                 name="servings"
                 id="servings"
-                required
+                aria-required="true"
                 v-model="recipe.servings"
                 placeholder="4 servings"
                 @change="validate('servings', recipe!.servings)"
@@ -403,7 +403,7 @@ onMounted(() => {
             </div>
           </div>
         </div>
-      </form>
+      </section>
     </div>
   </main>
 </template>

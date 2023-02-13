@@ -51,7 +51,7 @@ function onFocusout(event: Event) {
     />
     <label
       v-if="label"
-      class="inline-block cursor-pointer flex-1 transition duration-300"
+      class="inline-block cursor-pointer flex-1 transition duration-300 py-2"
       :class="{ 'line-through text-stone-200': lineThroughIfChecked && props.value }"
       :for="`checkbox-${id}`"
     >

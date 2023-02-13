@@ -2,7 +2,6 @@
   import LoadingIcon from '@/assets/loading-pot.svg?component';
   import LoadingShadow from '@/assets/loading-shadow.svg?component';
   import NotFoundIcon from '@/assets/empty.svg?component';
-  import { defineProps } from 'vue';
 
   const props = defineProps<{
     message: string;

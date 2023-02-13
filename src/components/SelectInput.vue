@@ -40,7 +40,7 @@ function onFocusout(event: Event) {
   background-size: 1.25rem 1.25rem, 100%;
 }
 .selectInput:focus {
-  @apply text-stone-800 bg-white border-yellow-400 outline-none;
+  @apply text-stone-800 bg-white border-yellow-400 outline-none ring-1 ring-yellow-400;
 }
 
 </style>

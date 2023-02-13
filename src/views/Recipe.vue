@@ -98,7 +98,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="max-w-screen-lg mx-auto mb-6 md:mb-14 md:mt-14">
+  <main class="max-w-screen-lg mx-auto mb-6 md:mb-20 md:mt-14">
     <LoadingState v-if="isLoading" class="p-12" />
     <ErrorState v-if="isError" :error="error" />
     <div v-else-if="!isLoading && recipe">

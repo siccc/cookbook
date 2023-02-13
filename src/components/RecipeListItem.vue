@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { defineProps } from 'vue';
   import type { RecipeExtract } from '@/types';
   import ImagePlaceholder from '@/assets/image-placeholder.svg?component';
 

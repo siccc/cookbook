@@ -34,7 +34,7 @@ const showMenu = computed(() => {
         </div>
         <nav class="items-center ml-4 hidden md:flex uppercase leading-relaxed">
           <RouterLink to="/home" class="ml-4 link-underline link-underline-yellow">
-            Home
+            Recipes
           </RouterLink>
           <RouterLink to="/inspiration" class="ml-4 link-underline link-underline-yellow">
             Inspiration
@@ -51,17 +51,17 @@ const showMenu = computed(() => {
     <!-- MOBILE MENU -->
     <nav v-if="showMenu" class="w-full fixed bottom-0 z-20 border-t border-stone-200
     bg-white md:hidden bottom-menu">
-      <div class="flex justify-around items-center text-stone-500 h-full my-1">
+      <div class="flex justify-around items-center text-stone-500 h-full my-2">
         <RouterLink to="/home" class="w-1/5">
           <div class="flex flex-col items-center hover:text-yellow-400">
             <HomeIcon class="w-6 h-6" aria-hidden="true" focusable="false"/>
-            <div class="text-xs">Home</div>
+            <div class="text-xs">Recipes</div>
           </div>
         </RouterLink>
         <RouterLink to="/inspiration" class="w-1/5">
           <div class="flex flex-col items-center hover:text-yellow-400">
             <IdeaIcon class="w-6 h-6" aria-hidden="true" focusable="false"/>
-            <div class="text-xs">Inspo</div>
+            <div class="text-xs">Inspiration</div>
           </div>
         </RouterLink>
         <RouterLink to="/edit/new" class="w-1/5">

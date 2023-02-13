@@ -65,7 +65,7 @@ function onConfirm(event: Event) {
     :aria-label="props.title"
     tabindex="0"
     @keyup.esc="onCancel"
-    class="fixed z-50 top-0 left-0 flex flex-col items-center justify-center w-screen h-screen"
+    class="fixed z-50 top-0 left-0 flex flex-col items-center justify-center w-screen h-full"
     :class="{ 'scrollable': props.isScrollable }"
   >
     <div class="absolute w-full h-full bg-stone-800/80" @mousedown="onCancel" />

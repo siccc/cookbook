@@ -29,8 +29,10 @@ if (!app._context.components.VueCodemirror) {
 
 const myTheme = EditorView.theme({
   '&': {
-    border: '1px solid #d6d3d1',
+    '-webkit-appearance': 'none',
+    'border': '1px solid #d6d3d1',
     'border-radius': '0.5rem',
+    '-webkit-border-radius': '0.5rem',
     'padding-left': '0.75rem',
     'padding-right': '0.75rem',
     'padding-top': '0.375rem',
@@ -38,19 +40,22 @@ const myTheme = EditorView.theme({
     'fontSize': '16px',
   },
   '.cm-placeholder': {
-    'color': '#a8a29e'
+    'color': '#a8a29e',
+    'height': '1.4em',
   },
   '.cm-content': {
     'font-family': "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
   },
   '&.cm-editor.cm-focused': {
-    'outline': 'none',
     'border': '1px solid #facc15',
+    'outline': 'none',
+    'box-shadow': '0 0 0 1px #facc15',
+    '-webkit-box-shadow': '0 0 0 1px #facc15',
   }
 });
 
 const extensions = [
-  minimalSetup, 
+  minimalSetup,
   markdown(),
   EditorView.lineWrapping,
   EditorView.domEventHandlers({

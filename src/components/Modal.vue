@@ -28,7 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 onMounted(() => {
   appEl.setAttribute('inert', 'true');
-  document.body.classList.add('modalOpen');
+  document.body.classList.add('overflow-hidden');
   if (modalEl.value) {
     modalEl.value.focus();
   }
@@ -36,7 +36,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   appEl.removeAttribute('inert');
-  document.body.classList.remove('modalOpen');
+  document.body.classList.remove('overflow-hidden');
 });
 
 const emit = defineEmits<{

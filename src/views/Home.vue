@@ -17,6 +17,7 @@ const initSearchText = getSearchText();
 let searchTextForRefetch = ref(initSearchText); // for listRecipes refetch only
 let searchText = ref(initSearchText);           // for detect every input change
 let selectedCategory = ref('');
+let searchInputEl = ref<HTMLInputElement | null>(null);
 const {
   isLoading,
   isError,
@@ -35,9 +36,9 @@ function onSearchTextInput(event: Event) {
   searchText.value = (event.target as HTMLInputElement).value;
 }
 
-function onSearchTextChange(event: Event) {
-  searchText.value = searchTextForRefetch.value = (event.target as HTMLInputElement).value;
-  setSearchText(searchTextForRefetch.value);
+function onSearchTextChange() {
+  searchText.value = searchTextForRefetch.value = searchInputEl.value?.value || '';
+  setSearchText(searchText.value);
 }
 
 function onCategoryClick(value: string) {
@@ -70,12 +71,15 @@ useInfiniteScroll(
     <h1 class="mt-3 mb-6 text-4xl">Let's cook something delicious!</h1>
     <div class="mx-auto sm:flex sm:items-center sm:justify-between">
       <div class="sm:flex-1 flex items-center relative sm:mr-3">
-        <SearchIcon
-          class="w-5 h-5 text-stone-300 absolute left-0 ml-3"
-          aria-hidden="true"
-          focusable="false"
-        />
+        <IconButton
+          class="text-stone-300 absolute left-0 ml-1"
+          @click="onSearchTextChange"
+          aria-label="Search"
+        >
+          <SearchIcon class="w-5 h-5" />
+        </IconButton>
         <input
+          ref="searchInputEl"
           enterkeyhint="search"
           :value="searchText"
           class="inputWithIcon"

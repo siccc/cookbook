@@ -79,14 +79,18 @@ function removeItem(itemToRemove: ShoppingListItem) {
   debouncedSaveChanges();
 }
 
-function addItems(event: Event) {
-  const inputValue = (event.target as HTMLInputElement).value;
+function addItems() {
+  const inputValue = newItemInputEl.value?.value;
+  if (!inputValue) {
+    return;
+  }
   const newItems = inputValue.split(",");
-  newItems.forEach(newItem => {
-    if (list.value) {
-      list.value.push({ checked: false, name: newItem.trim() });
-    }
-  });
+  if (list.value) {
+    list.value = [
+      ...newItems.map(newItem => ({ checked: false, name: newItem.trim() })),
+      ...list.value
+    ];
+  }
   debouncedSaveChanges();
 }
 
@@ -134,11 +138,13 @@ function saveChanges() {
         class="py-6"
       >
       <div class="flex items-center relative">
-        <PlusIcon
-          class="w-5 h-5 text-stone-300 absolute left-0 ml-3"
-          aria-hidden="true"
-          focusable="false"
-        />
+        <IconButton
+          class="text-stone-300 absolute left-0 ml-1"
+          aria-label="Add new items"
+          @click="addItems"
+        >
+          <PlusIcon class="w-5 h-5" />
+        </IconButton>
         <input
           enterkeyhint="done"
           ref="newItemInputEl"
@@ -166,7 +172,7 @@ function saveChanges() {
       </Modal>
     </Teleport>
     <div class="divide-y" v-auto-animate>
-      <div v-for="(item) in list" class="py-1.5 flex items-center">
+      <div v-for="(item) in list" class="py-1.5 flex items-center" :key="item.name">
         <EditableCheckboxInput
           class="flex-1 ml-1"
           :item="item"

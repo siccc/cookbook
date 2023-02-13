@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { trimStart } from 'lodash';
 import { getShoppingList, useUpdateShoppingListMutation } from '@/stores/shoppingList';
 import type { ShoppingList, ShoppingListItem } from '@/types';
@@ -35,7 +35,6 @@ watch(
   { immediate:true }
 );
 
-
 if (props.ingredientList) {
   let name = '';
   list.value = props.ingredientList.split('\n')
@@ -43,9 +42,13 @@ if (props.ingredientList) {
     .map((item) => {
       name = trimStart(item, '- ');
       name = name.substring(0, name.indexOf(',')) || name;
-      return { checked: false, name };
+      return { checked: true, name };
     });
 }
+
+const checkedListLenght = computed(() => {
+  return list.value ? list.value.filter(item => item.checked).length : 0;
+});
 
 function setItemChecked(item: ShoppingListItem, newValue: boolean) {
   item.checked = newValue;
@@ -139,6 +142,7 @@ async function showSuccessMessage() {
           primary
           @click="onConfirm"
           v-show="!showSaveSuccessMessage"
+          :disabled="checkedListLenght === 0"
         >
           <SpinnerIcon
             v-if="updateShoppingListMutation.isLoading.value"

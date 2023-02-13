@@ -45,6 +45,7 @@ function onFocusout(event: Event) {
     </div>
     <input
       type="checkbox"
+      :checked="props.value"
       class="opacity-0 absolute z-10 inset-0 w-full appearance-none cursor-pointer"
       :id="`checkbox-${id}`"
       v-on="computedListeners"

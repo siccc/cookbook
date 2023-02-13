@@ -8,7 +8,6 @@ import Modal from '@/components/Modal.vue';
 import SelectInput from '@/components/SelectInput.vue';
 import Button from '@/components/Button.vue';
 import SpinnerIcon from '@/assets/icons/spinner.svg?component';
-import EggplantIcon from '@/assets/icons/foods/eggplant.svg?component';
 import SvgSprite from '@/components/SvgSprite.vue';
 import CheckIcon from '@/assets/icons/check.svg?component';
 

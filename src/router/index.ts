@@ -6,7 +6,7 @@ const router = createRouter({
     if (savedPosition) {
       return savedPosition
     } else {
-      return { top: 0, behavior: 'smooth' }
+      return { top: 0 }
     }
   },
   routes: [
@@ -45,17 +45,7 @@ const router = createRouter({
       name: 'openRecipe',
       path: '/recipe/:id',
       component: () => import('@/views/Recipe.vue'),
-      props: (route) => {
-        return { id: Number(route.params.id) }
-      },
-      beforeEnter: (to, from, next) => {
-        const id = Number(to.params.id);
-        if (isNaN(id)) {
-          next('/');
-        } else {
-          next();
-        }
-      },
+      props: true
     },
     { path: "/:pathMatch(.*)*", redirect: '/' }
   ]

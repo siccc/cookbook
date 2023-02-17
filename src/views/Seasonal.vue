@@ -23,7 +23,10 @@ const { y } = useScroll(window, { behavior: 'smooth' });
 // -----------------------------------
 
 const selectedMonth = ref('');
-selectedMonth.value = getCurrentMonth();
+const selectedMonthIndex = ref(0);
+const { month: initialMonth, monthIndex: initialMonthIndex }= getCurrentMonth();
+selectedMonth.value = initialMonth;
+selectedMonthIndex.value = initialMonthIndex;
 
 const foods = ref<FoodList>({
   vegetables: [],
@@ -65,6 +68,7 @@ watch(
 
 function onSelectedMonthChange(event: Event) {
   selectedMonth.value = (event.target as HTMLInputElement).value;
+  selectedMonthIndex.value = months.indexOf(selectedMonth.value);
   foods.value = getSeasonalFoodsByMonth(selectedMonth.value);
 }
 
@@ -129,7 +133,7 @@ async function showSuccessMessage() {
     <div class="-mt-6 md:mt-0">
       <h1 class="text-center md:text-left px-6 md:mb-12 mb-6 md:ml-3">
         <span class="bg-sky-900/40 px-3 rounded-sm font-k2d text-2xl text-white">
-          Seasonal foods in {{ selectedMonth }}
+          Local seasonal foods in {{ selectedMonth }}
         </span>
       </h1>
       <div class="bg-white pt-3  rounded-t-3xl">
@@ -208,18 +212,54 @@ async function showSuccessMessage() {
               }"
             >
               {{ selectedFood.name_EN }}
+              <span
+                v-if="selectedFood.stored_HU && selectedFood.stored_HU[selectedMonthIndex]"
+                class="bg-stone-100 px-1 rounded-sm text-stone-600 text-xs"
+              >
+                stored
+              </span>
             </div>
             <!-- <div class="text-sm text-stone-400">{{ selectedFood.name_HU }}</div> -->
-            <div class="text-sm mt-6 grid grid-cols-12 gap-3">
+            <div class="text-sm text-stone-400 mt-6 mb-1 text-left w-full">Months</div>
+            <div class="text-sm grid grid-cols-12 gap-3">
               <div
                 v-for="(value, monthIndex) in selectedFood.inSeason_HU"
-                class="rounded-sm px-3 py-0.5 flex items-center justify-center"
+                class="rounded-sm px-3 py-0.5 flex items-center justify-center font-medium"
                 :class="{
-                  'bg-sky-200 text-sky-600': value && selectedFoodType === 'vegetable',
-                  'bg-amber-200 text-yellow-500': value && selectedFoodType === 'fruit',
-                  'bg-stone-100 text-stone-400': !value}"
+                  'bg-sky-400 text-sky-800': value && selectedFoodType === 'vegetable',
+                  'bg-sky-100 text-sky-600': selectedFood.stored_HU && selectedFood.stored_HU[monthIndex] && selectedFoodType === 'vegetable',
+                  'bg-amber-400 text-yellow-800/70': value && selectedFoodType === 'fruit',
+                  'bg-amber-200 text-yellow-600': selectedFood.stored_HU && selectedFood.stored_HU[monthIndex] && selectedFoodType === 'fruit',
+                  'bg-stone-100 text-stone-500': (selectedFood.stored_HU && !selectedFood.stored_HU[monthIndex] && !value) || (!selectedFood.stored_HU && !value),
+                }"
               >
                 {{ shortMonths[monthIndex] }}
+              </div>
+            </div>
+            <div class="text-sm mt-3 flex flex-col items-start self-start">
+              <div class="flex items-center justify-center">
+                <div
+                  class="w-3 h-3 rounded-full mr-1" 
+                  :class="{
+                    'bg-sky-400': selectedFoodType === 'vegetable',
+                    'bg-amber-400': selectedFoodType === 'fruit'
+                  }"
+                />
+                seasonal
+              </div>
+              <div class="flex items-center justify-center">
+                <div
+                  class="w-3 h-3 rounded-full mr-1" 
+                  :class="{
+                    'bg-sky-200': selectedFoodType === 'vegetable',
+                    'bg-amber-200': selectedFoodType === 'fruit'
+                  }"
+                />
+                out of season but available (stored)
+              </div>
+              <div class="flex items-center justify-center">
+                <div class="w-3 h-3 rounded-full bg bg-stone-300 mr-1" />
+                out of season
               </div>
             </div>
           </div>

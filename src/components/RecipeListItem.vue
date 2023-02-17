@@ -23,7 +23,7 @@
     <ImagePlaceholder class="opacity-10 w-40 p-3" aria-hidden="true" focusable="false"/>
   </div>
   <div class="mt-1 uppercase select-none w-full">
-    <span class="inline-block text-stone-400 text-sm md:text-base">
+    <span class="inline-block text-stone-400 text-sm">
       {{ props.recipe.category }}
     </span>
     <div class="hover:text-sky-300 hover:transition duration-300 ease-in-out

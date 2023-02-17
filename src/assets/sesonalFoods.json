@@ -19,13 +19,8 @@
       "name_HU": "cékla",
       "inSeason_HU": [0,0,0,0,0,0,0,0,1,1,1,0],
       "inSeason_NL": [0,0,0,0,0,0,0,0,1,1,1,0],
-      "imageId": "radish"
-    },
-    {
-      "name_EN": "beetroot (stored)",
-      "name_HU": "cékla",
-      "inSeason_HU": [1,1,1,0,0,0,0,0,0,0,0,1],
-      "inSeason_NL": [1,1,1,1,1,0,0,0,0,0,0,1],
+      "stored_HU": [1,1,1,0,0,0,0,0,0,0,0,1],
+      "stored_NL": [1,1,1,1,1,0,0,0,0,0,0,1],
       "imageId": "radish"
     },
     {
@@ -75,13 +70,8 @@
       "name_HU": "káposzta",
       "inSeason_HU": [0,0,0,0,0,0,0,1,1,1,1,1],
       "inSeason_NL": [0,0,0,0,0,0,0,1,1,1,1,1],
-      "imageId": "cabbage"
-    },
-    {
-      "name_EN": "cabbage (stored)",
-      "name_HU": "káposzta",
-      "inSeason_HU": [1,1,1,1,0,0,0,0,0,0,0,0],
-      "inSeason_NL": [1,1,1,1,0,0,0,0,0,0,0,0],
+      "stored_HU": [1,1,1,1,0,0,0,0,0,0,0,0],
+      "stored_NL": [1,1,1,1,0,0,0,0,0,0,0,0],
       "imageId": "cabbage"
     },
     {
@@ -89,13 +79,8 @@
       "name_HU": "sárgarépa",
       "inSeason_HU": [0,0,0,0,0,0,0,1,1,1,1,0],
       "inSeason_NL": [0,0,0,0,0,0,0,1,1,1,1,0],
-      "imageId": "carrot"
-    },
-    {
-      "name_EN": "carrot (stored)",
-      "name_HU": "sárgarépa",
-      "inSeason_HU": [1,1,1,0,0,0,0,0,0,0,0,1],
-      "inSeason_NL": [1,1,1,0,0,0,0,0,0,0,0,1],
+      "stored_HU": [1,1,1,0,0,0,0,0,0,0,0,1],
+      "stored_NL": [1,1,1,0,0,0,0,0,0,0,0,1],
       "imageId": "carrot"
     },
     {
@@ -110,13 +95,8 @@
       "name_HU": "zeller",
       "inSeason_HU": [0,0,0,0,0,0,1,1,1,1,1,0],
       "inSeason_NL": [0,0,0,0,0,0,0,0,1,1,1,0],
-      "imageId": "celeriac"
-    },
-    {
-      "name_EN": "celeriac (stored)",
-      "name_HU": "zeller",
-      "inSeason_HU": [1,1,1,0,0,0,0,0,0,0,0,1],
-      "inSeason_NL": [1,1,1,0,0,0,0,0,0,0,0,1],
+      "stored_HU": [1,1,1,0,0,0,0,0,0,0,0,1],
+      "stored_NL": [1,1,1,0,0,0,0,0,0,0,0,1],
       "imageId": "celeriac"
     },
     {
@@ -144,13 +124,8 @@
       "name_HU": "kínai kel",
       "inSeason_HU": [0,0,0,0,0,1,1,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,1,1,1,1,1,1,0,0],
-      "imageId": "chinese-cabbage"
-    },
-    {
-      "name_EN": "chinese cabbage (stored)",
-      "name_HU": "kínai kel",
-      "inSeason_HU": [1,1,1,1,0,0,0,0,0,0,1,1],
-      "inSeason_NL": [1,1,1,1,0,0,0,0,0,0,1,1],
+      "stored_HU": [1,1,1,1,0,0,0,0,0,0,1,1],
+      "stored_NL": [1,1,1,1,0,0,0,0,0,0,1,1],
       "imageId": "chinese-cabbage"
     },
     {
@@ -234,13 +209,8 @@
       "name_HU": "kelkáposzta",
       "inSeason_HU": [0,0,0,0,0,0,1,1,1,1,1,0],
       "inSeason_NL": [0,0,0,0,0,1,1,1,1,1,1,0],
-      "imageId": "kale"
-    },
-    {
-      "name_EN": "savoy cabbage (stored)",
-      "name_HU": "kelkáposzta",
-      "inSeason_HU": [1,1,0,0,0,0,0,0,0,0,0,1],
-      "inSeason_NL": [1,1,0,0,0,0,0,0,0,0,0,1],
+      "stored_HU": [1,1,0,0,0,0,0,0,0,0,0,1],
+      "stored_NL": [1,1,0,0,0,0,0,0,0,0,0,1],
       "imageId": "kale"
     },
     {
@@ -281,13 +251,8 @@
       "name_HU": "hagyma",
       "inSeason_HU": [0,0,0,0,0,1,1,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,0,1,1,1,1,1,0,0],
-      "imageId": "onion"
-    },
-    {
-      "name_EN": "onion (stored)",
-      "name_HU": "hagyma",
-      "inSeason_HU": [1,1,1,1,0,0,0,0,0,0,1,1],
-      "inSeason_NL": [1,1,1,1,0,0,0,0,0,0,1,1],
+      "stored_HU": [1,1,1,1,0,0,0,0,0,0,1,1],
+      "stored_NL": [1,1,1,1,0,0,0,0,0,0,1,1],
       "imageId": "onion"
     },
     {
@@ -315,13 +280,8 @@
       "name_HU": "paszternák",
       "inSeason_HU": [1,1,1,1,0,0,0,0,1,1,1,1],
       "inSeason_NL": [0,0,0,0,0,0,0,1,1,1,1,0],
-      "imageId": "carrot"
-    },
-    {
-      "name_EN": "parsnip (stored)",
-      "name_HU": "paszternák",
-      "inSeason_HU": [0,0,0,0,1,1,1,1,0,0,0,0],
-      "inSeason_NL": [1,1,1,1,1,0,0,0,0,0,0,1],
+      "stored_HU": [0,0,0,0,1,1,1,1,0,0,0,0],
+      "stored_NL": [1,1,1,1,1,0,0,0,0,0,0,1],
       "imageId": "carrot"
     },
     {
@@ -343,13 +303,8 @@
       "name_HU": "burgonya",
       "inSeason_HU": [0,0,0,0,0,1,1,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,0,1,1,1,1,1,0,0],
-      "imageId": "potato"
-    },
-    {
-      "name_EN": "potato (stored)",
-      "name_HU": "burgonya",
-      "inSeason_HU": [1,1,1,1,1,0,0,0,0,0,1,1],
-      "inSeason_NL": [1,1,1,1,1,0,0,0,0,0,1,1],
+      "stored_HU": [1,1,1,1,1,0,0,0,0,0,1,1],
+      "stored_NL": [1,1,1,1,1,0,0,0,0,0,1,1],
       "imageId": "potato"
     },
     {
@@ -357,13 +312,8 @@
       "name_HU": "sütőtök",
       "inSeason_HU": [0,0,0,0,0,0,0,0,0,1,1,0],
       "inSeason_NL": [0,0,0,0,0,0,0,0,0,1,1,0],
-      "imageId": "pumpkin"
-    },
-    {
-      "name_EN": "pumpkin (stored)",
-      "name_HU": "sütőtök",
-      "inSeason_HU": [1,0,0,0,0,0,0,0,0,0,0,1],
-      "inSeason_NL": [1,0,0,0,0,0,0,0,0,0,0,1],
+      "stored_HU": [1,0,0,0,0,0,0,0,0,0,0,1],
+      "stored_NL": [1,0,0,0,0,0,0,0,0,0,0,1],
       "imageId": "pumpkin"
     },
     {
@@ -378,13 +328,8 @@
       "name_HU": "lilakáposzta",
       "inSeason_HU": [0,0,0,0,0,1,1,1,1,1,1,1],
       "inSeason_NL": [0,0,0,0,0,0,0,1,1,1,1,1],
-      "imageId": "cabbage"
-    },
-    {
-      "name_EN": "red cabbage (stored)",
-      "name_HU": "lilakáposzta",
-      "inSeason_HU": [0,0,0,0,0,1,1,1,1,1,1,1],
-      "inSeason_NL": [1,1,1,1,0,0,0,0,0,0,0,0],
+      "stored_HU": [1,1,1,1,0,0,0,0,0,0,0,0],
+      "stored_NL": [1,1,1,1,0,0,0,0,0,0,0,0],
       "imageId": "cabbage"
     },
     {
@@ -402,7 +347,7 @@
       "imageId": "rucola"
     },
     {
-      "name_EN": "rutabaga",
+      "name_EN": "rutabaga (swede)",
       "name_HU": "karórépa",
       "inSeason_HU": [1,1,1,1,0,0,0,0,0,1,1,1],
       "inSeason_NL": [1,1,0,0,0,0,0,0,1,1,1,1],
@@ -448,13 +393,8 @@
       "name_HU": "édesburgonya",
       "inSeason_HU": [0,0,0,0,0,0,0,0,1,1,1,1],
       "inSeason_NL": [0,0,0,0,0,0,0,0,1,1,1,1],
-      "imageId": "sweetpotato"
-    },
-    {
-      "name_EN": "sweet potato (stored)",
-      "name_HU": "édesburgonya",
-      "inSeason_HU": [1,1,1,1,1,1,1,1,0,0,0,0],
-      "inSeason_NL": [1,1,1,1,1,1,1,1,0,0,0,0],
+      "stored_HU": [1,1,1,1,1,1,1,1,0,0,0,0],
+      "stored_NL": [1,1,1,1,1,1,1,1,0,0,0,0],
       "imageId": "sweetpotato"
     },
     {
@@ -499,13 +439,8 @@
       "name_HU": "alma",
       "inSeason_HU": [0,0,0,0,0,0,0,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,0,0,0,1,1,1,0,0],
-      "imageId": "apple"
-    },
-    {
-      "name_EN": "apple (stored)",
-      "name_HU": "alma",
-      "inSeason_HU": [1,1,1,1,1,0,0,0,0,0,1,1],
-      "inSeason_NL": [1,1,1,1,1,0,0,0,0,0,1,1],
+      "stored_HU": [1,1,1,1,1,0,0,0,0,0,1,1],
+      "stored_NL": [1,1,1,1,1,0,0,0,0,0,1,1],
       "imageId": "apple"
     },
     {
@@ -632,13 +567,8 @@
       "name_HU": "körte",
       "inSeason_HU": [0,0,0,0,0,0,1,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,0,0,0,0,1,1,1,0],
-      "imageId": "pear"
-    },
-    {
-      "name_EN": "pear (stored)",
-      "name_HU": "körte",
-      "inSeason_HU": [1,1,1,1,0,0,0,0,0,0,0,1],
-      "inSeason_NL": [1,1,1,1,0,0,0,0,0,0,0,1],
+      "stored_HU": [1,1,1,1,0,0,0,0,0,0,1,1],
+      "stored_NL": [1,1,1,1,0,0,0,0,0,0,0,1],
       "imageId": "pear"
     }
   ]

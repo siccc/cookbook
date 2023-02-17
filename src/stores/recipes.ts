@@ -24,20 +24,21 @@ type TransformDBRecipeExtractsFnOptions = {
 
 type DBInfiniteQueryResult = {
   recipes: DBRecipeExtract[],
-  nextId: number | undefined
+  nextId: string | undefined
 };
 
 type TransformedInfiniteQueryResult = {
   pages: {
     recipes: RecipeExtract[],
-    nextId: number | undefined
+    nextId: string | undefined
   }[],
   pageParams: unknown[]
 };
 
 
 const recipeListFetcher = async ({ searchKeywords, category, cursor = '' }: infiniteQueryFetcherFnOptions): Promise<DBInfiniteQueryResult> => {
-  const search = searchKeywords.value ? searchKeywords.value : '';
+  const search = searchKeywords.value ?
+    searchKeywords.value.replace(/[&\/\\#,+()$~%.'":*?<>{}@]/g, '') : '';
   const cat = category.value === 'all' ? '' : category.value;
   try {
     const response = await fetch(`/api/recipes?search=${search}&category=${cat}&cursor=${cursor}`, {
@@ -97,11 +98,11 @@ export function listRecipes(searchKeywords: Ref<string>, category: Ref<string>) 
 // GET RECIPE
 // -----------------------------------
 
-const recipeFetcher = async (id: number | 'new'): Promise<DBRecipe> => {
+const recipeFetcher = async (id: string | 'new'): Promise<DBRecipe> => {
   if (id === 'new') {
     let recipe:DBRecipe = {
       title: '',
-      id: 0,
+      id: 'new',
       category: '',
       cookTime: 0,
       prepTime: 0,
@@ -138,7 +139,7 @@ function transformRecipe(dbRecipe: DBRecipe): Recipe {
   return recipe;
 }
 
-export function getRecipe(id: number | 'new') {
+export function getRecipe(id: string | 'new') {
   const { isLoading, isError, isFetching, data, error, refetch } = useQuery(
     ['recipe', id],
     () => recipeFetcher(id), {

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SvgSprite from '@/components/SvgSprite.vue';
 import { ref } from 'vue';
 
 let selectedCategory = ref('all');
@@ -22,18 +23,35 @@ function onCategoryClick(value: string) {
 <template>
   <section
     aria-label="category selector to filter recipe list"
-    class="flex items-center md:justify-start gap-3 overflow-x-auto
-      snap-x no-scrollbar"
+    class="flex items-center md:justify-start gap-2 overflow-x-auto snap-x no-scrollbar snap-center"
   >
-    <button class="border border-stone-300 uppercase px-3 py-2 md:py-1.5 rounded-lg cursor-pointer
-    hover:border-sky-300 hover:text-sky-400 shrink-0"
+    <button
+      class="group border-2 border-stone-200 uppercase p-2 rounded-lg
+        cursor-pointer hover:border-sky-100 shrink-0 flex flex-col items-center justify-center
+        w-[6.5rem] transition"
       v-for="category in categories"
       :class="{
-        'bg-sky-300 border-sky-300 text-white hover:border-sky-300 hover:text-white': selectedCategory === category
+        'bg-sky-100 border-sky-100 hover:border-sky-100': selectedCategory === category
       }"
       @click="onCategoryClick(category)"
     >
-      {{ category }}
+      <SvgSprite
+        :symbol="category"
+        class="w-10 h-10 transition"
+        :class="{
+          'text-sky-800/50': selectedCategory === category,
+          'text-stone-400 group-hover:text-sky-800/50': selectedCategory !== category
+        }"
+      />
+      <span
+        class="transition text-sm font-medium"
+        :class="{
+          'text-sky-800': selectedCategory === category,
+          'text-stone-600 group-hover:text-sky-800': selectedCategory !== category
+        }"
+      >
+        {{ category }}
+      </span>
     </button>
   </section>
 </template>

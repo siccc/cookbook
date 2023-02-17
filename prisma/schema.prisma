@@ -11,7 +11,7 @@ generator client {
 }
 
 model Recipe {
-  id              Int             @id @default(autoincrement())
+  id              String          @id @unique
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   title           String

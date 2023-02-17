@@ -68,7 +68,7 @@ useInfiniteScroll(
 <template>
   <main class="p-3 md:p-9 max-w-screen-xl mx-auto mt-14 mb-20">
     <div>Greetings! 👋</div>
-    <h1 class="mt-3 mb-6 text-4xl">Let's cook something delicious!</h1>
+    <h1 class="mt-3 mb-6 text-3xl">Let's cook something delicious!</h1>
     <div class="mx-auto sm:flex sm:items-center sm:justify-between">
       <div class="sm:flex-1 flex items-center relative sm:mr-3">
         <IconButton
@@ -104,7 +104,8 @@ useInfiniteScroll(
         Create recipe
       </Button>
     </div>
-    <CategoryListWithSelector  class="mt-6" @selectedCategoryChange="onCategoryClick" />
+    <!-- <div class="mt-3">Categories</div> -->
+    <CategoryListWithSelector  class="mt-3 -mx-3 px-3" @selectedCategoryChange="onCategoryClick" />
     <LoadingState v-if="isLoading" />
     <ErrorState v-if="isError" :error="error" />
     <div v-else>

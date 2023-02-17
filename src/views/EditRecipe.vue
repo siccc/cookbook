@@ -48,7 +48,8 @@ const savingErrorMessage = ref('');
 // INIT
 // -----------------------------------
 
-const id = props.id === 'new' ? props.id : Number(props.id);
+// const id = props.id === 'new' ? props.id : Number(props.id);
+const id = props.id;
 const { isLoading, isError: fetchingIsError, data, error: fetchingError } = getRecipe(id);
 const recipe:Ref<Recipe|undefined> = ref(undefined);
 

@@ -21,7 +21,7 @@ import ErrorState from '@/components/ErrorState.vue';
 import LoadingState from '@/components/LoadingState.vue';
 
 const props = defineProps<{
-  id: number
+  id: string
 }>();
 
 const scrollPosition = ref(0);

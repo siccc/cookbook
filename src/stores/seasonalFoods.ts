@@ -27,16 +27,29 @@ export function getSeasonalFoodsByMonth(month: string): FoodList {
   const foods = getSeasonalFoods();
   return {
     fruits: foods.fruits
-      .filter((fruit: Food) => !!fruit.inSeason_HU && !!fruit.inSeason_HU[monthIndex])
+      .filter((fruit: Food) => {
+        return isInSeason(fruit, monthIndex);
+      })
       .sort((a: Food, b: Food) => a.name_EN.localeCompare(b.name_EN)),
     vegetables: foods.vegetables
-      .filter((veggie: Food) => !!veggie.inSeason_HU && !!veggie.inSeason_HU[monthIndex])
+      .filter((veggie: Food) => {
+        return isInSeason(veggie, monthIndex);
+      })
       .sort((a: Food, b: Food) => a.name_EN.localeCompare(b.name_EN))
   };
 }
 
+function isInSeason(food: Food, monthIndex: number): boolean {
+  if (food.inSeason_HU && !food.stored_HU) {
+    return !!food.inSeason_HU[monthIndex];
+  } else if (food.inSeason_HU && food.stored_HU) {
+    return !!food.inSeason_HU[monthIndex] || !!food.stored_HU[monthIndex];
+  }
+  return false;
+}
+
 export function getCurrentMonth() {
-  return months[currentMonthIndex];
+  return { month: months[currentMonthIndex], monthIndex: currentMonthIndex };
 }
 
 export function getMonths() {

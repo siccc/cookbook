@@ -2,7 +2,7 @@
 import type { ComputedRef } from 'vue';
 
 export interface Recipe {
-  id: number,
+  id: string,
   title: string,
   category: string,
   cookTime?: number
@@ -19,7 +19,7 @@ export interface Recipe {
 }
 
 export interface DBRecipe {
-  id: number,
+  id: string,
   title: string,
   category: string,
   cookTime?: number
@@ -35,19 +35,19 @@ export interface DBRecipe {
 }
 
 export interface Tag {
-  id?: number,
+  id?: string,
   name: string
 }
 
 export interface RecipeExtract {
-  id: number,
+  id: string,
   title: string,
   category: string,
   imageUrl?: string
 }
 
 export interface DBRecipeExtract {
-  id: number,
+  id: string,
   title: string,
   category: string,
   imagePublicId?: string
@@ -78,5 +78,7 @@ export interface Food {
   name_HU: string,
   inSeason_HU: number[],
   inSeason_NL: number[],
+  stored_HU: number[],
+  stored_NL: number[],
   imageId?: string
 }

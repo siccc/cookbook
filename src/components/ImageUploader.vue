@@ -126,7 +126,7 @@ function validateFileSize(size:number) {
           hover:text-white"
         >
           <ImageUploadIcon class="w-6 h-6" />
-          Upload
+          <span>Change photo</span>
         </label>
         <Button white @click="deleteImageUrl">
           <DeleteIcon class="w-6 h-6 mr-1" />

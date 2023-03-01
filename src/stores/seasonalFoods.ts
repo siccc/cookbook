@@ -1,4 +1,4 @@
-import foodsJson from '@/assets/sesonalFoods.json?raw';
+import foodsJson from '@/assets/seasonalFoods.json?raw';
 import type { Food, FoodList } from '@/types';
 
 const currentMonthIndex = new Date().getMonth();

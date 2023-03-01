@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { getCurrentMonth, getSeasonalFoodsByMonth, getMonths } from '@/stores/seasonalFoods';
 import { getShoppingList, useUpdateShoppingListMutation } from '@/stores/shoppingList';
-import { computed, ref, watch } from 'vue';
-import { useScroll } from '@vueuse/core';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import type { Food, FoodList, ShoppingList } from '@/types';
 import Modal from '@/components/Modal.vue';
 import SelectInput from '@/components/SelectInput.vue';
@@ -10,13 +9,16 @@ import Button from '@/components/Button.vue';
 import SpinnerIcon from '@/assets/icons/spinner.svg?component';
 import SvgSprite from '@/components/SvgSprite.vue';
 import CheckIcon from '@/assets/icons/check.svg?component';
+import winterBg from '@/assets/winter.png';
+import springBg from '@/assets/spring.png';
+import summerBg from '@/assets/summer.png';
+import autumnBg from '@/assets/autumn.png';
 
 const showModal = ref(false);
 const selectedFood = ref<Food | null>(null);
 const selectedFoodType = ref('');
 const showSaveSuccessMessage = ref(false);
 const shortMonths = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
-const { y } = useScroll(window, { behavior: 'smooth' });
 
 // -----------------------------------
 // INIT
@@ -38,33 +40,66 @@ const months = getMonths();
 const parallaxEl = ref<HTMLInputElement | null>(null);
 const { data:shoppingList } = getShoppingList();
 const updateShoppingListMutation = useUpdateShoppingListMutation();
+const images = {
+  winter: winterBg,
+  spring: springBg,
+  summer: summerBg,
+  autumn: autumnBg
+};
 
-const sesonalBgClass = computed(() => {
-  if (selectedMonth.value === '') {
+const sesonalBgStyle = computed(() => {
+  if (selectedMonth.value === '' || !parallaxEl.value) {
     return '';
   }
   if (['January', 'February', 'December'].includes(selectedMonth.value)) {
-    return 'bg-[url("@/assets/winter.png")]';
+    return { backgroundImage: `url(${ winterBg })` };
   } else if (['March', 'April', 'May'].includes(selectedMonth.value)) {
-    return 'bg-[url("@/assets/spring.png")]';
+    return { backgroundImage: `url(${ springBg })` };
   } else if (['June', 'July', 'August'].includes(selectedMonth.value)) {
-    return 'bg-[url("@/assets/summer.png")]';
+    return { backgroundImage: `url(${ summerBg })` };
   } else if (['September', 'October', 'November'].includes(selectedMonth.value)) {
-    return 'bg-[url("@/assets/autumn.png")]';
+    return { backgroundImage: `url(${ autumnBg })` };
   }
 });
 
-watch(
-  () => y.value,
-  (y) => {
-  if (parallaxEl.value) {
-    parallaxEl.value.style.transform = `translateY(${y * 0.5}px)`;
-  }
+onMounted(() => {
+  preloadImages(images);
+  window.addEventListener("scroll", handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
 });
 
 // -----------------------------------
 // METHODS
 // -----------------------------------
+
+function handleScroll() {
+  const scrollTop = window.pageYOffset;
+  const speed = 0.3;
+  const offset = scrollTop * speed;
+
+  window.requestAnimationFrame(() => {
+    if (parallaxEl.value) {
+      parallaxEl.value.style.transform = `translate3d(0, ${offset}px, 0)`;
+    }
+  });
+}
+
+async function preloadImages(images: { [key: string]: string }) {
+  const promises = Object.values(images).map(loadImage);
+  await Promise.all(promises);
+}
+
+function loadImage(imageSrc: string) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(true);
+    img.onerror = () => reject(new Error(`Failed to load image ${imageSrc}`));
+    img.src = imageSrc;
+  });
+}
 
 function onSelectedMonthChange(event: Event) {
   selectedMonth.value = (event.target as HTMLInputElement).value;
@@ -123,20 +158,20 @@ async function showSuccessMessage() {
 
 <template>
   <main class="mx-auto max-w-screen-xl mb-20">
-    <div class="h-72 relative top-12 md:top-20 md:h-96 -z-10">
+    <div class="relative overflow-hidden -z-10 h-80 md:h-[30rem]">
       <div
         ref="parallaxEl"
-        class="absolute inset-0 bg-cover bg-bottom bg-no-repeat md:rounded-3xl"
-        :class="[sesonalBgClass]"
+        class="parallax-bg transition-[transform] ease-out duration-75 md:transition-none"
+        :style="sesonalBgStyle"
       />
-    </div>
-    <div class="-mt-6 md:mt-0">
-      <h1 class="text-center md:text-left px-6 md:mb-12 mb-6 md:ml-3">
-        <span class="bg-sky-900/40 px-3 rounded-sm font-k2d text-2xl text-white">
+      <h1 class="text-center md:text-left px-6 mb-6 md:ml-3 absolute bottom-6 md:bottom-12">
+        <span class="bg-sky-900/50 px-3 rounded-sm font-k2d text-2xl text-white leading-relaxed">
           Local seasonal foods in {{ selectedMonth }}
         </span>
       </h1>
-      <div class="bg-white pt-3  rounded-t-3xl">
+    </div>
+    <div class="-mt-6 md:-mt-12">
+      <div class="bg-white pt-3 rounded-t-3xl">
         <div class="flex justify-between items-center my-6 px-6">
           <div class="text-xl">Veggies</div>
           <div class="flex items-center">
@@ -166,7 +201,7 @@ async function showSuccessMessage() {
             </div>
             <div class="text-left">
               <div>{{ veggie.name_EN }}</div>
-              <!-- <div class="text-xs mt-0.5">{{ veggie.name_HU }}</div> -->
+              <div class="text-xs mt-0.5">{{ veggie.name_HU }}</div>
             </div>
           </button>
         </div>
@@ -188,7 +223,7 @@ async function showSuccessMessage() {
             </div>
             <div class="text-left">
               <div>{{ fruit.name_EN }}</div>
-              <!-- <div class="text-xs mt-0.5">{{ fruit.name_HU }}</div> -->
+              <div class="text-xs mt-0.5">{{ fruit.name_HU }}</div>
             </div>
           </button>
         </div>
@@ -205,7 +240,7 @@ async function showSuccessMessage() {
         >
           <div v-if="selectedFood && !showSaveSuccessMessage" class="flex flex-col items-center">
             <div
-              class="uppercase font-k2d"
+              class="uppercase font-k2d flex items-center"
               :class="{
                 'text-sky-600': selectedFoodType === 'vegetable',
                 'text-yellow-500': selectedFoodType === 'fruit'
@@ -214,19 +249,19 @@ async function showSuccessMessage() {
               {{ selectedFood.name_EN }}
               <span
                 v-if="selectedFood.stored_HU && selectedFood.stored_HU[selectedMonthIndex]"
-                class="bg-stone-100 px-1 rounded-sm text-stone-600 text-xs"
+                class="bg-stone-100 px-1 rounded-sm text-stone-600 text-xs ml-1"
               >
                 stored
               </span>
             </div>
-            <!-- <div class="text-sm text-stone-400">{{ selectedFood.name_HU }}</div> -->
+            <div class="text-sm text-stone-400">{{ selectedFood.name_HU }}</div>
             <div class="text-sm text-stone-400 mt-6 mb-1 text-left w-full">Months</div>
             <div class="text-sm grid grid-cols-12 gap-3">
               <div
                 v-for="(value, monthIndex) in selectedFood.inSeason_HU"
                 class="rounded-sm px-3 py-0.5 flex items-center justify-center font-medium"
                 :class="{
-                  'bg-sky-400 text-sky-800': value && selectedFoodType === 'vegetable',
+                  'bg-sky-300 text-sky-800': value && selectedFoodType === 'vegetable',
                   'bg-sky-100 text-sky-600': selectedFood.stored_HU && selectedFood.stored_HU[monthIndex] && selectedFoodType === 'vegetable',
                   'bg-amber-400 text-yellow-800/70': value && selectedFoodType === 'fruit',
                   'bg-amber-200 text-yellow-600': selectedFood.stored_HU && selectedFood.stored_HU[monthIndex] && selectedFoodType === 'fruit',
@@ -258,7 +293,7 @@ async function showSuccessMessage() {
                 out of season but available (stored)
               </div>
               <div class="flex items-center justify-center">
-                <div class="w-3 h-3 rounded-full bg bg-stone-300 mr-1" />
+                <div class="w-3 h-3 rounded-full bg bg-stone-200 mr-1" />
                 out of season
               </div>
             </div>
@@ -292,3 +327,16 @@ async function showSuccessMessage() {
     </div>
   </main>
 </template>
+
+<style scoped>
+.parallax-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-position: bottom;
+  background-size: cover;
+  transform: translate3d(0, 0, 0);
+}
+</style>

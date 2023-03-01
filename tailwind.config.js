@@ -14,6 +14,9 @@ module.exports = {
       aspectRatio: {
         '4/3': '4 / 3'
       },
+      animation: {
+        'pulse-fast': 'pulse 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      }
     }
   },
   plugins: [

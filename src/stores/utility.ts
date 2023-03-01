@@ -5,3 +5,8 @@ export function isMobile() {
   }
   return isMobile;
 }
+
+export function getDPR() {
+  const dpr = window ? Math.ceil(Number((window.devicePixelRatio).toFixed(2))) : 1;
+  return `dpr_${dpr}.0`;
+}

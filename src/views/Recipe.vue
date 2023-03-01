@@ -19,6 +19,8 @@ import BackIcon from '@/assets/icons/angle-left-b.svg?component';
 import ImagePlaceholder from '@/assets/image-placeholder.svg?component';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingState from '@/components/LoadingState.vue';
+import Image from '@/components/Image.vue';
+import { getDPR } from '@/stores/utility';
 
 const props = defineProps<{
   id: string
@@ -29,6 +31,7 @@ const router = useRouter();
 const isCounterClicked = ref(false);
 const showDeleteConfirmModal = ref(false);
 const showAddToShoppingListModal = ref(false);
+const imageUrlStart = 'https://res.cloudinary.com/sicccookbook/image/upload/f_auto/q_auto/c_fill,';
 const {
   isLoading,
   isError,
@@ -44,6 +47,8 @@ const totalTime = computed<number>(() => {
   }
   return (recipe.value.cookTime || 0) + (recipe.value.prepTime || 0);
 });
+
+const dpr = getDPR();
 
 // -----------------------------------
 // METHODS
@@ -167,11 +172,14 @@ onMounted(() => {
       <div class="md:grid md:grid-cols-3 md:justify-items-start flex flex-col">
         <!-- IMAGE -->
         <div class="w-full md:p-3">
-          <img
-            v-if="recipe.imageUrl"
-            class="w-full h-96 object-cover md:rounded-xl"
-            :src="recipe.imageUrl"
-            alt=""
+          <Image
+            v-if="recipe.imagePublicId"
+            imgClass="w-full h-96 object-cover md:rounded-xl"
+            :imagePublicId="recipe.imagePublicId"
+            :imageUrl="recipe.imageUrl"
+            imgSizeSmall="h_420,w_420"
+            imgSizeLarge="h_460,w_780"
+            imgSizeDefault="h_420,w_350"
           />
           <div v-else class="w-full h-96 rounded-b-xl rounded-t-none md:rounded-xl bg-stone-100
             flex justify-center items-center">

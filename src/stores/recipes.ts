@@ -350,7 +350,7 @@ function getImageUrl(imagePublicId?: string) {
   if (imagePublicId) {
     url = cloudinary.image(imagePublicId)
       .resize(
-        fill().width(700).height(700)
+        fill().width(780).height(460)
       )
       .toURL();
   }

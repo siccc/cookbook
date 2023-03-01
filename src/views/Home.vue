@@ -119,7 +119,13 @@ useInfiniteScroll(
             class="w-1/2 md:w-1/3 lg:w-1/5 p-2 md:p-3"
           >
             <RouterLink :to="`/recipe/${recipe.id}`">
-              <RecipeListItem :recipe="recipe"/>
+              <RecipeListItem 
+                :recipe="recipe"
+                imageRatio="aspect-square"
+                img-size-default="h_225,w_225"
+                img-size-small="h_225,w_225"
+                img-size-large="h_420,w_420"
+              />
             </RouterLink>
           </div>
         </template>

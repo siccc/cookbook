@@ -214,7 +214,7 @@ onMounted(() => {
               :disabled="saveInProgress"
             >
               <SpinnerIcon v-if="saveInProgress" class="w-6 h-6 animate-spin mr-1"/>
-              Save
+              Save changes
             </Button>
             <Button
               class="ml-6"
@@ -247,7 +247,7 @@ onMounted(() => {
               :disabled="saveInProgress"
             >
               <SpinnerIcon v-if="saveInProgress" class="w-6 h-6 animate-spin mr-1"/>
-              Save
+              Save changes
             </Button>
             <Button
               v-if="props.id !== 'new'"

@@ -50,7 +50,13 @@ function onRefetchClick() {
             class="w-full sm:w-1/3 p-2 md:p-3"
           >
             <RouterLink :to="`/recipe/${recipe.id}`">
-              <RecipeListItem :recipe="recipe" imageRatio="aspect-[4/3]"/>
+              <RecipeListItem 
+                :recipe="recipe"
+                imageRatio="aspect-[4/3]"
+                img-size-default="h_420,w_420"
+                img-size-small="h_420,w_420"
+                img-size-large="h_460,w_780"
+              />
             </RouterLink>
           </div>
         </div>

@@ -1,20 +1,27 @@
 <script setup lang="ts">
   import type { RecipeExtract } from '@/types';
   import ImagePlaceholder from '@/assets/image-placeholder.svg?component';
+  import Image from '@/components/Image.vue';
 
   const props = defineProps<{
     recipe: RecipeExtract;
+    imgSizeSmall: string;
+    imgSizeLarge: string;
+    imgSizeDefault: string;
     imageRatio?: string;
   }>();
 </script>
 
 <template>
-  <img
-    v-if="props.recipe.imageUrl"
-    class="object-cover rounded-xl w-full"
-    :class="props.imageRatio || 'aspect-square'"
-    :src="props.recipe.imageUrl"
-    alt=""
+  <Image
+    v-if="props.recipe.imagePublicId"
+    :imgClass="'object-cover rounded-xl w-full'"
+    :imagePublicId="props.recipe.imagePublicId"
+    :imageUrl="props.recipe.imageUrl"
+    :imgSizeSmall="props.imgSizeSmall"
+    :imgSizeLarge="props.imgSizeLarge"
+    :imgSizeDefault="props.imgSizeDefault"
+    :imageRatio="props.imageRatio"
   />
   <div v-else
     class="w-full rounded-xl bg-stone-100 flex items-center justify-center"

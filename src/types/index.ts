@@ -43,7 +43,8 @@ export interface RecipeExtract {
   id: string,
   title: string,
   category: string,
-  imageUrl?: string
+  imageUrl?: string,
+  imagePublicId?: string
 }
 
 export interface DBRecipeExtract {

@@ -20,7 +20,6 @@ import ImagePlaceholder from '@/assets/image-placeholder.svg?component';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingState from '@/components/LoadingState.vue';
 import Image from '@/components/Image.vue';
-import { getDPR } from '@/stores/utility';
 
 const props = defineProps<{
   id: string
@@ -31,7 +30,6 @@ const router = useRouter();
 const isCounterClicked = ref(false);
 const showDeleteConfirmModal = ref(false);
 const showAddToShoppingListModal = ref(false);
-const imageUrlStart = 'https://res.cloudinary.com/sicccookbook/image/upload/f_auto/q_auto/c_fill,';
 const {
   isLoading,
   isError,
@@ -47,8 +45,6 @@ const totalTime = computed<number>(() => {
   }
   return (recipe.value.cookTime || 0) + (recipe.value.prepTime || 0);
 });
-
-const dpr = getDPR();
 
 // -----------------------------------
 // METHODS
@@ -94,7 +90,7 @@ function onAddToShoppingListCancel() {
 
 const updateScroll = useThrottleFn(() => {
   scrollPosition.value = window.scrollY;
-}, 100, true);
+}, 250, true);
 
 onMounted(() => {
   window.addEventListener('scroll', updateScroll);

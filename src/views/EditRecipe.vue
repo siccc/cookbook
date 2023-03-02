@@ -341,9 +341,10 @@ onMounted(() => {
             >
               <button
                 class="border border-stone-300 uppercase px-3 py-2 md:py-1.5 rounded-lg
-                  cursor-pointer hover:border-sky-300 hover:text-sky-400"
+                  cursor-pointer hover:border-sky-300 hover:transition-colors"
                 :class="{
-                  'bg-sky-300 border-sky-300 text-white hover:border-sky-300 hover:text-white': recipe.category === category
+                  'bg-sky-300 text-white border-sky-300 hover:text-white': recipe.category === category,
+                  'hover:text-sky-400': recipe.category !== category
                 }"
                 v-for="category in categories"
                 @click="onCategoryChange(category)"

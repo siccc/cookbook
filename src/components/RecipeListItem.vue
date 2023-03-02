@@ -33,7 +33,7 @@
     <span class="inline-block text-stone-400 text-sm">
       {{ props.recipe.category }}
     </span>
-    <div class="hover:text-sky-300 hover:transition duration-300 ease-in-out
+    <div class="group-hover:text-sky-300 group-hover:transition duration-300 ease-in-out
       font-k2d md:text-xl cursor-pointer md:leading-tight leading-tight"
     >
       {{ props.recipe.title }}

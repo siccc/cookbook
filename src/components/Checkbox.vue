@@ -41,7 +41,12 @@ function onFocusout(event: Event) {
         'bg-white border-stone-300': !props.value
       }"
     >
-      <CheckIcon class="w-5 h-5 text-white" v-if="props.value"></CheckIcon>
+      <CheckIcon
+      v-if="props.value"
+        class="w-5 h-5 text-white"
+        aria-hidden="true"
+        focusable="false"
+      />
     </div>
     <input
       type="checkbox"

@@ -73,7 +73,8 @@ const showMenu = computed(() => {
         <RouterLink to="/shopping-list" class="w-1/5">
           <div class="flex flex-col items-center hover:text-yellow-400">
             <GroceryIcon class="w-6 h-6" aria-hidden="true" focusable="false"/>
-            <div class="text-xs">Shopping list</div>
+            <div class="text-xs <xs:hidden block">Shopping list</div>
+            <div class="text-xs hidden <xs:block">Shopping</div>
           </div>
         </RouterLink>
         <RouterLink to="/seasonal-foods" class="w-1/5">

@@ -49,7 +49,7 @@ function onRefetchClick() {
             :key="recipe.id"
             class="w-full sm:w-1/3 p-2 md:p-3"
           >
-            <RouterLink :to="`/recipe/${recipe.id}`">
+            <RouterLink :to="`/recipe/${recipe.id}`" class="group">
               <RecipeListItem 
                 :recipe="recipe"
                 imageRatio="aspect-[4/3]"

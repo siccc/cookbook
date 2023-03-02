@@ -91,28 +91,30 @@ function onConfirm(event: Event) {
       </div>
       <!-- FOOTER -->
       <div
-        class="modalFooter flex justify-between items-center gap-3 px-6 pt-6"
+        class="modalFooter"
         :class="{ 'border-t': props.isScrollable }"
       >
         <slot name="footer">
-          <Button
-            ref="cancelButton"
-            v-if="props.showCancelButton"
-            class="flex-1 uppercase"
-            @click="onCancel"
-          >
-            {{ props.cancelLabel || 'Cancel' }}
-          </Button>
-          <Button
-            ref="confirmButton"
-            v-if="props.showConfirmButton"
-            class="flex-1 uppercase"
-            :primary="props.isConfirmPrimary"
-            :danger="props.isConfirmDanger"
-            @click="onConfirm"
-          >
-            {{ props.confirmLabel || 'OK' }}
-          </Button>
+          <div class="flex justify-between items-center gap-3 px-6 mt-6">
+            <Button
+              ref="cancelButton"
+              v-if="props.showCancelButton"
+              class="flex-1 uppercase"
+              @click="onCancel"
+            >
+              {{ props.cancelLabel || 'Cancel' }}
+            </Button>
+            <Button
+              ref="confirmButton"
+              v-if="props.showConfirmButton"
+              class="flex-1 uppercase"
+              :primary="props.isConfirmPrimary"
+              :danger="props.isConfirmDanger"
+              @click="onConfirm"
+            >
+              {{ props.confirmLabel || 'OK' }}
+            </Button>
+          </div>
         </slot>
       </div>
     </div>

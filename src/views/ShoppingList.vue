@@ -120,12 +120,13 @@ function saveChanges() {
 
 <template>
   <main class="px-6 md:px-9 max-w-screen-sm mx-auto mt-14 mb-20">
-    <div class="sticky top-14 bg-white z-10 pt-6">
+    <div class="sticky top-14 bg-white z-20 pt-6">
       <div class="flex items-center justify-between">
         <h1 class="text-2xl text-center md:text-left my-1">
           Shopping list
         </h1>
         <Button
+          class="<xs:hidden"
           v-if="checkedListLenght !== 0"
           @click="onClickShowModal"
           :disabled="editedItem !== undefined"
@@ -133,28 +134,33 @@ function saveChanges() {
           Delete all checked
         </Button>
       </div>
-
-      <div v-if="!isLoading"
-        class="py-6"
-      >
-      <div class="flex items-center relative">
-        <IconButton
-          class="text-stone-300 absolute left-0 ml-1"
-          aria-label="Add new items"
-          @click="addItems"
-        >
-          <PlusIcon class="w-5 h-5" />
-        </IconButton>
+      <div v-if="!isLoading" class="py-6 flex justify-between items-center <xs:flex-wrap">
         <input
           enterkeyhint="done"
           ref="newItemInputEl"
-          class="inputWithIcon"
+          class="filledInput"
           :value="newItem"
-          placeholder="Add new items (separated by &quot;,&quot; )"
+          placeholder="Add items (separated by &quot;,&quot; )"
           @keypress.enter="addItems"
         />
+        <Button
+          class="ml-2 uppercase <xs:ml-0 <xs:mt-3 <xs:w-full"
+          @click="addItems"
+          primary
+        >
+          <PlusIcon class="w-5 h-5" aria-hidden="true" focusable="false"/>
+          Add
+          <span class="<xs:inline ml-1 hidden"> items</span>
+        </Button>
       </div>
-    </div>
+      <Button
+        class="<xs:inline-flex <xs:mb-3 <xs:w-full hidden"
+        v-if="checkedListLenght !== 0"
+        @click="onClickShowModal"
+        :disabled="editedItem !== undefined"
+      >
+        Delete all checked
+      </Button>
     </div>
     <LoadingState v-if="isLoading" />
     <ErrorState v-else-if="isError" :error="error" />

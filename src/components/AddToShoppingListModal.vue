@@ -130,27 +130,29 @@ async function showSuccessMessage() {
         Items added successfully to shopping list.
       </div>
       <template v-slot:footer>
-        <Button
-          class="flex-1 uppercase"
-          @click="onCancel"
-          v-show="!showSaveSuccessMessage"
-        >
-          Cancel
-        </Button>
-        <Button
-          class="flex-1 uppercase"
-          primary
-          @click="onConfirm"
-          v-show="!showSaveSuccessMessage"
-          :disabled="checkedListLenght === 0"
-        >
-          <SpinnerIcon
-            v-if="updateShoppingListMutation.isLoading.value"
-            class="w-6 h-6 animate-spin mr-2"
-          />
-          <span v-if="updateShoppingListMutation.isLoading.value">Saving...</span>
-          <span v-else class="uppercase">Add items</span>
-        </Button>
+        <div class="flex justify-between items-center gap-3 px-6 mt-6">
+          <Button
+            class="flex-1 uppercase"
+            @click="onCancel"
+            v-show="!showSaveSuccessMessage"
+          >
+            Cancel
+          </Button>
+          <Button
+            class="flex-1 uppercase"
+            primary
+            @click="onConfirm"
+            v-show="!showSaveSuccessMessage"
+            :disabled="checkedListLenght === 0"
+          >
+            <SpinnerIcon
+              v-if="updateShoppingListMutation.isLoading.value"
+              class="w-6 h-6 animate-spin mr-2"
+            />
+            <span v-if="updateShoppingListMutation.isLoading.value">Saving...</span>
+            <span v-else class="uppercase">Add items</span>
+          </Button>
+        </div>
       </template>
     </Modal>
   </Teleport>

@@ -76,7 +76,7 @@ useInfiniteScroll(
           @click="onSearchTextChange"
           aria-label="Search"
         >
-          <SearchIcon class="w-5 h-5" />
+          <SearchIcon class="w-5 h-5" aria-hidden="true" focusable="false"/>
         </IconButton>
         <input
           ref="searchInputEl"
@@ -96,11 +96,11 @@ useInfiniteScroll(
           @click="cancelSearch"
           aria-label="Delete search text"
         >
-          <CloseIcon class="w-5 h-5"/>
+          <CloseIcon class="w-5 h-5" aria-hidden="true" focusable="false"/>
         </IconButton>
       </div>
       <Button primary to="/edit/new" class="hidden sm:inline-flex w-auto mt-3 sm:mt-0">
-        <PlusIcon class="w-6 h-6 mr-1"/>
+        <PlusIcon class="w-6 h-6 mr-1" aria-hidden="true" focusable="false"/>
         Create recipe
       </Button>
     </div>
@@ -118,7 +118,7 @@ useInfiniteScroll(
             :key="recipe.id"
             class="w-1/2 md:w-1/3 lg:w-1/5 p-2 md:p-3"
           >
-            <RouterLink :to="`/recipe/${recipe.id}`">
+            <RouterLink :to="`/recipe/${recipe.id}`" class="group">
               <RecipeListItem 
                 :recipe="recipe"
                 imageRatio="aspect-square"

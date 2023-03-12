@@ -96,9 +96,10 @@ const generateRecipes = async (userId: string) => {
     for (const recipe of seedData.recipes) {
       const d = await prisma.recipe.create({
         data: {
+          id: generateId(),
           ...recipe,
-          tags: processTags(recipe.tags, userId),
-          userId
+          userId,
+          tags: processTags(recipe.tags, userId)
         },
         include: {
           tags: true,

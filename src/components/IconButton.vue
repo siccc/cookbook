@@ -32,7 +32,7 @@ function onFocusout(event: Event) {
     :disabled="disabled"
     v-on="computedListeners"
   >
-    <slot area-hidden focusable="false" />
+    <slot aria-hidden focusable="false" />
   </button>
 </template>
 

@@ -1,6 +1,9 @@
 {
   "name": "cookbook-app",
   "version": "0.0.0",
+  "author": "Sarolta Nagy",
+  "description": "Cookbook is an easy-to-use recipe app, the digital version of your treasured family recipe book.",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "vdev": "vercel dev --local-config ./vercel-dev.json",
@@ -18,7 +21,7 @@
   "dependencies": {
     "@cloudinary/url-gen": "^1.8.6",
     "@codemirror/lang-markdown": "^6.0.3",
-    "@formkit/auto-animate": "^1.0.0-beta.5",
+    "@formkit/auto-animate": "^1.0.0-beta.6",
     "@types/dompurify": "^2.3.4",
     "@vueuse/core": "^9.5.0",
     "cloudinary": "^1.32.0",

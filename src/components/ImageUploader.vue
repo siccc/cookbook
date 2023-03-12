@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, type Ref } from 'vue';
+import { reactive, ref, type Ref } from 'vue';
 import ImagePlaceholder from '@/assets/image-placeholder.svg?component';
 import DeleteIcon from '@/assets/icons/trash-alt.svg?component';
 import Button from '@/components/Button.vue';
@@ -15,8 +15,11 @@ const emit = defineEmits<{
 
 const imageSource:Ref<string> = ref(props.imageSource || '');
 const fileInput:Ref<HTMLInputElement | null> = ref(null);
-const hasFileSizeError:Ref<Boolean> = ref(false);
-const fileSizeErrorMessage:string = `Maximum allowed file size is 50 MB.`
+
+const imageValidations = reactive({
+  fileSize: { hasError: false, message: 'Maximum allowed file size is 10 MB.'},
+  fileExtension: { hasError: false, message: 'Only .jpeg, .jpg, .png or .webp files are allowed.'},
+});
 
 function clickFileInput() {
   if(fileInput && fileInput.value) {
@@ -25,11 +28,19 @@ function clickFileInput() {
 }
 
 async function onFileSelect(event:Event) {
+  imageValidations.fileSize.hasError = false;
+  imageValidations.fileExtension.hasError = false;
   const target= event.target as HTMLInputElement;
   const file: File = (target.files as FileList)[0];
   if (!file) return;
   
   validateFileSize(file.size);
+  validateFileExtension(file.type);
+
+  if (imageValidations.fileSize.hasError || imageValidations.fileExtension.hasError) {
+    imageSource.value = '';
+    return;
+  }
 
   const readData = (f:File) =>  new Promise<string>((resolve) => {
     const reader = new FileReader();
@@ -55,11 +66,18 @@ function deleteImageUrl() {
 }
 
 function validateFileSize(size:number) {
-  // maximum allowed size 50 MB
-  if (size > 50 * 1024 * 1024) {
-    hasFileSizeError.value = true;
+  // maximum allowed size 10 MB
+  if (size > 10 * 1024 * 1024) {
+    imageValidations.fileSize.hasError = true;
   }
 }
+
+function validateFileExtension(type:string) {
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(type)) {
+    imageValidations.fileExtension.hasError = true;
+  }
+}
+
 </script>
 
 <template>
@@ -67,7 +85,7 @@ function validateFileSize(size:number) {
     <input
       ref="fileInput"
       type="file"
-      accept=".jpeg,.jpg,.png,image/jpeg,image/png"
+      accept="image/png, image/jpeg, image/webp"
       @change="onFileSelect"
       id="uploadImage"
       hidden
@@ -75,7 +93,7 @@ function validateFileSize(size:number) {
     <!-- PLACEHOLDER IMAGE -->
     <div
       v-if="!imageSource"
-      class="w-full h-96 md:rounded-xl bg-stone-200 md:bg-stone-50 md:border-dashed md:border-2
+      class="w-full h-96 md:rounded-xl bg-stone-100 md:bg-stone-50 md:border-dashed md:border-2
         border-stone-300 flex flex-col justify-center items-center"
     >
       <ImagePlaceholder class="opacity-10 w-40 h-40" aria-hidden="true"/>
@@ -109,8 +127,8 @@ function validateFileSize(size:number) {
           @keydown.enter="clickFileInput"
           @keydown.space="clickFileInput"
         >
-          <span class="text-yellow-400 font-semibold group-hover:text-yellow-300">Upload</span>
-           a photo of your dish
+          <span class="text-yellow-400 font-semibold group-hover:text-yellow-300">Change</span>
+           photo
         </label>
         <button 
           class="p-2 text-red-400 font-semibold hover:text-red-300"
@@ -134,8 +152,11 @@ function validateFileSize(size:number) {
         </Button>
       </div>
     </div>
-    <div v-if="hasFileSizeError" class="validationError">
-      {{ fileSizeErrorMessage }}
+    <div v-if="imageValidations.fileSize.hasError" class="validationError">
+      {{ imageValidations.fileSize.message }}
+    </div>
+    <div v-if="imageValidations.fileExtension.hasError" class="validationError">
+      {{ imageValidations.fileExtension.message }}
     </div>
   </div>
 </template>

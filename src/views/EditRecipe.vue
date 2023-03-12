@@ -32,7 +32,7 @@ const inputValidations = reactive({
   title: { hasError: false, message: 'Enter the title of your recipe.'},
   category: { hasError: false, message: 'Choose a category.'},
   servings: { hasError: false, message: 'Enter the servings (e.g. 12 pieces or 4 servings).'},
-  ingredients: { hasError: false, message: 'Add at least one the ingredient.'},
+  ingredients: { hasError: false, message: 'Add at least one ingredient.'},
   steps: { hasError: false, message: 'Add at least one step.'},
 });
 const categories = ['breakfast', 'soup', 'main dish', 'side dish', 'pasta', 'bread', 'sauce',
@@ -268,7 +268,8 @@ onMounted(() => {
         <!-- IMAGE -->
         <ImageUploader :image-source="recipe.imageUrl" @change="onImageChange"/>
         <!-- INFO -->
-        <div class="md:col-span-2 pt-6 md:pt-3 md:mt-0 p-3 rounded-t-3xl md:rounded-none -mt-10 bg-white">
+        <div class="md:col-span-2 pt-6 md:pt-3 md:mt-0 p-3 rounded-t-3xl md:rounded-none -mt-10
+          bg-white drop-shadow-[0_-1px_3px_rgba(28,23,25,0.1)] md:drop-shadow-none">
           <div>
             <label for="recipeName" class="uppercase">Your recipe's name*</label>
             <input

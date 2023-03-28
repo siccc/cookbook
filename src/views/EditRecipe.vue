@@ -4,8 +4,8 @@ import { forEach, find } from 'lodash';
 import { useRouter } from 'vue-router';
 import { useThrottleFn } from '@vueuse/core';
 import { getRecipe, useCreateRecipeMutation, useUpdateRecipeMutation } from '@/stores/recipes';
-import { uploadImage } from '@/stores/cloudinary';
 import type { Recipe, Tag } from '@/types';
+import uploadImage from '@/stores/imageUpload';
 import DOMPurify from 'dompurify';
 import Button from '@/components/Button.vue';
 import ValidationMessage from '@/components/ValidationMessage.vue';
@@ -40,7 +40,8 @@ const categories = ['breakfast', 'soup', 'main dish', 'side dish', 'pasta', 'bre
 const tags = ref('');
 const saveInProgress = ref(false);
 const anyInputHasError = ref(false);
-const shouldSaveImage = ref(false);
+const shouldUploadImage = ref(false);
+const imageSourceToUpload = ref('');
 const savingIsError = ref(false);
 const savingErrorMessage = ref('');
 
@@ -48,7 +49,6 @@ const savingErrorMessage = ref('');
 // INIT
 // -----------------------------------
 
-// const id = props.id === 'new' ? props.id : Number(props.id);
 const id = props.id;
 const { isLoading, isError: fetchingIsError, data, error: fetchingError } = getRecipe(id);
 const recipe:Ref<Recipe|undefined> = ref(undefined);
@@ -82,10 +82,10 @@ async function onSaveClick() {
   recipe.value.tags = transformTags(tags.value, recipe.value.tags);
 
   // upload image to cloudinary and set image props
-  if (shouldSaveImage.value === true) {
-    if (recipe.value.imageUrl) {
+  if (shouldUploadImage.value === true) {
+    if (imageSourceToUpload.value) {
       try {
-        const uploadedImageResult = await uploadImage(recipe.value.imageUrl);
+        const uploadedImageResult = await uploadImage(imageSourceToUpload.value);
         recipe.value.imageName = uploadedImageResult.imageName;
         recipe.value.imagePublicId = uploadedImageResult.imagePublicId;
       } catch (error) {
@@ -96,7 +96,6 @@ async function onSaveClick() {
     } else {
       recipe.value.imagePublicId = '';
       recipe.value.imageName = '';
-      recipe.value.imageUrl = '';
     }
   }
 
@@ -123,7 +122,7 @@ async function onSaveClick() {
 
 function onCancelClick() {
   if (window.history.state.back) {
-    router.back();
+    router.back(); // be able to go back to recipe page
   } else {
     router.push('/');
   }
@@ -174,9 +173,12 @@ function validate(key:ValidationKeys, value:string) {
 }
 
 function onImageChange(imageSource:string) {
-  if (recipe.value) {
-    shouldSaveImage.value = true;
-    recipe.value.imageUrl = imageSource;
+  shouldUploadImage.value = true;
+  if (imageSource) {
+    imageSourceToUpload.value = imageSource;
+  } else {
+    imageSourceToUpload.value = '';
+    recipe.value!.imagePublicId = '';
   }
 }
 
@@ -266,7 +268,7 @@ onMounted(() => {
         aria-label="Recipe details"
       >
         <!-- IMAGE -->
-        <ImageUploader :image-source="recipe.imageUrl" @change="onImageChange"/>
+        <ImageUploader :image-public-id="recipe.imagePublicId" @change="onImageChange"/>
         <!-- INFO -->
         <div class="md:col-span-2 pt-6 md:pt-3 md:mt-0 p-3 rounded-t-3xl md:rounded-none -mt-10
           bg-white drop-shadow-[0_-1px_3px_rgba(28,23,25,0.1)] md:drop-shadow-none">

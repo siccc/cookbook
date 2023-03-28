@@ -4,16 +4,17 @@ import ImagePlaceholder from '@/assets/image-placeholder.svg?component';
 import DeleteIcon from '@/assets/icons/trash-alt.svg?component';
 import Button from '@/components/Button.vue';
 import ImageUploadIcon from '@/assets/icons/image-upload.svg?component';
+import Image from '@/components/Image.vue';
 
 const props = defineProps<{
-  imageSource?: string
+  imagePublicId?: string
 }>();
 
 const emit = defineEmits<{
   (e: 'change', content: string): void
 }>();
 
-const imageSource:Ref<string> = ref(props.imageSource || '');
+const imageSource:Ref<string> = ref('');
 const fileInput:Ref<HTMLInputElement | null> = ref(null);
 
 const imageValidations = reactive({
@@ -60,7 +61,7 @@ async function onFileSelect(event:Event) {
   emit('change', imageSource.value);
 }
 
-function deleteImageUrl() {
+function deleteImage() {
   imageSource.value = '';
   emit('change', imageSource.value);
 }
@@ -92,7 +93,7 @@ function validateFileExtension(type:string) {
     />
     <!-- PLACEHOLDER IMAGE -->
     <div
-      v-if="!imageSource"
+      v-if="!imageSource && !imagePublicId"
       class="w-full h-96 md:rounded-xl bg-stone-100 md:bg-stone-50 md:border-dashed md:border-2
         border-stone-300 flex flex-col justify-center items-center"
     >
@@ -114,9 +115,18 @@ function validateFileExtension(type:string) {
     <!-- IMAGE PREVIEW -->
     <div v-else class="w-full">
       <img
+        v-if="!imagePublicId || imageSource"
         class="w-full h-96 object-cover md:rounded-xl"
         :src="imageSource"
         alt="preview of the uploaded image"
+      />
+      <Image
+        v-else="imagePublicId"
+        imgClass="w-full h-96 object-cover md:rounded-xl"
+        :imagePublicId="imagePublicId"
+        imgSizeSmall="h_420,w_420"
+        imgSizeLarge="h_460,w_780"
+        imgSizeDefault="h_420,w_350"
       />
       <div class="md:justify-between md:items-center md:flex hidden">
         <label
@@ -132,7 +142,7 @@ function validateFileExtension(type:string) {
         </label>
         <button 
           class="p-2 text-red-400 font-semibold hover:text-red-300"
-          @click="deleteImageUrl"
+          @click="deleteImage"
         >
           Delete
         </button>
@@ -146,7 +156,7 @@ function validateFileExtension(type:string) {
           <ImageUploadIcon class="w-6 h-6" />
           <span>Change photo</span>
         </label>
-        <Button white @click="deleteImageUrl">
+        <Button white @click="deleteImage">
           <DeleteIcon class="w-6 h-6 mr-1" />
           Delete photo
         </Button>

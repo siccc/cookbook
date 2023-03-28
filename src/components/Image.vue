@@ -5,7 +5,6 @@ import { onMounted, ref } from 'vue';
 const props = defineProps<{
   imagePublicId: string,
   imgClass: string,
-  imageUrl?: string,
   imgSizeSmall: string;
   imgSizeLarge: string;
   imgSizeDefault: string;
@@ -48,11 +47,10 @@ onMounted(() => {
       :srcset="`${ imageUrlStart }${props.imgSizeLarge},${dpr}/v1/${ imagePublicId }`"
       media="(max-width:767px)"
     />
-    <source :srcset="`${ imageUrlStart }${props.imgSizeDefault},${dpr}/v1/${ imagePublicId }`"/>
     <img
       ref="imgEl"
       :class="`${props.imgClass} ${aspectRatio}`"
-      :src="props.imageUrl"
+      :src="`${ imageUrlStart }${props.imgSizeDefault},${dpr}/v1/${ imagePublicId }`"
       alt=""
     />
   </picture>

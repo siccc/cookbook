@@ -1,6 +1,3 @@
-//ComputedRef
-import type { ComputedRef } from 'vue';
-
 export interface Recipe {
   id: string,
   title: string,
@@ -14,23 +11,6 @@ export interface Recipe {
   steps: string,
   notes: string,
   imageName: string,
-  imagePublicId: string,
-  imageUrl?: string
-}
-
-export interface DBRecipe {
-  id: string,
-  title: string,
-  category: string,
-  cookTime?: number
-  prepTime?: number,
-  servings: string,
-  cookedCount: number,
-  tags?: Tag[]
-  ingredients: string
-  steps: string
-  notes: string
-  imageName: string,
   imagePublicId: string
 }
 
@@ -40,14 +20,6 @@ export interface Tag {
 }
 
 export interface RecipeExtract {
-  id: string,
-  title: string,
-  category: string,
-  imageUrl?: string,
-  imagePublicId?: string
-}
-
-export interface DBRecipeExtract {
   id: string,
   title: string,
   category: string,

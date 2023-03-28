@@ -38,7 +38,7 @@ function onSubmit() {
     <div class="flex-1 flex flex-col items-center justify-center rounded-xl p-3 m-4 sm:m-10
     bg-white"
     >
-      <DetailedLogo class="w-32 h-32 mt-3" />
+      <DetailedLogo class="w-32 h-32 mt-3 shrink-0" />
       <div class="text-2xl text-center my-6 font-k2d">
         Hey, welcome to Cookbook<sup class="text-sm">DEMO</sup>
       </div>

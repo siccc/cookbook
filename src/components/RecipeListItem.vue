@@ -17,7 +17,6 @@
     v-if="props.recipe.imagePublicId"
     :imgClass="'object-cover rounded-xl w-full'"
     :imagePublicId="props.recipe.imagePublicId"
-    :imageUrl="props.recipe.imageUrl"
     :imgSizeSmall="props.imgSizeSmall"
     :imgSizeLarge="props.imgSizeLarge"
     :imgSizeDefault="props.imgSizeDefault"

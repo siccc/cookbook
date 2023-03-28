@@ -1,17 +1,6 @@
-import { Cloudinary } from '@cloudinary/url-gen';
-
 const cloudName = 'sicccookbook';
 
-export function useCloudinary() {
-  const cld = new Cloudinary({
-    cloud: {
-      cloudName
-    }
-  });
-  return cld;
-}
-
-export async function uploadImage(file: string) {
+export default async function uploadImage(file: string) {
   const userId = localStorage.getItem('userId');
   const data = new FormData();
   data.append('file', file);

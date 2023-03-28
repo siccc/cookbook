@@ -65,11 +65,7 @@ function onCounterClick(recipe: Recipe) {
 }
 
 function onBackClick() {
-  if (window.history.state.back) {
-    router.back();
-  } else {
-    router.push('/');
-  }
+  router.push('/');
 }
 
 function onDeleteConfirmShow() {
@@ -172,7 +168,6 @@ onMounted(() => {
             v-if="recipe.imagePublicId"
             imgClass="w-full h-96 object-cover md:rounded-xl"
             :imagePublicId="recipe.imagePublicId"
-            :imageUrl="recipe.imageUrl"
             imgSizeSmall="h_420,w_420"
             imgSizeLarge="h_460,w_780"
             imgSizeDefault="h_420,w_350"

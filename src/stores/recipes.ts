@@ -1,10 +1,7 @@
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "vue-query";
-import type { Recipe, RecipeExtract, DBRecipeExtract, DBRecipe } from '@/types';
+import type { Recipe, RecipeExtract } from '@/types';
 import type { Ref } from 'vue';
-import { useCloudinary } from '@/stores/cloudinary';
-import { fill } from '@cloudinary/url-gen/actions/resize';
 
-const cloudinary = useCloudinary();
 let searchText = '';
 
 // -----------------------------------
@@ -17,13 +14,8 @@ type  infiniteQueryFetcherFnOptions = {
   cursor: string
 };
 
-type TransformDBRecipeExtractsFnOptions = {
-  pages: DBInfiniteQueryResult[],
-  pageParams: unknown[]
-};
-
-type DBInfiniteQueryResult = {
-  recipes: DBRecipeExtract[],
+type InfiniteQueryResult = {
+  recipes: RecipeExtract[],
   nextId: string | undefined
 };
 
@@ -36,7 +28,7 @@ type TransformedInfiniteQueryResult = {
 };
 
 
-const recipeListFetcher = async ({ searchKeywords, category, cursor = '' }: infiniteQueryFetcherFnOptions): Promise<DBInfiniteQueryResult> => {
+const recipeListFetcher = async ({ searchKeywords, category, cursor = '' }: infiniteQueryFetcherFnOptions): Promise<InfiniteQueryResult> => {
   const search = searchKeywords.value ?
     searchKeywords.value.replace(/[&\/\\#,+()$~%.'":*?<>{}@]/g, '') : '';
   const cat = category.value === 'all' ? '' : category.value;
@@ -57,21 +49,6 @@ const recipeListFetcher = async ({ searchKeywords, category, cursor = '' }: infi
   }
 }
 
-function transformDBRecipeExtractsForInfiniteList(data: TransformDBRecipeExtractsFnOptions): TransformedInfiniteQueryResult {
-  const transformedRecipeExtracts = data.pages.map(page => {
-    return {
-      recipes: page.recipes.map(extract => {
-        return {
-          ...extract,
-          imageUrl: getImageUrl(extract.imagePublicId)
-        };
-      }),
-      nextId: page.nextId
-    }
-  });
-  return { pages: transformedRecipeExtracts, pageParams: data.pageParams };
-}
-
 export function listRecipes(searchKeywords: Ref<string>, category: Ref<string>) {
   const {
     isLoading,
@@ -87,7 +64,6 @@ export function listRecipes(searchKeywords: Ref<string>, category: Ref<string>) 
       searchKeywords, category, cursor: pageParam
     }),
     {
-      select: transformDBRecipeExtractsForInfiniteList,
       getNextPageParam: (lastPage) => lastPage.nextId ?? false
     }
   );
@@ -98,9 +74,9 @@ export function listRecipes(searchKeywords: Ref<string>, category: Ref<string>) 
 // GET RECIPE
 // -----------------------------------
 
-const recipeFetcher = async (id: string | 'new'): Promise<DBRecipe> => {
+const recipeFetcher = async (id: string | 'new'): Promise<Recipe> => {
   if (id === 'new') {
-    let recipe:DBRecipe = {
+    let recipe:Recipe = {
       title: '',
       id: 'new',
       category: '',
@@ -133,18 +109,10 @@ const recipeFetcher = async (id: string | 'new'): Promise<DBRecipe> => {
   }
 }
 
-function transformRecipe(dbRecipe: DBRecipe): Recipe {
-  const recipe = JSON.parse(JSON.stringify(dbRecipe)); // deep copy because of tags
-  recipe.imageUrl = getImageUrl(recipe.imagePublicId);
-  return recipe;
-}
-
 export function getRecipe(id: string | 'new') {
   const { isLoading, isError, isFetching, data, error, refetch } = useQuery(
     ['recipe', id],
-    () => recipeFetcher(id), {
-      select: transformRecipe
-    }
+    () => recipeFetcher(id)
   );
   return { isLoading, isError, isFetching, data, error, refetch };
 }
@@ -154,16 +122,15 @@ export function getRecipe(id: string | 'new') {
 // -----------------------------------
 
 const recipeCreater = async (newRecipe: Recipe): Promise<Recipe> => {
-  const dbRecipe = JSON.parse(JSON.stringify(newRecipe));
-  delete dbRecipe.imageUrl;
-  delete dbRecipe.id;
+  const recipe = JSON.parse(JSON.stringify(newRecipe));
+  delete recipe.id;
   const response = await fetch(`/api/recipes`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Basic ${authToken()}`
     },
-    body: JSON.stringify(dbRecipe),
+    body: JSON.stringify(recipe),
   });
   if (!response.ok) {
     throw new Error('An error occurred while updating the recipe. Try again later.');
@@ -187,8 +154,6 @@ export function useCreateRecipeMutation() {
 // -----------------------------------
 
 const recipeUpdater = async (updatedRecipe: Recipe): Promise<Recipe> => {
-  const dbRecipe = JSON.parse(JSON.stringify(updatedRecipe));
-  delete dbRecipe.imageUrl;
   try {
     const response = await fetch(`/api/recipes/${updatedRecipe.id}`, {
       method: 'PUT',
@@ -196,7 +161,7 @@ const recipeUpdater = async (updatedRecipe: Recipe): Promise<Recipe> => {
         'Content-Type': 'application/json',
         'Authorization': `Basic ${authToken()}`
       },
-      body: JSON.stringify(dbRecipe),
+      body: JSON.stringify(updatedRecipe),
     });
     if (!response.ok) {
       throw new Error('An error occurred while updating the recipe. Try again later.');
@@ -295,7 +260,7 @@ export function useDeleteRecipeMutation() {
 // GET RECIPE INSPIRATION
 // -----------------------------------
 
-const threeRandomRecipesFetcher = async (category: Ref<string>): Promise<DBRecipe[]> => {
+const threeRandomRecipesFetcher = async (category: Ref<string>): Promise<Recipe[]> => {
   const cat = category.value === 'all' ? '' : category.value;
   try {
     const response = await fetch(`/api/recipe-selection?category=${cat}`, {
@@ -314,15 +279,10 @@ const threeRandomRecipesFetcher = async (category: Ref<string>): Promise<DBRecip
   }
 }
 
-function transformRecipes(dbRecipes: DBRecipe[]): Recipe[] {
-  return dbRecipes.map(dbRecipe => transformRecipe(dbRecipe));
-}
-
 export function getThreeRandomRecipes(category: Ref<string>) {
   const { isLoading, isError, data, error, isFetching, refetch } = useQuery(
     ['randomRecipes', category],
     () => threeRandomRecipesFetcher(category), {
-      select: transformRecipes,
       staleTime: Infinity
     }
   );
@@ -344,18 +304,6 @@ export function getSearchText(): string {
 // -----------------------------------
 // HELPERS
 // -----------------------------------
-
-function getImageUrl(imagePublicId?: string) {
-  let url:string = '';
-  if (imagePublicId) {
-    url = cloudinary.image(imagePublicId)
-      .resize(
-        fill().width(780).height(460)
-      )
-      .toURL();
-  }
-  return url;
-}
 
 function authToken() {
   return localStorage.getItem('userId') || '';

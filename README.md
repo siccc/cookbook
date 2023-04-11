@@ -36,4 +36,4 @@ Here are some features I am planning to add in the near future
 
 ## :scroll: License
 
-The source code is licensed under the [MIT License](LICENSE.md), while the Cookbook logo and the food icons are licensed under the [Creative Commons license](https://creativecommons.org/licenses/by-nc-nd/4.0/) (CC BY-NC-ND 4.0 International).
+The source code is licensed under the [MIT License](LICENSE.md), while the Cookbook logo and the food icons are licensed under [Creative Commons](https://creativecommons.org/licenses/by-nc-nd/4.0/) (CC BY-NC-ND 4.0 International).

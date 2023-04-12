@@ -29,7 +29,3 @@ app.use(autoAnimatePlugin);
 app.provide('app', app);
 
 app.mount('#app');
-
-// app.config.errorHandler = (err, instance, info) => {
-//   // report error to tracking services
-// };

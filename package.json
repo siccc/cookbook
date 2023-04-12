@@ -37,7 +37,7 @@
     "vue3-markdown-it": "^1.0.10"
   },
   "devDependencies": {
-    "@prisma/client": "4.7.0",
+    "@prisma/client": "4.12.0",
     "@rushstack/eslint-patch": "1.2.0",
     "@tailwindcss/typography": "^0.5.7",
     "@types/jsdom": "20.0.0",
@@ -53,8 +53,9 @@
     "eslint-plugin-vue": "9.6.0",
     "jsdom": "20.0.1",
     "npm-run-all": "4.1.5",
+    "node-mocks-http": "1.12.2",
     "postcss": "8.4.17",
-    "prisma": "4.7.0",
+    "prisma": "4.12.0",
     "tailwindcss": "3.1.8",
     "typescript": "4.8.4",
     "vercel": "28.4.8",

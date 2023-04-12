@@ -10,8 +10,8 @@
       "notes": "",
       "category": "sauce",
       "tags": [{ "name": "italian" }],
-      "imageName": "emanuel-ekstrom-_CO7YZ501g4-unsplash_bms5xh.jpg",
-      "imagePublicId": "cookbook/default/emanuel-ekstrom-_CO7YZ501g4-unsplash_bms5xh.jpg"
+      "imageName": "emanuel-ekstrom-_CO7YZ501g4-unsplash_qgrwri.jpg",
+      "imagePublicId": "cookbook/default/emanuel-ekstrom-_CO7YZ501g4-unsplash_qgrwri.jpg"
     },
     {
       "title": "Apple pie",
@@ -199,8 +199,8 @@
       "steps": "1. Preheat the oven to 180 Celsius.\n2. In a large bowl mix flour, salt, cocoa powder, baking soda and chocolate chips together.\n3. In another bowl mix sugar, egg, yogurt, vanilla extract and butter together.\n4. Gently fold the wet mixture into the dry one. Stir them together.\n5. Fill each muffin cup with batter.\n6. Bake them for 20-25 minutes. (toothpick test)\n\nIcing:\n\n1. Fill a saucepan with some water and bring it to a very gentle simmer.\n2. Place a metal or glass bowl over the warm water but make sure it doesn't actually touch the water. Pour the chocolate and cream into the bowl and stir frequently while it melts.\n3. Once all of the chocolate is almost completely melted, remove the bowl from the heat. The rest of the chocolate will continue to melt off-heat. \n4. Scrape the vanilla bean seeds by cutting down the center of the bean first and then scraping the seeds with the flat side of a knife. Add the vanilla bean seeds to the cream.\n5. Let it thicken as it cools. (30 min - 2 hours)",
       "notes": "Keep in the fridge for up to 5 days or frozen for up to 2 months.",
       "category": "dessert",
-      "imageName": "dessy-dimcheva-Uc9HyrJMQdI-unsplash_yg4vix.jpg",
-      "imagePublicId": "cookbook/default/dessy-dimcheva-Uc9HyrJMQdI-unsplash_yg4vix.jpg",
+      "imageName": "dessy-dimcheva-Uc9HyrJMQdI-unsplash_md797f.jpg",
+      "imagePublicId": "cookbook/default/dessy-dimcheva-Uc9HyrJMQdI-unsplash_md797f.jpg",
       "tags": [
         { "name": "muffin" }
       ]
@@ -214,8 +214,8 @@
       "steps": "1. Preheat the oven to 180 Celsius.\n2. In a large bowl mix flour, salt, baking soda together.\n3. In another bowl mix sugar, eggs, yogurt, vanilla extract and oil together.\n4. Gently fold the wet mixture into the dry one. Stir them together.\n5. Fill each muffin cup with batter. Stud each muffin with blueberries.\n6. Bake them for 20-25 minutes. (toothpick test)",
       "notes": "",
       "category": "dessert",
-      "imageName": "IMG_20200703_175110_gaesm0.jpg",
-      "imagePublicId": "cookbook/default/IMG_20200703_175110_gaesm0.jpg",
+      "imageName": "IMG_20200703_175110_sq2upu.jpg",
+      "imagePublicId": "cookbook/default/IMG_20200703_175110_sq2upu.jpg",
       "tags": [
         { "name": "muffin" }
       ]
@@ -229,11 +229,88 @@
       "steps": "1. Preheat the oven to 180 Celsius.\n2. In a large bowl mix flour, salt, baking powder, cranberry and shredded coconut together.\n3. In another bowl mix sugar, egg and butter together.\n4. Gently fold the wet mixture into the dry one. Stir them together.\n5. Roll the dough into balls (walnut size) place them on baking sheet well spaced apart. Flatten each slightly using your palm. (around 1 cm thick)\n6. Bake them for 13 minutes. (toothpick test)\n7. Let them cool on a wire rack.",
       "notes": "You can use nuts, other dried fruits, chocolate to vary the recipe.",
       "category": "dessert",
-      "imageName": "DSC_0396_ofbut9.jpg",
-      "imagePublicId": "cookbook/default/DSC_0396_ofbut9.jpg",
+      "imageName": "DSC_0396_stdjfq.jpg",
+      "imagePublicId": "cookbook/default/DSC_0396_stdjfq.jpg",
       "tags": [
         { "name": "edible gift" },
         { "name": "christmas" }
+      ]
+    },
+    {
+      "title": "Carrot soup with lentils and chorizo",
+      "servings": "6 servings",
+      "prepTime": 10,
+      "cookTime": 30,
+      "ingredients": "\n- 200 g chorizo\n- 500g carrots\n- 2 medium onions\n- 3 cloves of garlic\n- 2 red peppers\n- 1 tbsp olive oil\n- 400 g canned peeled tomatoes\n- 0.5 tbsp cumin seed\n- 250 g dried red lentils\n- 1 chicken stock cube\n- 1.2 l boiling water\n- 8 tbsp yogurt greek style",
+      "steps": "1. Cut the chorizo ​into 1 cm cubes. Heat the oil in a large pan over medium heat and fry the chorizo ​​for 8 minutes until it became crispy. Remove from the pan and drain on kitchen paper. Do not clean the pan.\n2. Meanwhile, peel the carrots and cut them into 1 cm cubes. Chop the onion, finely chop the garlic. Clean the peppers and cut into 2 cm cubes.\n3. Bake the onion, carrots, bell pepper and cumin seeds for 10 minutes on medium heat in the pan with the chorizo ​​fat. Toss regularly. Add the garlic and fry for 1 min. Add the lentils, half the chorizo ​​and the peeled tomatoes. Crush the tomatoes against the side of the pan with a wooden spoon. Add the water and crumble the stock cube over it. Bring the soup to a boil. Cook for 20-30 minutes with the lid on the pan, stir occasionally.\n4. Blend the soup with a stick blender, but not completely smooth. Season with pepper and salt.\n5. Serve the soup with the remaining chorizo ​​and yoghurt.",
+      "notes": "",
+      "category": "soup",
+      "imageName": "monika-grabkowska-_y6A9bhILkM-unsplash_wfavoi.jpg",
+      "imagePublicId": "cookbook/default/monika-grabkowska-_y6A9bhILkM-unsplash_wfavoi.jpg",
+      "tags": [
+        { "name": "winter" },
+        { "name": "healthy" }
+      ]
+    },
+    {
+      "title": "Broccoli soup with croutons and cheese",
+      "servings": "4 servings",
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": "- 500 g broccoli\n- 2 tbsp oil\n- 4 cloves of garlic, finely chopped\n- 1 small onion, finely chopped\n- 0.5 tsp nutmeg\n- 500 ml water\n- 150 ml cream\n- salt, pepper\n- 1 tbsp flour or starch\n- shredded cheese",
+      "steps": "1. Heat olive oil in a pan. Add onions and cook, stirring occasionally, until translucent. Add garlic and the broccoli florets. Pour in the half of the water, boil it and cook until the broccoli is tender. (You can use the stalks too, just peel them first!)\n2. Add the rest of the water, the dried herbs, and salt and pepper to taste. Bring to a boil, then reduce the heat and simmer for 10 minutes.\n3. Mix the cream with starch or flour and 1 tbsp water. Stir it until it gets smooth. Add the cream mixture to the soup, bring to a boil.\n4. Blend the soup with a stick blender. Serve with croutons and shredded cheese.",
+      "notes": "",
+      "category": "soup",
+      "imageName": "megan-bucknall-qav5LFLbSUk-unsplash_vwzmzk.jpg",
+      "imagePublicId": "cookbook/default/megan-bucknall-qav5LFLbSUk-unsplash_vwzmzk.jpg",
+      "tags": [
+        { "name": "winter" },
+        { "name": "healthy" },
+        { "name": "creamsoup" }
+      ]
+    },
+    {
+      "title": "Banana pancakes",
+      "servings": "12 pancakes",
+      "prepTime": 10,
+      "cookTime": 30,
+      "ingredients": "- 2 pieces of ripe banana\n- 2 eggs\n- 60 g sugar\n- 10 g vanilla sugar\n- 300 ml milk\n- 1 pinch of salt\n- 12 g baking powder\n- 220 g flour",
+      "steps": "1. Smash the bananas with a fork, mix them with the eggs, sugar and vanilla sugar, then pour in the milk.\n2. Mix the salt, baking powder and flour, and add it to the banana mixture and whisk them together.\n3. Fry the pancakes in a non-stick pan, 2-3 minutes on each side.",
+      "notes": "",
+      "category": "breakfast",
+      "imageName": "sara-cervera-WVgNJDjJFg0-unsplash_l8kxfb.jpg",
+      "imagePublicId": "cookbook/default/sara-cervera-WVgNJDjJFg0-unsplash_l8kxfb.jpg",
+      "tags": [
+      ]
+    },
+    {
+      "title": "Sourdough bread",
+      "servings": "~800 g bread",
+      "prepTime": 700,
+      "cookTime": 40,
+      "ingredients": "- 120 g sourdough starter\n- 470 g bread flour\n- 329 g water\n- 10 g salt",
+      "steps": "Make the dough\n\n1. Feed 30 g sourdough starter with 60 g warm water and 60 g bread flour. (around 8-9 am) Let it rest for about 5-6 hours , until it's active.\n2. Combine 120 g of the starter with water and bread flour. Knead for 10 minutes with hand or use a dough mixer. Cover the dough with a led and let it rest for 30 minutes.\n3. Add the salt to the dough and knead for 10 minutes or use the mixer.\n4. Every 30 minutes for the next 2 - 2 1/2 hours give your dough 3 - 4 stretches and folds\n5. After your stretch and folds are done, it is time for the bulk rise. Cover the dough with a led and let it rest for 2 hours.\n6. Shape the loaf, let bench rest for 15 minutes and then do one final shape. If you are adding flavor to your loaf, you will add it in during your the shaping.\n7. Place your shaped loaf into a banneton seam side up, cover with a plastic bag or wrap. Place in fridge to cold proof until next morning.\n\nBaking\n\n1. Preheat oven to 240˚C with a dutch oven inside.\n2. Place the loaf on parchment paper and score your loaf with a blade.\n3. Place it seam side down into the dutch oven with the parchment paper. Cover with lid and bake for 20 minutes.\n4. Remove lid and bake for another 20 minutes on 220 ˚C until the loaf is golden brown.\n5. Remove the loaf from the oven and let it cool on a wire rack for at least 2 hours before slicing.",
+      "notes": "This is a 70% hydration sourdough bread recipe. The recipe is also very versatile and you can add seeds, nuts, herbs, spices, etc. to the dough.",
+      "category": "bread",
+      "imageName": "IMG_2222_ido2nm.jpg",
+      "imagePublicId": "cookbook/default/IMG_2222_ido2nm.jpg",
+      "tags": [
+      ]
+    },
+    {
+      "title": "Pizza dough",
+      "servings": "3x32cm pizza bases",
+      "prepTime": 90,
+      "cookTime": 30,
+      "ingredients": "- 300 g warm water\n- 1 pinch of sugar\n- 15 g fresh yeast\n- 500 g 00 flour\n- 1 tbsp olive oil\n- 15 g salt\n- 2 tbsp sourdough starter, optional\n- corn flour for rolling",
+      "steps": "1. Mix the water, sugar and yeast in a bowl and let it activate.\n2. Add the flour, olive oil and salt to the bowl with the yeast mixture and mix until a dough is formed.\n3. Let the dough rest for 1 hour, covered, in a warm place.\n4. Divide the dough into 3 equal parts and let it rest for 30 minutes, covered, in a warm place.\n5. Preheat the oven to 250°C with the baking tray inside.\n6. Dust baking paper (for each pizza) with corn flour and roll out the dough into a 32 cm pizza base on it. Add your toppings.\n7. Bake them for 10 minutes at 250°C.",
+      "notes": "",
+      "category": "bread",
+      "imageName": "IMG-2128_kdttzn.jpg",
+      "imagePublicId": "cookbook/default/IMG-2128_kdttzn.jpg",
+      "tags": [
+        { "name": "pizza" },
+        { "name": "italian" }
       ]
     }
   ]

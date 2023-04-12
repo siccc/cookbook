@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useInfiniteScroll } from '@vueuse/core';
-import { listRecipes, setSearchText, getSearchText } from '@/stores/recipes';
+import {
+  listRecipes,
+  setSearchText,
+  getSearchText,
+  setCategoryFilter
+} from '@/stores/recipes';
 import RecipeListItem from '@/components/RecipeListItem.vue';
 import Button from '@/components/Button.vue';
 import CategoryListWithSelector from '@/components/CategoryListWithSelector.vue';
@@ -43,6 +48,7 @@ function onSearchTextChange() {
 
 function onCategoryClick(value: string) {
   selectedCategory.value = value;
+  setCategoryFilter(value);
 }
 
 function cancelSearch() {
@@ -104,7 +110,6 @@ useInfiniteScroll(
         Create recipe
       </Button>
     </div>
-    <!-- <div class="mt-3">Categories</div> -->
     <CategoryListWithSelector  class="mt-3 -mx-3 px-3" @selectedCategoryChange="onCategoryClick" />
     <LoadingState v-if="isLoading" />
     <ErrorState v-if="isError" :error="error" />

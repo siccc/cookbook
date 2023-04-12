@@ -159,7 +159,7 @@ function onClickCancelModal() {
             </div>
             <div class="text-left">
               <div>{{ veggie.name_EN }}</div>
-              <div class="text-xs mt-0.5">{{ veggie.name_HU }}</div>
+              <!-- <div class="text-xs mt-0.5">{{ veggie.name_HU }}</div> -->
             </div>
           </button>
         </div>
@@ -181,7 +181,7 @@ function onClickCancelModal() {
             </div>
             <div class="text-left">
               <div>{{ fruit.name_EN }}</div>
-              <div class="text-xs mt-0.5">{{ fruit.name_HU }}</div>
+              <!-- <div class="text-xs mt-0.5">{{ fruit.name_HU }}</div> -->
             </div>
           </button>
         </div>

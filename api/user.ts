@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { PrismaClient } from '@prisma/client';
-import fetch from 'cross-fetch';
 import { v2 as cloudinary } from 'cloudinary';
 import { readFileSync } from 'fs';
 import path from 'path';
+import verifyRecaptcha from './_verifyRecaptcha';
 
 const prisma = new PrismaClient();
 cloudinary.config({ 
@@ -16,16 +16,15 @@ cloudinary.config({
 export default async (req: VercelRequest, res: VercelResponse) => {
   const { method, query } = req;
   // CREATE USER
-  if (method === 'POST') {
+  if (method === 'POST' && req.body.isDemoUser) {
     if (!req.body.recaptchaToken) {
-      return res.status(400).json({message: "recaptchaToken is required"});
+      return res.status(400).send('Recaptcha token is required.');
     }
 
     // verify recaptcha token
     const verificationRes = await verifyRecaptcha(req.body.recaptchaToken);
     if (!verificationRes.success) {
-      console.log(verificationRes['error-codes']);
-      return res.status(404).send('');
+      return res.status(403).send('Recaptcha verification failed.');
     }
 
     // generate userId
@@ -41,7 +40,32 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       return res.json(user);
     } catch (error) {
       console.log(error);
-      return res.status(404).send('');
+      return res.status(500).send('User creation failed.');
+    }
+  }
+  // CREATE EMPTY USER
+  else if (method === 'POST' && !req.body.isDemoUser) {
+    if (!req.body.recaptchaToken) {
+      return res.status(400).send('Recaptcha token is required.');
+    }
+    // verify recaptcha token
+    const verificationRes = await verifyRecaptcha(req.body.recaptchaToken);
+    if (!verificationRes.success) {
+      return res.status(403).send('Recaptcha verification failed.');
+    }
+    try {
+      const userId = generateId();
+
+      const user = await prisma.user.create({
+        data: { id: userId }
+      });
+      await setCloudinaryFolderForUser(userId);
+      await createShoppingList(userId);
+
+      return res.status(200).json(user);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send('User creation failed.');
     }
   }
   // GET USER
@@ -50,34 +74,40 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       const user = await prisma.user.findUniqueOrThrow({
         where: { id: query.id as string }
       });
-      return res.json(user);
+      return res.status(200).json(user);
     } catch (error) {
-      return res.status(404).send('');
+      return res.status(404).send('The requested user could not be found.');
     }
   }
-  return res.status(404).send('');
+  // DELETE USER
+  else if (method === 'DELETE' && query.id) {
+    const userId = query.id as string;
+    try {
+      await deleteCloudinaryFolderForUser(userId);
+      const deleteUser = prisma.user.delete({
+        where: { id: userId }
+      });
+      const deleteRecipes = prisma.recipe.deleteMany({
+        where: { userId: userId }
+      });
+      const deleteShoppingList = prisma.shoppingList.deleteMany({
+        where: { userId: userId }
+      });
+      const deleteTags = prisma.tag.deleteMany({
+        where: { userId: userId }
+      });
+      await prisma.$transaction([deleteTags, deleteShoppingList, deleteRecipes, deleteUser]);
+      return res.status(200).send('User deleted.');
+    } catch (error) {
+      return res.status(404).send('An error occurred while deleting the user.');
+    }
+  }
+  return res.status(500).send('The request parameters are invalid.');
 };
 
 // -----------------------------------
 // HELPERS
 // -----------------------------------
-
-type RecaptchaResponse = {
-  'success': true|false,
-  'challenge_ts': string,
-  'hostname': string,
-  'error-codes'?: string[]
-}
-const verifyRecaptcha = async (recaptchaToken: string): Promise<RecaptchaResponse> => {
-  const data = new URLSearchParams();
-  data.append('secret', process.env.RECAPCHA_SECRET_KEY_INVISIBLE || '');
-  data.append('response', recaptchaToken);
-  const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-    method: 'POST',
-    body: data
-  });
-  return response.json();
-}
 
 const generateId = () => {
   return Math.random().toString(16).slice(2);
@@ -85,6 +115,10 @@ const generateId = () => {
 
 const setCloudinaryFolderForUser = (userId: string) => {
   return cloudinary.api.create_folder(`cookbook/demo/${userId}`);
+}
+
+const deleteCloudinaryFolderForUser = (userId: string) => {
+  return cloudinary.api.delete_folder(`cookbook/demo/${userId}`);
 }
 
 // For demo purposes 
@@ -122,7 +156,6 @@ const createShoppingList = async (userId: string) => {
         userId
       }
     });
-    console.log(`Created shopping list with id: ${shoppingList.id}`);
   } catch (err) {
     console.log(err);
   }

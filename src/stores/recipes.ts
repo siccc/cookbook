@@ -3,6 +3,7 @@ import type { Recipe, RecipeExtract } from '@/types';
 import type { Ref } from 'vue';
 
 let searchText = '';
+let categoryFilter = '';
 
 // -----------------------------------
 // LIST & SEARCH RECIPES -- WITH CURSOR
@@ -28,7 +29,9 @@ type TransformedInfiniteQueryResult = {
 };
 
 
-const recipeListFetcher = async ({ searchKeywords, category, cursor = '' }: infiniteQueryFetcherFnOptions): Promise<InfiniteQueryResult> => {
+const recipeListFetcher = async (
+    { searchKeywords, category, cursor = '' }: infiniteQueryFetcherFnOptions
+  ): Promise<InfiniteQueryResult> => {
   const search = searchKeywords.value ?
     searchKeywords.value.replace(/[&\/\\#,+()$~%.'":*?<>{}@]/g, '') : '';
   const cat = category.value === 'all' ? '' : category.value;
@@ -143,7 +146,7 @@ export function useCreateRecipeMutation() {
   return useMutation(
     recipeCreater, {
       onSettled: () => {
-        queryClient.invalidateQueries(['recipes', '']);
+        queryClient.invalidateQueries(['recipes', searchText, 'all']);
       }
     }
   );
@@ -191,7 +194,7 @@ export function useUpdateRecipeMutation() {
         }
       },
       onSettled: () => {
-        queryClient.invalidateQueries(['recipes', '']);
+        queryClient.invalidateQueries(['recipes', searchText, 'all']);
       }
     }
   );
@@ -214,7 +217,7 @@ const recipeDeleter = async (deletedRecipe: Recipe): Promise<Recipe> => {
     if (!response.ok) {
       throw new Error('An error occurred while deleting the recipe. Try again later.');
     }
-    return response.json();
+    return Promise.resolve(deletedRecipe);
   } catch (error) {
     console.log(error);
     throw new Error('An error occurred while deleting the recipe. Try again later.');
@@ -226,9 +229,12 @@ export function useDeleteRecipeMutation() {
   return useMutation(
     recipeDeleter, {
       onMutate: async (deletedRecipe: Recipe) => {
-        await queryClient.cancelQueries(['recipes', '']);
-        const previousRecipes = queryClient.getQueryData<TransformedInfiniteQueryResult>(['recipes', '']);
-        queryClient.setQueryData<TransformedInfiniteQueryResult|undefined>(['recipes', ''], (prevData) => {
+        await queryClient.cancelQueries(['recipes', searchText, categoryFilter]);
+        const previousRecipes = queryClient.getQueryData<TransformedInfiniteQueryResult>(
+          ['recipes', searchText, categoryFilter]
+        );
+        queryClient.setQueryData<TransformedInfiniteQueryResult|undefined>(
+          ['recipes', searchText, categoryFilter], (prevData) => {
           if (!prevData) {
             return prevData;
           }
@@ -246,11 +252,13 @@ export function useDeleteRecipeMutation() {
       },
       onError: (err, variables, context) => {
         if (context?.previousRecipes) {
-          queryClient.setQueryData<TransformedInfiniteQueryResult>(['recipes', ''], context.previousRecipes);
+          queryClient.setQueryData<TransformedInfiniteQueryResult>(
+            ['recipes', searchText, categoryFilter], context.previousRecipes
+          );
         }
       },
       onSettled: () => {
-        queryClient.invalidateQueries(['recipes', '']);
+        queryClient.invalidateQueries(['recipes', searchText, 'all']);
       }
     }
   );
@@ -299,6 +307,18 @@ export function setSearchText(text: string) {
 
 export function getSearchText(): string {
   return searchText;
+}
+
+// -----------------------------------
+// CATEGORY FILTER MEMO
+// -----------------------------------
+
+export function setCategoryFilter(text: string) {
+  categoryFilter = text;
+}
+
+export function getCategoryFilter(): string {
+  return categoryFilter;
 }
 
 // -----------------------------------

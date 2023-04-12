@@ -9,7 +9,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   const { method, query } = req;
   const userId = processAuthToken(req.headers.authorization);
   if (!userId) {
-    return res.status(403);
+    return res.status(401).send('Unauthorized');
   }
   if (query.resource === 'recipes' && query.mode !== 'selection') {
     // LIST RECIPES
@@ -23,7 +23,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       if (query.search && typeof query.search === 'string') {
         recipes = await prisma.recipe.findMany({
           take: limit,
-          skip: query.cursor !== '' ? 1 : 0,
+          skip: cursor !== '' ? 1 : 0, // skip the first one if cursor is not empty
           cursor: cursorObj,
           orderBy: { createdAt: 'desc' },
           where: {
@@ -45,7 +45,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       else {
         recipes = await prisma.recipe.findMany({
           take: limit,
-          skip: query.cursor !== '' ? 1 : 0,
+          skip: cursor !== '' ? 1 : 0, // skip the first one if cursor is not empty
           cursor: cursorObj,
           orderBy: { createdAt: 'desc' },
           where: {
@@ -62,7 +62,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           },
         });
       }
-      return res.json({
+      return res.status(200).json({
         recipes,
         nextId: recipes.length === limit ? recipes[limit - 1].id : undefined
       });
@@ -78,9 +78,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
             tags: processTags(userId, req.body.tags)
           }
         });
-        return res.json(recipe);
+        return res.status(200).json(recipe);
       } catch (error) {
-        return res.status(404).send('');
+        return res.status(500).send('Recipe creation failed.');
       }
     }
     // GET RECIPE BY ID
@@ -95,22 +95,26 @@ export default async (req: VercelRequest, res: VercelResponse) => {
             tags: true,
           },
         });
-        return res.json(recipe);
+        return res.status(200).json(recipe);
       } catch (error) {
-        console.log(error);
-        return res.status(404).send('');
+        return res.status(404).send('Recipe not found.');
       }
     }
     // UPDATE RECIPE
     else if (method === 'PUT' && query.id) {
-      const prevRecipe = await prisma.recipe.findUniqueOrThrow({
-        where: { id: query.id as string },
-        include: {
-          tags: true,
-        }
-      });
+      let prevRecipe;
+      try {
+        prevRecipe = await prisma.recipe.findUniqueOrThrow({
+          where: { id: query.id as string },
+          include: {
+            tags: true,
+          }
+        });
+      } catch (error) {
+        return res.status(404).send('Recipe not found.');
+      }
       if (prevRecipe.userId !== userId) {
-        return res.status(403);
+        return res.status(403).send('Not authorized to update this recipe.');
       }
       // if image was removed or replaced
       if (!!prevRecipe.imagePublicId && !req.body.imagePublicId || 
@@ -122,7 +126,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
             await deleteImage(prevRecipe.imagePublicId);
           }
         } catch (error) {
-          return res.status(404).send('');
+          return res.status(404).send('An error occurred while updating the recipe.');
         }
       }
       try {
@@ -132,54 +136,56 @@ export default async (req: VercelRequest, res: VercelResponse) => {
             ...req.body,
             tags: processTags(userId, req.body.tags, prevRecipe.tags)
           },
+          include: {
+            tags: true,
+          }
         });
-        return res.json(recipe);
+        return res.status(200).json(recipe);
       } catch (error) {
-        return res.status(404).send('');
+        return res.status(404).send('An error occurred while updating the recipe.');
       }
     }
     // DELETE RECIPE
     else if (method === 'DELETE' && query.id) {
-      const recipe = await prisma.recipe.findUniqueOrThrow({
-        where: { id: query.id as string },
-        include: {
-          tags: true
-        }
-      });
+      let recipe;
+      try {
+        recipe = await prisma.recipe.findUniqueOrThrow({
+          where: { id: query.id as string },
+          include: {
+            tags: true
+          }
+        });
+      } catch (error) {
+        return res.status(404).send('Recipe not found.');
+      }
       if (recipe.userId !== userId) {
-        return res.status(403);
+        return res.status(403).send('Not authorized to delete this recipe.');
       }
-      // disconnect tags
+      const disconnectTags = prisma.recipe.update({
+        where: { id: recipe.id },
+        data: {
+          ...recipe,
+          tags: processTags(userId, [], recipe.tags)
+        },
+      });
+
+      const deleteRecipe = prisma.recipe.delete({
+        where: { id: recipe.id },
+      });
+
       try {
-        await prisma.recipe.update({
-          where: { id: recipe.id },
-          data: {
-            ...recipe,
-            tags: processTags(userId, [], recipe.tags)
-          },
-        });
-      } catch (error) {
-        return res.status(404).send('');
-      }
-      // delete image from cloudinary
-      try {
-        if (recipe.imagePublicId) {
-          await deleteImage(recipe.imagePublicId);
+        const imagePublicId = recipe.imagePublicId;
+        await prisma.$transaction([disconnectTags, deleteRecipe]);
+        // delete image from cloudinary
+        if (imagePublicId) {
+          await deleteImage(imagePublicId);
         }
+        return res.status(200).send('Recipe deleted.');
       } catch (error) {
-        return res.status(404).send('');
-      }
-      
-      try {
-        await prisma.recipe.delete({
-          where: { id: recipe.id },
-        });
-        return res.json({ status: "ok" });
-      } catch (error) {
-        return res.status(404).send('');
+        return res.status(404).send('An error occurred while deleting the recipe.');
       }
     }
-  } else if (query.resource === 'recipes' && query.mode === 'selection') {
+  } else if (method === 'GET' && query.resource === 'recipes' && query.mode === 'selection') {
     // get ids by category
     const category = query.category as string ?? '';
     const recipeIds = await prisma.recipe.findMany({
@@ -208,10 +214,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           imagePublicId: true
         },
       });
-      return res.json(recipes);
+      return res.status(200).json(recipes);
     } catch (error) {
-      console.log(error);
-      return res.status(404).send('');
+      return res.status(404).send('An error occurred while fetching the recipe selection.');
     }
   } else if (query.resource === 'shopping-list') {
     // CREATE SHOPPING LIST
@@ -223,9 +228,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
             userId
           }
         });
-        return res.json(shoppingList);
+        return res.status(200).json(shoppingList);
       } catch (error) {
-        return res.status(404).send('');
+        return res.status(404).send('An error occurred while creating the shopping list.');
       }
     }
     // GET SHOPPING LIST
@@ -240,13 +245,24 @@ export default async (req: VercelRequest, res: VercelResponse) => {
             items: true
           }
         });
-        return res.json(shoppingList);
+        return res.status(200).json(shoppingList);
       } catch (error) {
-        return res.status(404).send('');
+        return res.status(404).send('An error occurred while getting the shopping list.');
       }
     }
     // UPDATE SHOPPING LIST
     else if (method === 'PUT' && query.id) {
+      let shoppingList;
+      try {
+        shoppingList = await prisma.shoppingList.findUniqueOrThrow({
+          where: { id: query.id as string }
+        });
+      } catch (error) {
+        return res.status(404).send('Shopping list not found.');
+      }
+      if (shoppingList.userId !== userId) {
+        return res.status(403).send('Not authorized to update this shopping list.');
+      }
       try {
         const shoppingList = await prisma.shoppingList.update({
           where: {
@@ -257,14 +273,13 @@ export default async (req: VercelRequest, res: VercelResponse) => {
             items: req.body
           }
         });
-        return res.json(shoppingList);
+        return res.status(200).json(shoppingList);
       } catch (error) {
-        return res.status(404).send('');
+        return res.status(404).send('An error occurred while updating the shopping list.');
       }
     }
   }
-
-  return res.status(404).send('');
+  return res.status(400).send('The request parameters are invalid.');
 };
 
 // -----------------------------------
@@ -284,30 +299,35 @@ const preprocessSearchKeywords = (searchKeywords: string) => {
     .trim()
 		.split(/\s+/)
 		.join('* & ');
-  console.log(searchText + '*');
+  // console.log(searchText + '*');
   return searchText + '*';
 }
 
 const processTags = (userId: string, newTags: {id: string, name: string}[], prevTags?: {id: string, name: string}[]) => {
-  const tagsToDisconnect = differenceBy(prevTags, newTags, 'id');
-  if (newTags && newTags.length > 0) {
-    return {
-      connectOrCreate: newTags.map((tag) => {
-        return {
-          where: { id: `${userId}:${tag.name}` },
-          create: { 
-            id: `${userId}:${tag.name}`,
-            name: tag.name,
-            userId
-          }
-        }
-      })
-    }
-  } else if (tagsToDisconnect.length > 0){
-    return {
-      disconnect: tagsToDisconnect.map(tag => { return { id: tag.id }})
-    }
+  const tagsToDisconnect = differenceBy(prevTags, newTags, 'name');
+
+  type TagOperations = {
+    connectOrCreate?: { where: { id: string}, create: {id: string, name: string, userId: string }}[],
+    disconnect?: { id: string }[]
   }
+  const tagOperations: TagOperations = {
+  };
+  if (newTags && newTags.length > 0) {
+    tagOperations['connectOrCreate'] = newTags.map((tag) => {
+      return {
+        where: { id: `${userId}:${tag.name}` },
+        create: { 
+          id: `${userId}:${tag.name}`,
+          name: tag.name,
+          userId
+        }
+      }
+    });
+  }
+  if (tagsToDisconnect.length > 0){
+    tagOperations['disconnect'] = tagsToDisconnect.map(tag => { return { id: tag.id }});
+  }
+  return tagOperations;
 }
 
 const deleteImage = async (publicId: string) => {

@@ -9,9 +9,16 @@ const userFetcher = async (userId: string | null): Promise<User|null> => {
   if (!userId) {
     return Promise.resolve(null);
   }
+  // fetch would return with 404 when the server is unreachable,
+  // so we need to handle that case separately
+  if (navigator.onLine === false) {
+    throw new Error('503 Service unavailable');
+  }
   const response = await fetch(`/api/user/${userId}`);
-  if (!response.ok) {
+  if (!response.ok && response.status === 404) {
     localStorage.removeItem('userId');
+    throw new Error('401 Unauthorized');
+  } else if (!response.ok) {
     throw new Error('An error occurred while getting user.');
   }
   return response.json();
@@ -36,7 +43,10 @@ const userCreater = async (recaptchaToken: string): Promise<User> => {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ recaptchaToken })
+    body: JSON.stringify({
+      recaptchaToken,
+      isDemoUser: true
+    })
   });
   if (!response.ok) {
     throw new Error('An error occurred while creating user.');

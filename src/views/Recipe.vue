@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useThrottleFn } from '@vueuse/core';
+import { useWakeLock } from '@vueuse/core';
 import { getRecipe, useDeleteRecipeMutation, useUpdateRecipeMutation } from '@/stores/recipes';
 import type { Recipe } from '@/types';
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
@@ -38,6 +39,12 @@ const {
 } = getRecipe(props.id);
 const deleteRecipeMutation = useDeleteRecipeMutation();
 const updateRecipeMutation = useUpdateRecipeMutation();
+const {
+  isSupported: isWakeLockSupported,
+  isActive: isWakeLockActive,
+  request: wakeLockRequest,
+  release: wakeLockRelease
+} = useWakeLock();
 
 const totalTime = computed<number>(() => {
   if (!recipe.value) {
@@ -90,6 +97,14 @@ const updateScroll = useThrottleFn(() => {
 
 onMounted(() => {
   window.addEventListener('scroll', updateScroll);
+  if (isWakeLockSupported.value) { wakeLockRequest('screen'); }
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', updateScroll);
+  if (isWakeLockActive.value) { 
+    wakeLockRelease();
+  }
 });
 
 </script>

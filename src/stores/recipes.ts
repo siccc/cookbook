@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "vue-query";
 import type { Recipe, RecipeExtract } from '@/types';
+import fetchFromApi from "@/utils/fetchFromApi";
 import type { Ref } from 'vue';
 
 let searchText = '';
@@ -9,7 +10,7 @@ let categoryFilter = '';
 // LIST & SEARCH RECIPES -- WITH CURSOR
 // -----------------------------------
 
-type  infiniteQueryFetcherFnOptions = {
+type InfiniteQueryFetcherFnOptions = {
   searchKeywords: Ref<string>,
   category: Ref<string>,
   cursor: string
@@ -30,26 +31,17 @@ type TransformedInfiniteQueryResult = {
 
 
 const recipeListFetcher = async (
-    { searchKeywords, category, cursor = '' }: infiniteQueryFetcherFnOptions
+    { searchKeywords, category, cursor = '' }:InfiniteQueryFetcherFnOptions
   ): Promise<InfiniteQueryResult> => {
   const search = searchKeywords.value ?
     searchKeywords.value.replace(/[&\/\\#,+()$~%.'":*?<>{}@]/g, '') : '';
   const cat = category.value === 'all' ? '' : category.value;
-  try {
-    const response = await fetch(`/api/recipes?search=${search}&category=${cat}&cursor=${cursor}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Basic ${authToken()}`
-      }
-    })
-    if (!response.ok) {
-      throw new Error('An error occurred while fetching the recipes.');
-    }
-    return response.json();
-  } catch (error) {
-    console.log(error);
-    throw new Error('An error occurred while fetching the recipes.');
-  }
+  return fetchFromApi<InfiniteQueryResult>({
+      url: `/api/recipes?search=${search}&category=${cat}&cursor=${cursor}`,
+      method: 'GET'
+    },
+    'An error occurred while fetching the recipes.'
+  );
 }
 
 export function listRecipes(searchKeywords: Ref<string>, category: Ref<string>) {
@@ -95,21 +87,12 @@ const recipeFetcher = async (id: string | 'new'): Promise<Recipe> => {
     };
     return Promise.resolve(recipe);
   }
-  try {
-    const response = await fetch(`/api/recipes/${id}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Basic ${authToken()}`
-      }
-    });
-    if (!response.ok) {
-      throw new Error('An error occurred while fetching a recipe.');
-    }
-    return response.json();
-  } catch (error) {
-    console.log(error);
-    throw new Error('An error occurred while fetching a recipe.');
-  }
+  return fetchFromApi<Recipe>({
+      url: `/api/recipes/${id}`,
+      method: 'GET'
+    },
+    'An error occurred while fetching a recipe.'
+  );
 }
 
 export function getRecipe(id: string | 'new') {
@@ -127,18 +110,16 @@ export function getRecipe(id: string | 'new') {
 const recipeCreater = async (newRecipe: Recipe): Promise<Recipe> => {
   const recipe = JSON.parse(JSON.stringify(newRecipe));
   delete recipe.id;
-  const response = await fetch(`/api/recipes`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Basic ${authToken()}`
+  return fetchFromApi<Recipe>({
+      url: `/api/recipes`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(recipe)
     },
-    body: JSON.stringify(recipe),
-  });
-  if (!response.ok) {
-    throw new Error('An error occurred while updating the recipe. Try again later.');
-  }
-  return response.json();
+    'An error occurred while updating the recipe. Try again later.'
+  );
 }
 
 export function useCreateRecipeMutation() {
@@ -157,23 +138,16 @@ export function useCreateRecipeMutation() {
 // -----------------------------------
 
 const recipeUpdater = async (updatedRecipe: Recipe): Promise<Recipe> => {
-  try {
-    const response = await fetch(`/api/recipes/${updatedRecipe.id}`, {
+  return fetchFromApi<Recipe>({
+      url: `/api/recipes/${updatedRecipe.id}`,
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${authToken()}`
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(updatedRecipe),
-    });
-    if (!response.ok) {
-      throw new Error('An error occurred while updating the recipe. Try again later.');
-    }
-    return response.json();
-  } catch (error) {
-    console.log(error);
-    throw new Error('An error occurred while updating the recipe. Try again later.');
-  }
+      body: JSON.stringify(updatedRecipe)
+    },
+    'An error occurred while updating the recipe. Try again later.'
+  );
 }
 
 export function useUpdateRecipeMutation() {
@@ -205,23 +179,16 @@ export function useUpdateRecipeMutation() {
 // -----------------------------------
 
 const recipeDeleter = async (deletedRecipe: Recipe): Promise<Recipe> => {
-  try {
-    const response = await fetch(`/api/recipes/${deletedRecipe.id}`, {
+  return fetchFromApi<Recipe>({
+      url: `/api/recipes/${deletedRecipe.id}`,
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${authToken()}`
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(deletedRecipe),
-    });
-    if (!response.ok) {
-      throw new Error('An error occurred while deleting the recipe. Try again later.');
-    }
-    return Promise.resolve(deletedRecipe);
-  } catch (error) {
-    console.log(error);
-    throw new Error('An error occurred while deleting the recipe. Try again later.');
-  }
+      body: JSON.stringify(deletedRecipe)
+    },
+    'An error occurred while deleting the recipe. Try again later.'
+  );
 }
 
 export function useDeleteRecipeMutation() {
@@ -270,21 +237,13 @@ export function useDeleteRecipeMutation() {
 
 const threeRandomRecipesFetcher = async (category: Ref<string>): Promise<Recipe[]> => {
   const cat = category.value === 'all' ? '' : category.value;
-  try {
-    const response = await fetch(`/api/recipe-selection?category=${cat}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Basic ${authToken()}`
-      }
-    })
-    if (!response.ok) {
-      throw new Error('An error occurred while fetching the recipes.');
-    }
-    return response.json();
-  } catch (error) {
-    console.log(error);
-    throw new Error('An error occurred while fetching the recipes.');
-  }
+  return fetchFromApi<Recipe[]>({
+      url: `/api/recipe-selection?category=${cat}`,
+      method: 'GET'
+    },
+    'An error occurred while fetching the recipes.'
+  );
+
 }
 
 export function getThreeRandomRecipes(category: Ref<string>) {
@@ -319,12 +278,4 @@ export function setCategoryFilter(text: string) {
 
 export function getCategoryFilter(): string {
   return categoryFilter;
-}
-
-// -----------------------------------
-// HELPERS
-// -----------------------------------
-
-function authToken() {
-  return localStorage.getItem('userId') || '';
 }

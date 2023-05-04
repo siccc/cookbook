@@ -120,20 +120,17 @@ onUnmounted(() => {
         :class="{ 'bg-white border-b border-stone-200 shadow-sm': scrollPosition > 100 }"
       >
         <div class="flex justify-between items-center p-3">
-          <Button
-            white
-            @click="onBackClick"
-          >
+          <Button type="white" @click="onBackClick">
             <BackIcon class="w-6 h-6" />
           </Button>
           <div class="flex items-center">
-            <Button white class="mr-6" :to="`/edit/${props.id}`">
+            <Button type="white" class="mr-6" :to="`/edit/${props.id}`">
               <EditIcon class="w-6 h-6" />
             </Button>
             <Button
-              white
-              @click="onDeleteConfirmShow"
+              type="white"
               :disabled="deleteRecipeMutation.isLoading.value"
+              @click="onDeleteConfirmShow"
             >
               <DeleteIcon class="w-6 h-6" />
             </Button>
@@ -167,11 +164,11 @@ onUnmounted(() => {
         <Modal
           v-if="showDeleteConfirmModal"
           confirm-label="Delete"
-          :is-confirm-danger="true"
+          confirm-button-type="danger"
+          title="Delete recipe?"
           @close="onDeleteConfirmCancel"
           @cancel="onDeleteConfirmCancel"
           @confirm="onDelete(recipe!)"
-          title="Delete recipe?"
         >
           Are you sure you want to permanently delete this recipe? You can't undo this action.
         </Modal>
@@ -288,7 +285,7 @@ onUnmounted(() => {
           </div>
           <div class="flex justify-center">
             <Button
-              primary
+              type="primary"
               class="w-full md:w-60 mt-6 md:mt-6"
               @click="onCounterClick(recipe!)"
               :disabled="updateRecipeMutation.isLoading.value"

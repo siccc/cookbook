@@ -206,24 +206,24 @@ onMounted(() => {
           class="flex items-center p-3"
           :class="{ 'justify-between': props.id === 'new', 'justify-end': props.id !== 'new' }"
         >
-          <Button v-if="props.id === 'new'" white to="/">
+          <Button v-if="props.id === 'new'" type="white" to="/">
             <BackIcon class="w-6 h-6" />
           </Button>
           <div class="flex items-center">
             <Button
-              white
-              @click="onSaveClick()"
+              type="white"
               :disabled="saveInProgress"
+              @click="onSaveClick()"
             >
               <SpinnerIcon v-if="saveInProgress" class="w-6 h-6 animate-spin mr-1"/>
               Save changes
             </Button>
             <Button
-              class="ml-6"
-              white
               v-if="props.id !== 'new'"
-              @click="onCancelClick()"
+              class="ml-6"
+              type="white"
               :disabled="saveInProgress"
+              @click="onCancelClick()"
             >
               Cancel
             </Button>
@@ -244,9 +244,9 @@ onMounted(() => {
           </Button>
           <div class="flex items-center">
             <Button
-              primary
-              @click="onSaveClick()"
+              type="primary"
               :disabled="saveInProgress"
+              @click="onSaveClick()"
             >
               <SpinnerIcon v-if="saveInProgress" class="w-6 h-6 animate-spin mr-1"/>
               Save changes

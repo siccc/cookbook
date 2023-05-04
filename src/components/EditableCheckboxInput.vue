@@ -70,7 +70,7 @@ function setItemChecked(item: ShoppingListItem, event: Event) {
         @click="editItem(props.item)"
         aria-label="Edit item"
       >
-        <EditIcon class="w-5 h-5" />
+        <EditIcon class="w-5 h-5" aria-hidden focusable="false"/>
       </IconButton>
     </div>
     <div v-if="isEditing" class="flex justify-between items-center w-full">
@@ -80,8 +80,13 @@ function setItemChecked(item: ShoppingListItem, event: Event) {
         @keypress.enter="confirmEditingItem"
         @keyup.esc="cancelEditingItem"
       />
-      <Button primary @click="confirmEditingItem" class="ml-1" aria-label="Confirm editing">
-        <CheckIcon class="w-6 h-6 text-white" />
+      <Button
+        type="primary"
+        class="ml-1"
+        aria-label="Confirm editing"
+        @click="confirmEditingItem"
+      >
+        <CheckIcon class="w-6 h-6 text-white" aria-hidden focusable="false"/>
       </Button>
     </div>
   </div>

@@ -1,22 +1,18 @@
 import { useQuery, useMutation, useQueryClient } from "vue-query";
-import type { ShoppingList, ShoppingListItem } from '@/types';
-import type { Ref } from "vue";
+import type { ShoppingList } from '@/types';
+import fetchFromApi from "@/utils/fetchFromApi";
 
 // -----------------------------------
 // GET SHOPPING LIST
 // -----------------------------------
 
 const shoppingListFetcher = async (): Promise<ShoppingList|null> => {
-  const response = await fetch(`/api/shopping-list`, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Basic ${authToken()}`
-    }
-  });
-  if (!response.ok) {
-    throw new Error('An error occurred while getting the shopping list.');
-  }
-  return response.json();
+  return fetchFromApi<ShoppingList|null>({
+      url: `/api/shopping-list`,
+      method: 'GET'
+    },
+    'An error occurred while getting the shopping list.'
+  );
 }
 
 export function getShoppingList() {
@@ -32,18 +28,16 @@ export function getShoppingList() {
 // -----------------------------------
 
 const shoppingListUpdater = async (shoppingList: ShoppingList): Promise<ShoppingList> => {
-  const response = await fetch(`/api/shopping-list/${shoppingList.id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Basic ${authToken()}`
+  return fetchFromApi<ShoppingList>({
+      url: `/api/shopping-list/${shoppingList.id}`,
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(shoppingList.items),
     },
-    body: JSON.stringify(shoppingList.items),
-  });
-  if (!response.ok) {
-    throw new Error('An error occurred while updating the shopping list. Try again later.');
-  }
-  return response.json();
+    'An error occurred while updating the shopping list. Try again later.'
+  );
 }
 
 export function useUpdateShoppingListMutation() {
@@ -66,8 +60,4 @@ export function useUpdateShoppingListMutation() {
       }
     }
   );
-}
-
-function authToken() {
-  return localStorage.getItem('userId') || '';
 }

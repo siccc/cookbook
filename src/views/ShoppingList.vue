@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, Teleport } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
-import { isMobile } from '@/stores/utility';
+import isMobile from '@/utils/isMobile';
 import { getShoppingList, useUpdateShoppingListMutation } from '@/stores/shoppingList';
 import type { ShoppingList, ShoppingListItem } from '@/types';
 import Button from '@/components/Button.vue';
@@ -146,7 +146,7 @@ function saveChanges() {
         <Button
           class="ml-2 uppercase <xs:ml-0 <xs:mt-3 <xs:w-full"
           @click="addItems"
-          primary
+          type="primary"
         >
           <PlusIcon class="w-5 h-5" aria-hidden="true" focusable="false"/>
           Add
@@ -168,7 +168,7 @@ function saveChanges() {
       <Modal
         v-if="showModal"
         confirm-label="Delete"
-        :is-confirm-danger="true"
+        confirm-button-type="danger"
         @close="onClickCancelModal"
         @cancel="onClickCancelModal"
         @confirm="removeAllChecked()"

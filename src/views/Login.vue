@@ -55,8 +55,8 @@ function onSubmit() {
       >
       </vue-recaptcha>
       <Button
-        class="my-6" 
-        primary 
+        class="my-6"
+        type="primary" 
         @click="onSubmit"
         :disabled="createUserMutation.isLoading.value"
       >

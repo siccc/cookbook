@@ -61,7 +61,12 @@ function onRefetchClick() {
           </div>
         </div>
         <div v-if="data?.length > 0" class="flex justify-center">
-          <Button primary class="mx-auto mt-6" @click="onRefetchClick" :disabled="isFetching">
+          <Button
+            type="primary"
+            class="mx-auto mt-6"
+            @click="onRefetchClick"
+            :disabled="isFetching"
+          >
             <SpinnerIcon v-if="isFetching" class="w-6 h-6 animate-spin mr-1"/>
             Give me another 3
           </Button>

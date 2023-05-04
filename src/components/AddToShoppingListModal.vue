@@ -103,7 +103,7 @@ async function showSuccessMessage() {
   <Teleport to="body">
     <Modal
       confirm-label="Add items"
-      :is-confirm-primary="true"
+      confirm-button-type="primary"
       @cancel="onCancel"
       @confirm="onConfirm"
       title="Add to shopping list"
@@ -139,11 +139,11 @@ async function showSuccessMessage() {
             Cancel
           </Button>
           <Button
-            class="flex-1 uppercase"
-            primary
-            @click="onConfirm"
             v-show="!showSaveSuccessMessage"
+            class="flex-1 uppercase"
+            type="primary"
             :disabled="checkedListLenght === 0"
+            @click="onConfirm"
           >
             <SpinnerIcon
               v-if="updateShoppingListMutation.isLoading.value"

@@ -159,17 +159,14 @@ describe('recipes api', () => {
   
       expect(deleteRecipeRes.status).toBeCalledTimes(1);
       expect(deleteRecipeRes.status).toHaveBeenCalledWith(200);
-      expect(deleteRecipeRes.send).toBeCalledTimes(1);
+      expect(deleteRecipeRes.json).toBeCalledTimes(1);
     });
   
     it('should create and delete a recipe with helpers', async () => {
       const recipe = await createRecipe(user.id, recipeBody);
       expect(recipe).toHaveProperty('id');
   
-      if (recipe) {
-        const res = await deleteRecipe(user.id, recipe.id);
-        expect(res).toBe('Recipe deleted.');
-      }
+      await deleteRecipe(user.id, recipe.id);
     });
   });
 

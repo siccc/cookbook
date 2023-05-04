@@ -32,7 +32,7 @@ function onFocusout(event: Event) {
     :disabled="disabled"
     v-on="computedListeners"
   >
-    <slot aria-hidden focusable="false" />
+    <slot />
   </button>
 </template>
 
@@ -44,7 +44,7 @@ function onFocusout(event: Event) {
 .iconButton:disabled {
   @apply cursor-default opacity-50;
 }
-.iconButton:hover:not(:disabled), .button:active {
+.iconButton:hover:not(:disabled), .iconButton:active {
   @apply text-amber-400;
 }
 

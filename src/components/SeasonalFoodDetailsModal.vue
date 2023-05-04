@@ -25,13 +25,17 @@ const shortMonths = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
 const months = getMonths();
 
 const seasonalCalendarForFood = computed(() => {
+  let isStoredInThisMonth;
+  let isInSeasonInThisMonth;
   return shortMonths.map((month, index) => {
-    if ((props.selectedFood.stored_HU && !props.selectedFood.stored_HU[index] && !props.selectedFood.inSeason_HU[index]) ||
-      (!props.selectedFood.stored_HU && !props.selectedFood.inSeason_HU[index])) {
+    isStoredInThisMonth = props.selectedFood.stored_HU?.[index];
+    isInSeasonInThisMonth = props.selectedFood.inSeason_HU[index];
+
+    if (!isStoredInThisMonth && !isInSeasonInThisMonth) {
       return 'unavailable';
-    } else if (props.selectedFood.inSeason_HU[index]) {
+    } else if (isInSeasonInThisMonth) {
       return 'inSeason';
-    } else if (props.selectedFood.stored_HU && props.selectedFood.stored_HU[index]) {
+    } else if (isStoredInThisMonth) {
       return 'stored';
     }
   });

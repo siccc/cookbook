@@ -7,8 +7,7 @@ export interface Props {
   message?: string
   cancelLabel?: string
   confirmLabel?: string
-  isConfirmPrimary?: boolean,
-  isConfirmDanger?: boolean,
+  confirmButtonType?: 'primary' | 'danger' | 'white',
   showConfirmButton?: boolean,
   showCancelButton?: boolean,
   showTitle?: boolean,
@@ -18,8 +17,6 @@ export interface Props {
 const appEl = document.getElementById('app') as HTMLElement;
 const modalEl = ref<HTMLElement | null>(null);
 const props = withDefaults(defineProps<Props>(), {
-  isConfirmPrimary: false,
-  isConfirmDanger: false,
   isScrollable: false,
   showConfirmButton: true,
   showCancelButton: true,
@@ -97,19 +94,18 @@ function onConfirm(event: Event) {
         <slot name="footer">
           <div class="flex justify-between items-center gap-3 px-6 mt-6">
             <Button
-              ref="cancelButton"
               v-if="props.showCancelButton"
+              ref="cancelButton"
               class="flex-1 uppercase"
               @click="onCancel"
             >
               {{ props.cancelLabel || 'Cancel' }}
             </Button>
             <Button
-              ref="confirmButton"
               v-if="props.showConfirmButton"
+              ref="confirmButton"
               class="flex-1 uppercase"
-              :primary="props.isConfirmPrimary"
-              :danger="props.isConfirmDanger"
+              :type="props.confirmButtonType"
               @click="onConfirm"
             >
               {{ props.confirmLabel || 'OK' }}

@@ -140,12 +140,9 @@ function validateFileExtension(type:string) {
           <span class="text-yellow-400 font-semibold group-hover:text-yellow-300">Change</span>
            photo
         </label>
-        <button 
-          class="p-2 text-red-400 font-semibold hover:text-red-300"
-          @click="deleteImage"
-        >
+        <Button class="p-2 text-red-400 font-semibold hover:text-red-300" @click="deleteImage">
           Delete
-        </button>
+        </Button>
       </div>
       <div class="flex justify-between items-center md:hidden -mt-24 mb-14 px-3">
         <label
@@ -153,11 +150,11 @@ function validateFileExtension(type:string) {
           class="bg-white flex items-center shadow px-3 py-2 rounded-lg hover:bg-yellow-400
           hover:text-white"
         >
-          <ImageUploadIcon class="w-6 h-6" />
+          <ImageUploadIcon class="w-6 h-6" aria-hidden focusable="false"/>
           <span>Change photo</span>
         </label>
-        <Button white @click="deleteImage">
-          <DeleteIcon class="w-6 h-6 mr-1" />
+        <Button type="white" @click="deleteImage">
+          <DeleteIcon class="w-6 h-6 mr-1" aria-hidden focusable="false"/>
           Delete photo
         </Button>
       </div>

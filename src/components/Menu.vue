@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { computed } from 'vue';
-import { isMobile } from '@/stores/utility';
+import isMobile from '@/utils/isMobile';
 import GroceryIcon from '@/assets/icons/grocery.svg?component';
 import IdeaIcon from '@/assets/icons/lightbulb-alt.svg?component';
 import SeasonIcon from '@/assets/icons/season.svg?component';
@@ -18,7 +18,35 @@ const showMenu = computed(() => {
     || router.currentRoute.value.name === 'shoppingList'
     || router.currentRoute.value.name === 'seasonalFoods';
 });
-
+const menuItems = [
+  {
+    name: 'Recipes',
+    icon: HomeIcon,
+    route: '/home'
+  },
+  {
+    name: 'Inspiration',
+    icon: IdeaIcon,
+    route: '/inspiration'
+  },
+  {
+    name: 'Create',
+    icon: PlusIcon,
+    route: '/edit/new',
+    hideOnDesktop: true
+  },
+  {
+    name: 'Shopping list',
+    icon: GroceryIcon,
+    route: '/shopping-list'
+  },
+  {
+    name: 'What\'s in season',
+    nameOnMobile: 'Seasonal',
+    icon: SeasonIcon,
+    route: '/seasonal-foods'
+  }
+];
 </script>
 
 <template>
@@ -33,18 +61,17 @@ const showMenu = computed(() => {
           </RouterLink>
         </div>
         <nav class="items-center ml-4 hidden md:flex uppercase leading-relaxed">
-          <RouterLink to="/home" class="ml-4 link-underline link-underline-yellow">
-            Recipes
-          </RouterLink>
-          <RouterLink to="/inspiration" class="ml-4 link-underline link-underline-yellow">
-            Inspiration
-          </RouterLink>
-          <RouterLink to="/shopping-list" class="ml-4 link-underline link-underline-yellow">
-            Shopping list
-          </RouterLink>
-          <RouterLink to="/seasonal-foods" class="ml-4 link-underline link-underline-yellow">
-            What's in season
-          </RouterLink>
+          <template v-for="item in menuItems" :key="item.name">
+            <RouterLink
+              v-if="!item.hideOnDesktop"
+              :to="item.route"
+              class="ml-4 link-underline link-underline-yellow"
+            >
+              <div class="flex flex-col items-center">
+                {{ item.name }}
+              </div>
+            </RouterLink>
+          </template>
         </nav>
       </div>
     </div>
@@ -52,36 +79,14 @@ const showMenu = computed(() => {
     <nav v-if="showMenu" class="w-full fixed bottom-0 z-20 border-t border-stone-200
     bg-white md:hidden bottom-menu">
       <div class="flex justify-around items-center text-stone-500 h-full my-2">
-        <RouterLink to="/home" class="w-1/5">
-          <div class="flex flex-col items-center hover:text-yellow-400">
-            <HomeIcon class="w-6 h-6" aria-hidden="true" focusable="false"/>
-            <div class="text-xs">Recipes</div>
-          </div>
-        </RouterLink>
-        <RouterLink to="/inspiration" class="w-1/5">
-          <div class="flex flex-col items-center hover:text-yellow-400">
-            <IdeaIcon class="w-6 h-6" aria-hidden="true" focusable="false"/>
-            <div class="text-xs">Inspiration</div>
-          </div>
-        </RouterLink>
-        <RouterLink to="/edit/new" class="w-1/5">
-          <div class="flex flex-col items-center hover:text-yellow-400">
-            <PlusIcon class="w-6 h-6" aria-hidden="true" focusable="false"/>
-            <div class="text-xs">Create</div>
-          </div>
-        </RouterLink>
-        <RouterLink to="/shopping-list" class="w-1/5">
-          <div class="flex flex-col items-center hover:text-yellow-400">
-            <GroceryIcon class="w-6 h-6" aria-hidden="true" focusable="false"/>
-            <div class="text-xs <xs:hidden block">Shopping list</div>
-            <div class="text-xs hidden <xs:block">Shopping</div>
-          </div>
-        </RouterLink>
-        <RouterLink to="/seasonal-foods" class="w-1/5">
-          <div class="flex flex-col items-center hover:text-yellow-400">
-            <SeasonIcon class="w-6 h-6" aria-hidden="true" focusable="false"/>
-            <div class="text-xs">Seasonal</div>
-          </div>
+        <RouterLink
+          v-for="item in menuItems"
+          :key="item.name"
+          :to="item.route"
+          class="w-1/5 flex flex-col items-center hover:text-yellow-400"
+        >
+          <component :is=item.icon class="w-6 h-6" aria-hidden="true" focusable="false"/>
+          <div class="text-xs">{{ item.nameOnMobile || item.name }}</div>
         </RouterLink>
       </div>
     </nav>

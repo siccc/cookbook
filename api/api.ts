@@ -180,7 +180,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         if (imagePublicId) {
           await deleteImage(imagePublicId);
         }
-        return res.status(200).send('Recipe deleted.');
+        return res.status(200).json({ message: 'Recipe deleted.'});
       } catch (error) {
         return res.status(404).send('An error occurred while deleting the recipe.');
       }

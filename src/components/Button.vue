@@ -4,9 +4,7 @@ import { computed } from 'vue'
 const props = defineProps<{
   to?: string,
   disabled?: boolean,
-  primary?: boolean,
-  white?: boolean,
-  danger?: boolean
+  type?: 'primary' | 'white' | 'danger'
 }>();
 
 const emit = defineEmits<{
@@ -14,7 +12,7 @@ const emit = defineEmits<{
   (e: 'focusout', event: Event): void
 }>();
 
-const type = computed(() => {
+const componentType = computed(() => {
   if (props.disabled) {
     return 'button';
   }
@@ -42,11 +40,11 @@ function onFocusout(event: Event) {
 
 <template>
   <component
-    :is="type"
+    :is="componentType"
     :to="to"
     class="button inline-flex"
     :disabled="disabled"
-    :class="{ primary, danger, white }"
+    :class="type"
     v-on="computedListeners"
   >
     <slot />

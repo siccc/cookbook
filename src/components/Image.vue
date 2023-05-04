@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { getDPR } from '@/stores/utility';
 import { onMounted, ref } from 'vue';
 
 const props = defineProps<{
@@ -22,14 +21,15 @@ const onImageLoad = () => {
   }
 };
 
+function getDPR() {
+  const dpr = window ? Math.ceil(Number((window.devicePixelRatio).toFixed(2))) : 1;
+  return `dpr_${dpr}.0`;
+}
+
 onMounted(() => {
+  // set a timeout to show the loading state if the image hasn't loaded after 1 second
   setTimeout(() => {
-    if (!imgEl.value?.complete) {
-      isLoading.value = true;
-      imgEl.value?.addEventListener('load', onImageLoad);
-    } else {
-      isLoading.value = false;
-    }
+    isLoading.value = !imgEl.value?.complete;
   }, 1000);
 });
 
@@ -52,6 +52,7 @@ onMounted(() => {
       :class="`${props.imgClass} ${aspectRatio}`"
       :src="`${ imageUrlStart }${props.imgSizeDefault},${dpr}/v1/${ imagePublicId }`"
       alt=""
+      @load="onImageLoad"
     />
   </picture>
 </template>

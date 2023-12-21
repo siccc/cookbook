@@ -32,7 +32,6 @@ export function createMockVercelResponse(
 
 //-------------------------- USER HELPERS --------------------------
 
-
 export async function createUser(recaptchaToken: string, isDemoUser: boolean) {
   const req = createMockVercelRequest({
     method: 'POST',

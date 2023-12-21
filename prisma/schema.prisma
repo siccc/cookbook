@@ -41,6 +41,15 @@ model Tag {
 model User {
   id              String          @id @unique
   createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt @default(now())
+  email           String          @default("")
+  displayName     String          @default("")
+  firstName       String          @default("")
+  lastName        String          @default("")
+  profileImage    String          @default("")
+  googleId        String          @default("")
+
+  @@index([email])
 }
 
 model ShoppingList {

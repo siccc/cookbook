@@ -13,6 +13,10 @@
       "destination": "/api/api?resource=shopping-list&id=:id"
     },
     {
+      "source": "/api/user-logout",
+      "destination": "/api/user?logout=true"
+    },
+    {
       "source": "/api/user/:id?",
       "destination": "/api/user?id=:id"
     },

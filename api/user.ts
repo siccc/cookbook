@@ -4,6 +4,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { readFileSync } from 'fs';
 import path from 'path';
 import verifyRecaptcha from './_verifyRecaptcha';
+import { loginWithGoogle, loginDemoUser, logoutUser } from './_auth';
 
 const prisma = new PrismaClient();
 cloudinary.config({ 
@@ -15,8 +16,13 @@ cloudinary.config({
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   const { method, query } = req;
-  // CREATE USER
-  if (method === 'POST' && req.body.isDemoUser) {
+  console.log(query)
+  if (method === 'GET' && query.logout) {
+    logoutUser(res);
+    return res.status(200).send('OK');
+  }
+  // CREATE DEMO USER
+  else if (method === 'POST' && req.body.isDemoUser) {
     if (!req.body.recaptchaToken) {
       return res.status(400).send('Recaptcha token is required.');
     }
@@ -27,7 +33,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       return res.status(403).send('Recaptcha verification failed.');
     }
 
-    // generate userId
     try {
       const userId = generateId();
       const user = await prisma.user.create({
@@ -37,14 +42,17 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       await setCloudinaryFolderForUser(userId);
       await createShoppingList(userId);
       await generateRecipes(userId);
+
+      loginDemoUser(userId, res);
+
       return res.json(user);
     } catch (error) {
       console.log(error);
       return res.status(500).send('User creation failed.');
     }
   }
-  // CREATE EMPTY USER
-  else if (method === 'POST' && !req.body.isDemoUser) {
+  // CREATE EMPTY DEMO USER (for testing)
+  else if (method === 'POST' && !req.body.isDemoUser && !req.body.googleCode) {
     if (!req.body.recaptchaToken) {
       return res.status(400).send('Recaptcha token is required.');
     }
@@ -53,6 +61,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     if (!verificationRes.success) {
       return res.status(403).send('Recaptcha verification failed.');
     }
+    // check if has userId in query -> if so, check if user exists -> set session cookie
     try {
       const userId = generateId();
 
@@ -66,6 +75,37 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     } catch (error) {
       console.log(error);
       return res.status(500).send('User creation failed.');
+    }
+  }
+  // INIT GOOGLE USER
+  else if (method === 'POST' && !req.body.isDemoUser && req.body.googleCode) {
+    try {
+      const userInfo = await loginWithGoogle(req.body.googleCode, res);
+
+      // check if the user is already in the database (added manually) = whitelisted
+      const user = await prisma.user.findFirstOrThrow({
+        where: { email: userInfo.email }
+      });
+
+      const updatedUser = await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          googleId: userInfo.sub,
+          displayName: userInfo.name,
+          firstName: userInfo.given_name,
+          lastName: userInfo.family_name,
+          email: userInfo.email,
+          profileImage: userInfo.picture
+        }
+      });
+      await setCloudinaryFolderForUser(user.id);
+      await createShoppingList(user.id);
+      // -----------------------------------
+
+      return res.status(200).json(updatedUser);
+    } catch (error) {
+      console.log(error);
+      return res.status(403).send('User verification failed.');
     }
   }
   // GET USER
@@ -113,7 +153,8 @@ const generateId = () => {
   return Math.random().toString(16).slice(2);
 }
 
-const setCloudinaryFolderForUser = (userId: string) => {
+const setCloudinaryFolderForUser = async (userId: string) => {
+  // won't create a new folder if this one exists already
   return cloudinary.api.create_folder(`cookbook/demo/${userId}`);
 }
 
@@ -121,7 +162,6 @@ const deleteCloudinaryFolderForUser = (userId: string) => {
   return cloudinary.api.delete_folder(`cookbook/demo/${userId}`);
 }
 
-// For demo purposes 
 const generateRecipes = async (userId: string) => {
   const file = path.join(process.cwd(), 'prisma', 'recipes.json');
   const seedStr = readFileSync(file, 'utf8');
@@ -149,13 +189,18 @@ const generateRecipes = async (userId: string) => {
 
 const createShoppingList = async (userId: string) => {
   try {
-    const id = generateId();
-    const shoppingList = await prisma.shoppingList.create({
-      data: {
-        id: `sl${id}`,
-        userId
-      }
+    const shoppingListFound = await prisma.shoppingList.findFirst({
+      where: { userId }
     });
+    if (!shoppingListFound) {
+      const id = generateId();
+      await prisma.shoppingList.create({
+        data: {
+          id: `sl${id}`,
+          userId
+        }
+      });
+    }
   } catch (err) {
     console.log(err);
   }

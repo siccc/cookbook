@@ -2,12 +2,13 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { PrismaClient } from '@prisma/client';
 import fetch from 'cross-fetch';
 import { differenceBy, sampleSize } from 'lodash';
+import { verifyAuth } from './_auth';
 
 const prisma = new PrismaClient();
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   const { method, query } = req;
-  const userId = processAuthToken(req.headers.authorization);
+  const userId = await verifyAuth(req.headers.cookie, res);
   if (!userId) {
     return res.status(401).send('Unauthorized');
   }
@@ -285,14 +286,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 // -----------------------------------
 // HELPERS
 // -----------------------------------
-
-const processAuthToken = (authHeader: string | undefined) => {
-  let userId = '';
-  if (authHeader && authHeader.startsWith('Basic ') && authHeader.length > 6){
-    userId = authHeader.substring(6, authHeader.length);
-  }
-  return userId;
-}
 
 const preprocessSearchKeywords = (searchKeywords: string) => {
 	const searchText = searchKeywords

@@ -128,7 +128,7 @@ function validateFileExtension(type:string) {
         imgSizeLarge="h_460,w_780"
         imgSizeDefault="h_420,w_350"
       />
-      <div class="md:justify-between md:items-center md:flex hidden">
+      <div class="md:justify-between md:items-center md:flex hidden mt-3">
         <label
           class="block cursor-pointer group p-2 text-stone-400"
           for="uploadImage"

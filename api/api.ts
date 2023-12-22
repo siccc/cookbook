@@ -8,8 +8,8 @@ const prisma = new PrismaClient();
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   const { method, query } = req;
-  const userId = await verifyAuth(req.headers.cookie, res);
-  if (!userId) {
+  const accountId = await verifyAuth(req.headers.cookie, res);
+  if (!accountId) {
     return res.status(401).send('Unauthorized');
   }
   if (query.resource === 'recipes' && query.mode !== 'selection') {
@@ -31,7 +31,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
             AND: [
               { title: { search: preprocessSearchKeywords(query.search) } },
               { category: { contains: category } },
-              { userId: { equals: userId } }
+              { accountId: { equals: accountId } }
             ]
           },
           select: {
@@ -52,7 +52,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           where: {
             AND: [
               { category: { contains: category } },
-              { userId: { equals: userId } }
+              { accountId: { equals: accountId } }
             ]
           },
           select: {
@@ -75,8 +75,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           data: {
             id: generateId(),
             ...req.body,
-            userId,
-            tags: processTags(userId, req.body.tags)
+            accountId,
+            tags: processTags(accountId, req.body.tags)
           }
         });
         return res.status(200).json(recipe);
@@ -89,8 +89,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       try {
         const recipe = await prisma.recipe.findUniqueOrThrow({
           where: {
-            id: query.id as string,
-            userId
+            id: query.id as string
           },
           include: {
             tags: true,
@@ -114,7 +113,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       } catch (error) {
         return res.status(404).send('Recipe not found.');
       }
-      if (prevRecipe.userId !== userId) {
+      if (prevRecipe.accountId !== accountId) {
         return res.status(403).send('Not authorized to update this recipe.');
       }
       // if image was removed or replaced
@@ -135,7 +134,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           where: { id: query.id as string },
           data: {
             ...req.body,
-            tags: processTags(userId, req.body.tags, prevRecipe.tags)
+            tags: processTags(accountId, req.body.tags, prevRecipe.tags)
           },
           include: {
             tags: true,
@@ -159,14 +158,14 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       } catch (error) {
         return res.status(404).send('Recipe not found.');
       }
-      if (recipe.userId !== userId) {
+      if (recipe.accountId !== accountId) {
         return res.status(403).send('Not authorized to delete this recipe.');
       }
       const disconnectTags = prisma.recipe.update({
         where: { id: recipe.id },
         data: {
           ...recipe,
-          tags: processTags(userId, [], recipe.tags)
+          tags: processTags(accountId, [], recipe.tags)
         },
       });
 
@@ -193,7 +192,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       where: {
         AND: [
           { category: { contains: category } },
-          { userId: { equals: userId } }
+          { accountId: { equals: accountId } }
         ]
       },
       select: {
@@ -226,7 +225,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         const shoppingList = await prisma.shoppingList.create({
           data: {
             ...req.body,
-            userId
+            accountId
           }
         });
         return res.status(200).json(shoppingList);
@@ -239,7 +238,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       try {
         const shoppingList = await prisma.shoppingList.findFirst({
           where: {
-            userId
+            accountId
           },
           select: {
             id: true,
@@ -261,14 +260,13 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       } catch (error) {
         return res.status(404).send('Shopping list not found.');
       }
-      if (shoppingList.userId !== userId) {
+      if (shoppingList.accountId !== accountId) {
         return res.status(403).send('Not authorized to update this shopping list.');
       }
       try {
         const shoppingList = await prisma.shoppingList.update({
           where: {
-            id: query.id as string,
-            userId
+            id: query.id as string
           },
           data: {
             items: req.body
@@ -296,11 +294,11 @@ const preprocessSearchKeywords = (searchKeywords: string) => {
   return searchText + '*';
 }
 
-const processTags = (userId: string, newTags: {id: string, name: string}[], prevTags?: {id: string, name: string}[]) => {
+const processTags = (accountId: string, newTags: {id: string, name: string}[], prevTags?: {id: string, name: string}[]) => {
   const tagsToDisconnect = differenceBy(prevTags, newTags, 'name');
 
   type TagOperations = {
-    connectOrCreate?: { where: { id: string}, create: {id: string, name: string, userId: string }}[],
+    connectOrCreate?: { where: { id: string}, create: {id: string, name: string, accountId: string }}[],
     disconnect?: { id: string }[]
   }
   const tagOperations: TagOperations = {
@@ -308,11 +306,11 @@ const processTags = (userId: string, newTags: {id: string, name: string}[], prev
   if (newTags && newTags.length > 0) {
     tagOperations['connectOrCreate'] = newTags.map((tag) => {
       return {
-        where: { id: `${userId}:${tag.name}` },
+        where: { id: `${accountId}:${tag.name}` },
         create: { 
-          id: `${userId}:${tag.name}`,
+          id: `${accountId}:${tag.name}`,
           name: tag.name,
-          userId
+          accountId
         }
       }
     });

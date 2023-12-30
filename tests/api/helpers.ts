@@ -3,7 +3,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { Mock } from 'vitest';
 import userApiHandler from '../../api/user';
 import recipesApiHandler from '../../api/api';
-import type { Recipe, User } from '@/types';
+import type { Recipe, Account } from '@/types';
 
 //-------------------------- VERCEL HELPERS --------------------------
 

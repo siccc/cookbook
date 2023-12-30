@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from "vue-query";
-import type { User } from '@/types';
+import type { Account } from '@/types';
 import fetchFromApi from "@/utils/fetchFromApi";
 import type { CallbackTypes } from "vue3-google-login";
 
@@ -7,7 +7,7 @@ import type { CallbackTypes } from "vue3-google-login";
 // GET USER
 // -----------------------------------
 
-const userFetcher = async (userId: string | null): Promise<User|null> => {
+const userFetcher = async (userId: string | null): Promise<Account|null> => {
   if (!userId) {
     return Promise.resolve(null);
   }
@@ -45,7 +45,7 @@ type UserCreaterOptions = {
   googleCode?: CallbackTypes.CodePopupResponse
 }
 
-const userCreater = async (option: UserCreaterOptions): Promise<User> => {
+const userCreater = async (option: UserCreaterOptions): Promise<Account> => {
   const { type, recaptchaToken, googleCode } = option;
   let body;
   if (type === 'google' && googleCode) {

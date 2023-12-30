@@ -47,14 +47,15 @@ model Account {
 
 model User {
   id              String          @id @unique
-  email           String          @default("")
+  email           String?         @default("")
   accountId       String
   account         Account         @relation(fields: [accountId], references: [id])
-  firstName       String          @default("")
-  lastName        String          @default("")
-  displayName     String          @default("")
-  profileImage    String          @default("")
-  googleId        String          @default("")
+  firstName       String?         @default("")
+  lastName        String?         @default("")
+  displayName     String?         @default("")
+  profileImage    String?         @default("")
+  googleId        String?         @default("")
+  settings        Json            @default("{}")
 
   @@index([email])
   @@index([accountId])

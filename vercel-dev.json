@@ -2,11 +2,15 @@
   "rewrites": [
     {
       "source": "/api/recipes/:id?",
-      "destination": "/api/api?resource=recipes&id=:id"
+      "destination": "/api/api?resource=recipes&id=:id&mode=crud"
     },
     {
       "source": "/api/recipe-selection",
       "destination": "/api/api?resource=recipes&mode=selection"
+    },
+    {
+      "source": "/api/recipe-generate",
+      "destination": "/api/api?resource=recipes&mode=generate"
     },
     {
       "source": "/api/shopping-list/:id?",

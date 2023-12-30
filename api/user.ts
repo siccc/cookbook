@@ -1,10 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { PrismaClient } from '@prisma/client';
 import { v2 as cloudinary } from 'cloudinary';
-import { readFileSync } from 'fs';
-import path from 'path';
 import verifyRecaptcha from './_verifyRecaptcha';
 import { loginWithGoogle, loginDemoUser, logoutUser } from './_auth';
+import { generateRecipes } from './_generateRecipes'
+import { generateId } from './_utils';
 
 const prisma = new PrismaClient();
 cloudinary.config({ 
@@ -35,8 +35,18 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     try {
       const accountId = generateId();
-      const user = await prisma.account.create({
-        data: { id: accountId }
+      const account = await prisma.account.create({
+        data: {
+          id: accountId,
+          users: {
+            create: {
+              id: generateId('user'),
+            }
+          }
+        },
+        include: {
+          users: true,
+        },
       });
 
       await setCloudinaryFolderForUser(accountId);
@@ -45,7 +55,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
       loginDemoUser(accountId, res);
 
-      return res.json(user);
+      return res.json(account);
     } catch (error) {
       console.log(error);
       return res.status(500).send('User creation failed.');
@@ -66,7 +76,17 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       const accountId = generateId();
 
       const account = await prisma.account.create({
-        data: { id: accountId }
+        data: {
+          id: accountId,
+          users: {
+            create: {
+              id: generateId('user'),
+            }
+          }
+        },
+        include: {
+          users: true,
+        }
       });
       await setCloudinaryFolderForUser(accountId);
       await createShoppingList(accountId);
@@ -133,7 +153,10 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   else if (method === 'GET' && query.id) {
     try {
       const account = await prisma.account.findUniqueOrThrow({
-        where: { id: query.id as string }
+        where: { id: query.id as string },
+        include: {
+          users: true,
+        }
       });
       return res.status(200).json(account);
     } catch (error) {
@@ -170,10 +193,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 // HELPERS
 // -----------------------------------
 
-const generateId = () => {
-  return Math.random().toString(16).slice(2);
-}
-
 const setCloudinaryFolderForUser = async (accountId: string) => {
   // won't create a new folder if this one exists already
   return cloudinary.api.create_folder(`cookbook/demo/${accountId}`);
@@ -181,31 +200,6 @@ const setCloudinaryFolderForUser = async (accountId: string) => {
 
 const deleteCloudinaryFolderForUser = (accountId: string) => {
   return cloudinary.api.delete_folder(`cookbook/demo/${accountId}`);
-}
-
-const generateRecipes = async (accountId: string) => {
-  const file = path.join(process.cwd(), 'prisma', 'recipes.json');
-  const seedStr = readFileSync(file, 'utf8');
-  const seedData = JSON.parse(seedStr);
-  try {
-    for (const recipe of seedData.recipes) {
-      const d = await prisma.recipe.create({
-        data: {
-          id: generateId(),
-          ...recipe,
-          accountId,
-          tags: processTags(recipe.tags, accountId)
-        },
-        include: {
-          tags: true,
-        }
-      });
-      console.log(`Created recipe with id: ${d.id}`);
-    }
-  } catch (err) {
-    console.log(err);
-  }
-  await prisma.$disconnect();
 }
 
 const createShoppingList = async (accountId: string) => {
@@ -228,19 +222,3 @@ const createShoppingList = async (accountId: string) => {
   await prisma.$disconnect();
 }
 
-const processTags = (tags: { name: string }[], accountId: string) => {
-  if (tags && tags.length > 0) {
-    return {
-      connectOrCreate: tags.map((tag) => {
-        return {
-          where: { id: `${accountId}:${tag.name}` },
-          create: { 
-            id: `${accountId}:${tag.name}`,
-            name: tag.name,
-            accountId
-          }
-        }
-      })
-    }
-  }
-}

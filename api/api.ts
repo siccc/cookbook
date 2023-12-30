@@ -3,6 +3,8 @@ import { PrismaClient } from '@prisma/client';
 import fetch from 'cross-fetch';
 import { differenceBy, sampleSize } from 'lodash';
 import { verifyAuth } from './_auth';
+import { generateId } from './_utils';
+import { generateRecipes } from './_generateRecipes';
 
 const prisma = new PrismaClient();
 
@@ -12,7 +14,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   if (!accountId) {
     return res.status(401).send('Unauthorized');
   }
-  if (query.resource === 'recipes' && query.mode !== 'selection') {
+  if (query.resource === 'recipes' && query.mode === 'crud') {
     // LIST RECIPES
     if (method === 'GET' && !query.id) {
       let recipes;
@@ -218,6 +220,13 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     } catch (error) {
       return res.status(404).send('An error occurred while fetching the recipe selection.');
     }
+  } else if (method === 'GET' && query.resource === 'recipes' && query.mode === 'generate') {
+    try {
+      await generateRecipes(accountId);
+      return res.status(200).send({ message: 'Recipes generated.'});
+    } catch (error) {
+      return res.status(404).send('An error occurred while generating recipes.');
+    }
   } else if (query.resource === 'shopping-list') {
     // CREATE SHOPPING LIST
     if (method === 'POST' && !query.id) {
@@ -336,8 +345,4 @@ const deleteImage = async (publicId: string) => {
     body: data
   });
   return response;
-}
-
-const generateId = () => {
-  return Math.random().toString(16).slice(2);
 }

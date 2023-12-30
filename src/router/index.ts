@@ -52,7 +52,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  const loggedIn = localStorage.getItem('userId');
+  const loggedIn = document.cookie.includes('isAuthenticated=true');
   if (to.path !== '/login' && !loggedIn) {
     next('/login');
   } else if (to.path === '/login' && loggedIn) {

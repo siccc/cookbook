@@ -1,9 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { PrismaClient } from '@prisma/client';
 import { v2 as cloudinary } from 'cloudinary';
-import { readFileSync } from 'fs';
-import path from 'path';
 import verifyRecaptcha from './_verifyRecaptcha';
+import { loginWithGoogle, loginDemoUser, logoutUser } from './_auth';
+import { generateRecipes } from './_generateRecipes'
+import { generateId } from './_utils';
 
 const prisma = new PrismaClient();
 cloudinary.config({ 
@@ -15,8 +16,13 @@ cloudinary.config({
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   const { method, query } = req;
-  // CREATE USER
-  if (method === 'POST' && req.body.isDemoUser) {
+  console.log(query)
+  if (method === 'GET' && query.logout) {
+    logoutUser(res);
+    return res.status(200).send('OK');
+  }
+  // CREATE DEMO USER
+  else if (method === 'POST' && req.body.isDemoUser) {
     if (!req.body.recaptchaToken) {
       return res.status(400).send('Recaptcha token is required.');
     }
@@ -27,24 +33,36 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       return res.status(403).send('Recaptcha verification failed.');
     }
 
-    // generate userId
     try {
-      const userId = generateId();
-      const user = await prisma.user.create({
-        data: { id: userId }
+      const accountId = generateId();
+      const account = await prisma.account.create({
+        data: {
+          id: accountId,
+          users: {
+            create: {
+              id: generateId('user'),
+            }
+          }
+        },
+        include: {
+          users: true,
+        },
       });
 
-      await setCloudinaryFolderForUser(userId);
-      await createShoppingList(userId);
-      await generateRecipes(userId);
-      return res.json(user);
+      await setCloudinaryFolderForUser(accountId);
+      await createShoppingList(accountId);
+      await generateRecipes(accountId);
+
+      loginDemoUser(accountId, res);
+
+      return res.json(account);
     } catch (error) {
       console.log(error);
       return res.status(500).send('User creation failed.');
     }
   }
-  // CREATE EMPTY USER
-  else if (method === 'POST' && !req.body.isDemoUser) {
+  // CREATE EMPTY DEMO USER (for testing)
+  else if (method === 'POST' && !req.body.isDemoUser && !req.body.googleCode) {
     if (!req.body.recaptchaToken) {
       return res.status(400).send('Recaptcha token is required.');
     }
@@ -53,50 +71,116 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     if (!verificationRes.success) {
       return res.status(403).send('Recaptcha verification failed.');
     }
+    // check if has accountId in query -> if so, check if user exists -> set session cookie
     try {
-      const userId = generateId();
+      const accountId = generateId();
 
-      const user = await prisma.user.create({
-        data: { id: userId }
+      const account = await prisma.account.create({
+        data: {
+          id: accountId,
+          users: {
+            create: {
+              id: generateId('user'),
+            }
+          }
+        },
+        include: {
+          users: true,
+        }
       });
-      await setCloudinaryFolderForUser(userId);
-      await createShoppingList(userId);
+      await setCloudinaryFolderForUser(accountId);
+      await createShoppingList(accountId);
 
-      return res.status(200).json(user);
+      return res.status(200).json(account);
     } catch (error) {
       console.log(error);
       return res.status(500).send('User creation failed.');
+    }
+  }
+  // INIT GOOGLE USER
+  else if (method === 'POST' && !req.body.isDemoUser && req.body.googleCode) {
+    try {
+      const userInfo = await loginWithGoogle(req.body.googleCode, res);
+
+      // check if the user is already in the database (added manually) = whitelisted
+      const account = await prisma.account.findFirstOrThrow({
+        where: {
+          users: {
+            some: {
+              email: userInfo.email,
+            },
+          },
+        }
+      });
+
+      const updatedAccount = await prisma.account.update({
+        where: {
+          id: account.id,
+        },
+        data: {
+          users: {
+            updateMany: {
+              where: {
+                email: userInfo.email,
+              },
+              data: {
+                email: userInfo.email,
+                firstName: userInfo.given_name,
+                lastName: userInfo.family_name,
+                displayName: userInfo.name,
+                profileImage: userInfo.picture,
+                googleId: userInfo.sub,
+              },
+            },
+          },
+        },
+        include: {
+          users: true,
+        },
+      });
+
+      await setCloudinaryFolderForUser(account.id);
+      await createShoppingList(account.id);
+      // -----------------------------------
+
+      return res.status(200).json(updatedAccount);
+    } catch (error) {
+      console.log(error);
+      return res.status(403).send('User verification failed.');
     }
   }
   // GET USER
   else if (method === 'GET' && query.id) {
     try {
-      const user = await prisma.user.findUniqueOrThrow({
-        where: { id: query.id as string }
+      const account = await prisma.account.findUniqueOrThrow({
+        where: { id: query.id as string },
+        include: {
+          users: true,
+        }
       });
-      return res.status(200).json(user);
+      return res.status(200).json(account);
     } catch (error) {
       return res.status(404).send('The requested user could not be found.');
     }
   }
   // DELETE USER
   else if (method === 'DELETE' && query.id) {
-    const userId = query.id as string;
+    const accountId = query.id as string;
     try {
-      await deleteCloudinaryFolderForUser(userId);
-      const deleteUser = prisma.user.delete({
-        where: { id: userId }
+      await deleteCloudinaryFolderForUser(accountId);
+      const deleteAccount = prisma.account.delete({
+        where: { id: accountId }
       });
       const deleteRecipes = prisma.recipe.deleteMany({
-        where: { userId: userId }
+        where: { accountId: accountId }
       });
       const deleteShoppingList = prisma.shoppingList.deleteMany({
-        where: { userId: userId }
+        where: { accountId: accountId }
       });
       const deleteTags = prisma.tag.deleteMany({
-        where: { userId: userId }
+        where: { accountId: accountId }
       });
-      await prisma.$transaction([deleteTags, deleteShoppingList, deleteRecipes, deleteUser]);
+      await prisma.$transaction([deleteTags, deleteShoppingList, deleteRecipes, deleteAccount]);
       return res.status(200).send('User deleted.');
     } catch (error) {
       return res.status(404).send('An error occurred while deleting the user.');
@@ -109,37 +193,28 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 // HELPERS
 // -----------------------------------
 
-const generateId = () => {
-  return Math.random().toString(16).slice(2);
+const setCloudinaryFolderForUser = async (accountId: string) => {
+  // won't create a new folder if this one exists already
+  return cloudinary.api.create_folder(`cookbook/demo/${accountId}`);
 }
 
-const setCloudinaryFolderForUser = (userId: string) => {
-  return cloudinary.api.create_folder(`cookbook/demo/${userId}`);
+const deleteCloudinaryFolderForUser = (accountId: string) => {
+  return cloudinary.api.delete_folder(`cookbook/demo/${accountId}`);
 }
 
-const deleteCloudinaryFolderForUser = (userId: string) => {
-  return cloudinary.api.delete_folder(`cookbook/demo/${userId}`);
-}
-
-// For demo purposes 
-const generateRecipes = async (userId: string) => {
-  const file = path.join(process.cwd(), 'prisma', 'recipes.json');
-  const seedStr = readFileSync(file, 'utf8');
-  const seedData = JSON.parse(seedStr);
+const createShoppingList = async (accountId: string) => {
   try {
-    for (const recipe of seedData.recipes) {
-      const d = await prisma.recipe.create({
+    const shoppingListFound = await prisma.shoppingList.findFirst({
+      where: { accountId }
+    });
+    if (!shoppingListFound) {
+      const id = generateId();
+      await prisma.shoppingList.create({
         data: {
-          id: generateId(),
-          ...recipe,
-          userId,
-          tags: processTags(recipe.tags, userId)
-        },
-        include: {
-          tags: true,
+          id: `sl${id}`,
+          accountId
         }
       });
-      console.log(`Created recipe with id: ${d.id}`);
     }
   } catch (err) {
     console.log(err);
@@ -147,34 +222,3 @@ const generateRecipes = async (userId: string) => {
   await prisma.$disconnect();
 }
 
-const createShoppingList = async (userId: string) => {
-  try {
-    const id = generateId();
-    const shoppingList = await prisma.shoppingList.create({
-      data: {
-        id: `sl${id}`,
-        userId
-      }
-    });
-  } catch (err) {
-    console.log(err);
-  }
-  await prisma.$disconnect();
-}
-
-const processTags = (tags: { name: string }[], userId: string) => {
-  if (tags && tags.length > 0) {
-    return {
-      connectOrCreate: tags.map((tag) => {
-        return {
-          where: { id: `${userId}:${tag.name}` },
-          create: { 
-            id: `${userId}:${tag.name}`,
-            name: tag.name,
-            userId
-          }
-        }
-      })
-    }
-  }
-}

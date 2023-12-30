@@ -5,7 +5,8 @@ import {
   listRecipes,
   setSearchText,
   getSearchText,
-  setCategoryFilter
+  setCategoryFilter,
+  useGenerateRecipesMutation
 } from '@/stores/recipes';
 import RecipeListItem from '@/components/RecipeListItem.vue';
 import Button from '@/components/Button.vue';
@@ -32,6 +33,7 @@ const {
   fetchNextPage,
   hasNextPage
 } = listRecipes(searchTextForRefetch, selectedCategory);
+const generateRecipesMutation = useGenerateRecipesMutation();
 
 const hasRecipe = computed(() => {
   return !!data.value?.pages[0]?.recipes.length;
@@ -55,6 +57,10 @@ function cancelSearch() {
   searchText.value = '';
   searchTextForRefetch.value = '';
   setSearchText(searchTextForRefetch.value);
+}
+
+async function onGenerateRecipesClick() {
+  await generateRecipesMutation.mutateAsync();
 }
 
 useInfiniteScroll(
@@ -115,6 +121,14 @@ useInfiniteScroll(
     <ErrorState v-if="isError" :error="error" />
     <div v-else>
       <EmptyState v-if="!isLoading && !hasRecipe" message="No recipes found." type="not-found"/>
+      <div v-if="!isLoading && !hasRecipe" class="text-center text-xl text-yellow-400 mt-6 flex flex-col items-center justify-center gap-3">
+        <Button type="primary" @click="onGenerateRecipesClick">
+          Give me some recipes!
+        </Button>
+        <Button type="primary" to="/edit/new">
+          Create a recipe
+        </Button>
+      </div>
       <h2 v-if="hasRecipe" class="mt-6 mb-4 text-2xl">Latest recipes</h2>
       <div class="flex flex-row flex-wrap -mx-2 md:-mx-3">
         <template v-if="hasRecipe" v-for="(page, index) in data?.pages" :key="index">

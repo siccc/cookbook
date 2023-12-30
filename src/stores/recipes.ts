@@ -257,6 +257,30 @@ export function getThreeRandomRecipes(category: Ref<string>) {
 }
 
 // -----------------------------------
+// GENERATE RECIPES
+// -----------------------------------
+
+const recipeGenerator = async (): Promise<void> => {
+  fetchFromApi<Recipe[]>({
+      url: `/api/recipe-generate`,
+      method: 'GET'
+    },
+    'An error occurred while generating the recipes.'
+  );
+}
+
+export function useGenerateRecipesMutation() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    recipeGenerator, {
+      onSettled: () => {
+        queryClient.invalidateQueries(['recipes', searchText, 'all']);
+      }
+    }
+  );
+}
+
+// -----------------------------------
 // SEARCH TEXT MEMO
 // -----------------------------------
 

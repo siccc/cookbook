@@ -26,10 +26,23 @@ export interface RecipeExtract {
   imagePublicId?: string
 }
 
+export interface Account {
+  id: string,
+  createdAt: string,
+  users: User[]
+}
+
 export interface User {
   id: string,
-  createdAt: string
-};
+  firstName?: string,
+  lastName?: string,
+  displayName?: string,
+  profileImage?: string,
+  settings: {
+    lang: 'en' | 'hu',
+    seasonalFoodCountry: 'nl' | 'hu'
+  },
+}
 
 export interface ShoppingList {
   id: string,

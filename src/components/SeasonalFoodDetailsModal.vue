@@ -110,7 +110,7 @@ async function showSuccessMessage() {
           stored
         </span>
       </div>
-      <div class="text-sm text-stone-400">{{ props.selectedFood.name_HU }}</div>
+      <!-- <div class="text-sm text-stone-400">{{ props.selectedFood.name_HU }}</div> -->
       <div class="text-sm text-stone-400 mt-6 mb-1 text-left w-full">Months</div>
       <div class="text-sm grid grid-cols-12 gap-3">
         <div

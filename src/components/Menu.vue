@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import isMobile from '@/utils/isMobile';
+import { userLogout } from '@/stores/user';
 import GroceryIcon from '@/assets/icons/grocery.svg?component';
 import IdeaIcon from '@/assets/icons/lightbulb-alt.svg?component';
 import SeasonIcon from '@/assets/icons/season.svg?component';
 import HomeIcon from '@/assets/icons/home.svg?component';
 import PlusIcon from '@/assets/icons/plus.svg?component';
 import Logo from '@/assets/vertical-logo.svg?component';
+import Modal from '@/components/Modal.vue';
 
 const router = useRouter();
 const useMobile = isMobile();
+const showLogoutWarningModal = ref(false);
 const showMenu = computed(() => {
   return !useMobile
     || router.currentRoute.value.name === 'home'
@@ -47,6 +50,24 @@ const menuItems = [
     route: '/seasonal-foods'
   }
 ];
+
+function onLogoutClick() {
+  const isDemoUser = localStorage.getItem('isDemoUser')
+  if (!!isDemoUser) {
+    showLogoutWarningModal.value = true;
+  } else {
+    logout();
+  }
+}
+
+function cancelLogoutWarning() {
+  showLogoutWarningModal.value = false;
+}
+
+async function logout() {
+  await userLogout();
+  router.push('/login');
+}
 </script>
 
 <template>
@@ -72,6 +93,22 @@ const menuItems = [
               </div>
             </RouterLink>
           </template>
+          <div @click="onLogoutClick" class="ml-4 cursor-pointer link-underline link-underline-yellow">
+            Logout
+          </div>
+          <Teleport to="body">
+            <Modal
+              v-if="showLogoutWarningModal"
+              confirm-label="Log out"
+              confirm-button-type="danger"
+              @close="cancelLogoutWarning"
+              @cancel="cancelLogoutWarning"
+              @confirm="logout()"
+              title="Log out"
+            >
+              Are you sure you want to log out? Currently you have a demo account and if you log out, your recipes will be lost.
+            </Modal>
+          </Teleport>
         </nav>
       </div>
     </div>

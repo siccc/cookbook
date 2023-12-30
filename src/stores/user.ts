@@ -1,11 +1,13 @@
 import { useQuery, useMutation } from "vue-query";
-import type { User } from '@/types';
+import type { Account } from '@/types';
+import fetchFromApi from "@/utils/fetchFromApi";
+import type { CallbackTypes } from "vue3-google-login";
 
 // -----------------------------------
 // GET USER
 // -----------------------------------
 
-const userFetcher = async (userId: string | null): Promise<User|null> => {
+const userFetcher = async (userId: string | null): Promise<Account|null> => {
   if (!userId) {
     return Promise.resolve(null);
   }
@@ -37,18 +39,31 @@ export function getUser() {
 // CREATE USER
 // -----------------------------------
 
-const userCreater = async (recaptchaToken: string): Promise<User> => {
+type UserCreaterOptions = {
+  type: 'demo'|'google',
+  recaptchaToken?: string,
+  googleCode?: CallbackTypes.CodePopupResponse
+}
+
+const userCreater = async (option: UserCreaterOptions): Promise<Account> => {
+  const { type, recaptchaToken, googleCode } = option;
+  let body;
+  if (type === 'google' && googleCode) {
+    body = { googleCode: googleCode.code };
+  } else if (type === 'demo' && recaptchaToken) {
+    body = { recaptchaToken, isDemoUser: true, userId: localStorage.getItem('userId') || '' };
+    localStorage.setItem('isDemoUser', 'true');
+  }
   const response = await fetch(`/api/user`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({
-      recaptchaToken,
-      isDemoUser: true
-    })
+    body: JSON.stringify(body)
   });
-  if (!response.ok) {
+  if (!response.ok && response.status === 403) {
+    throw new Error('Unknown email address. Please request access for your Google account from the creator.');
+  } else if (!response.ok) {
     throw new Error('An error occurred while creating user.');
   }
   return response.json();
@@ -60,4 +75,12 @@ export function useCreateUserMutation() {
       localStorage.setItem('userId', user.id);
     }
   });
+}
+
+export async function userLogout() {
+  localStorage.removeItem('isDemoUser');
+  const response = await fetch(`/api/user-logout`);
+  if (!response.ok) {
+    throw new Error('An error occurred while logging out user.');
+  }
 }

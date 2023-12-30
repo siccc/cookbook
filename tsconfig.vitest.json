@@ -4,6 +4,7 @@
   "compilerOptions": {
     "composite": true,
     "lib": [],
-    "types": ["vitest/importMeta", "vitest/globals", "node", "jsdom"]
+    "types": ["vitest/importMeta", "vitest/globals", "node", "jsdom"],
+    "ignoreDeprecations": "5.0"
   }
 }

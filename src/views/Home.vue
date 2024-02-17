@@ -8,6 +8,7 @@ import {
   setCategoryFilter,
   useGenerateRecipesMutation
 } from '@/stores/recipes';
+import { isDemoUser } from '@/stores/user';
 import RecipeListItem from '@/components/RecipeListItem.vue';
 import Button from '@/components/Button.vue';
 import CategoryListWithSelector from '@/components/CategoryListWithSelector.vue';
@@ -35,8 +36,14 @@ const {
 } = listRecipes(searchTextForRefetch, selectedCategory);
 const generateRecipesMutation = useGenerateRecipesMutation();
 
+const showGreetings = isDemoUser();
+
 const hasRecipe = computed(() => {
   return !!data.value?.pages[0]?.recipes.length;
+});
+
+const showGenerateRecipesButton = computed(() => {
+  return !initSearchText && !hasRecipe.value && !selectedCategory.value;
 });
 
 function onSearchTextInput(event: Event) {
@@ -79,8 +86,10 @@ useInfiniteScroll(
 
 <template>
   <main class="p-3 md:p-9 max-w-screen-xl mx-auto mt-14 mb-20">
-    <div>Greetings! 👋</div>
-    <h1 class="mt-3 mb-6 text-3xl">Let's cook something delicious!</h1>
+    <div v-if="showGreetings">
+      <div>Greetings! 👋</div>
+      <h1 class="mt-3 mb-6 text-3xl">Let's cook something delicious!</h1>
+    </div>
     <div class="mx-auto sm:flex sm:items-center sm:justify-between">
       <div class="sm:flex-1 flex items-center relative sm:mr-3">
         <IconButton
@@ -121,7 +130,11 @@ useInfiniteScroll(
     <ErrorState v-if="isError" :error="error" />
     <div v-else>
       <EmptyState v-if="!isLoading && !hasRecipe" message="No recipes found." type="not-found"/>
-      <div v-if="!isLoading && !hasRecipe" class="text-center text-xl text-yellow-400 mt-6 flex flex-col items-center justify-center gap-3">
+      <div
+        v-if="!isLoading && showGenerateRecipesButton"
+        class="text-center text-xl text-yellow-400 mt-6 flex flex-col items-center
+        justify-center gap-3"
+      >
         <Button type="primary" @click="onGenerateRecipesClick">
           Give me some recipes!
         </Button>

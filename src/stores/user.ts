@@ -77,10 +77,14 @@ export function useCreateUserMutation() {
   });
 }
 
-export async function userLogout() {
+export async function userLogout(): Promise<void> {
   localStorage.removeItem('isDemoUser');
   const response = await fetch(`/api/user-logout`);
   if (!response.ok) {
     throw new Error('An error occurred while logging out user.');
   }
+}
+
+export function isDemoUser(): boolean {
+  return localStorage.getItem('isDemoUser') === 'true';
 }

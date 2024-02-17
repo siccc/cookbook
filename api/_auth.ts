@@ -138,7 +138,7 @@ function createDemoSessionCookie(userId: string): string {
 function createIsAuthenticatedCookie(): string {
   const isAuthCookie = serialize('isAuthenticated', 'true', {
     httpOnly: false,
-    maxAge: 60 * 60 * 24 * 7,
+    maxAge: 60 * 60 * 24 * 30, // 30 days
     path: '/'
   });
   return isAuthCookie;

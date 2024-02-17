@@ -2,7 +2,7 @@
 import { useRouter } from 'vue-router';
 import { computed, ref } from 'vue';
 import isMobile from '@/utils/isMobile';
-import { userLogout } from '@/stores/user';
+import { userLogout, isDemoUser } from '@/stores/user';
 import GroceryIcon from '@/assets/icons/grocery.svg?component';
 import IdeaIcon from '@/assets/icons/lightbulb-alt.svg?component';
 import SeasonIcon from '@/assets/icons/season.svg?component';
@@ -11,6 +11,7 @@ import PlusIcon from '@/assets/icons/plus.svg?component';
 import Logo from '@/assets/vertical-logo.svg?component';
 import Modal from '@/components/Modal.vue';
 
+const isDemo = isDemoUser();
 const router = useRouter();
 const useMobile = isMobile();
 const showLogoutWarningModal = ref(false);
@@ -52,8 +53,7 @@ const menuItems = [
 ];
 
 function onLogoutClick() {
-  const isDemoUser = localStorage.getItem('isDemoUser')
-  if (!!isDemoUser) {
+  if (isDemo) {
     showLogoutWarningModal.value = true;
   } else {
     logout();

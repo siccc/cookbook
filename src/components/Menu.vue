@@ -8,6 +8,8 @@ import IdeaIcon from '@/assets/icons/lightbulb-alt.svg?component';
 import SeasonIcon from '@/assets/icons/season.svg?component';
 import HomeIcon from '@/assets/icons/home.svg?component';
 import PlusIcon from '@/assets/icons/plus.svg?component';
+import CogIcon from '@/assets/icons/cog.svg?component';
+import SignoutIcon from '@/assets/icons/signout.svg?component';
 import Logo from '@/assets/vertical-logo.svg?component';
 import Modal from '@/components/Modal.vue';
 
@@ -15,42 +17,65 @@ const isDemo = isDemoUser();
 const router = useRouter();
 const useMobile = isMobile();
 const showLogoutWarningModal = ref(false);
-const showMenu = computed(() => {
-  return !useMobile
-    || router.currentRoute.value.name === 'home'
-    || router.currentRoute.value.name === 'inspiration'
-    || router.currentRoute.value.name === 'shoppingList'
-    || router.currentRoute.value.name === 'seasonalFoods';
+const hideMenu = computed(() => {
+  return useMobile
+    && (router.currentRoute.value.name === 'login'
+    || router.currentRoute.value.name === 'openRecipe'
+    || router.currentRoute.value.name === 'editRecipe');
 });
-const menuItems = [
-  {
+
+type MenuItem = {
+  name: string;
+  nameOnMobile?: string;
+  icon: any;
+  route: string;
+  hideOnDesktop?: boolean;
+};
+
+const menuItems: Record<string, MenuItem> = {
+  'home': {
     name: 'Recipes',
     icon: HomeIcon,
     route: '/home'
   },
-  {
+  'inspiration': {
     name: 'Inspiration',
     icon: IdeaIcon,
     route: '/inspiration'
   },
-  {
+  'create': {
     name: 'Create',
     icon: PlusIcon,
     route: '/edit/new',
     hideOnDesktop: true
   },
-  {
+  'shoppingList': {
     name: 'Shopping list',
     icon: GroceryIcon,
     route: '/shopping-list'
   },
-  {
-    name: 'What\'s in season',
+  'seasonalFoods':{
+    name: 'Seasonal', // What's in season
     nameOnMobile: 'Seasonal',
     icon: SeasonIcon,
     route: '/seasonal-foods'
+  },
+  'logout': {
+    name: 'Logout',
+    icon: SignoutIcon,
+    route: '/logout'
+  },
+  'settings': {
+    name: 'Settings',
+    icon: CogIcon,
+    route: '/settings'
   }
-];
+};
+
+// removed inspiration menu item from desktopTopItems for testing purposes
+const desktopTopItems = ['home', 'create', 'shoppingList', 'seasonalFoods', 'settings'];
+const mobileTopItems = ['settings', 'logout'];
+const mobileBottomItems = ['home', 'inspiration', 'create', 'shoppingList', 'seasonalFoods'];
 
 function onLogoutClick() {
   if (isDemo) {
@@ -74,60 +99,83 @@ async function logout() {
 <template>
   <header>
     <!-- DESKTOP MENU -->
-    <div v-if="showMenu" class="h-14 px-2 md:px-4 py-2.5 bg-white fixed w-full z-20 top-0 left-0
-      border-b border-stone-200 top-menu">
-      <div class="container mx-auto px-4 flex justify-center md:justify-between items-center">
+    <div v-if="!hideMenu" class="h-14 px-2 md:px-4 py-2.5 bg-white w-full z-20 top-0 left-0
+      border-b border-stone-200 desktop-menu hidden md:block md:fixed">
+      <div class="lg:container mx-auto px-4 flex justify-center md:justify-between items-center">
         <div class="flex-shrink-0">
           <RouterLink to="/home" aria-label="Cookbook Logo">
             <Logo class="mr-4 h-9 cursor-pointer" aria-hidden="true"/>
           </RouterLink>
         </div>
-        <nav class="items-center ml-4 hidden md:flex uppercase leading-relaxed">
-          <template v-for="item in menuItems" :key="item.name">
+        <nav class="items-center hidden md:flex uppercase leading-relaxed">
+          <template v-for="item in desktopTopItems" :key="item">
             <RouterLink
-              v-if="!item.hideOnDesktop"
-              :to="item.route"
+              v-if="!menuItems[item].hideOnDesktop"
+              :to="menuItems[item].route"
               class="ml-4 link-underline link-underline-yellow"
             >
               <div class="flex flex-col items-center">
-                {{ item.name }}
+                {{ menuItems[item].name }}
               </div>
             </RouterLink>
           </template>
           <div @click="onLogoutClick" class="ml-4 cursor-pointer link-underline link-underline-yellow">
             Logout
           </div>
-          <Teleport to="body">
-            <Modal
-              v-if="showLogoutWarningModal"
-              confirm-label="Log out"
-              confirm-button-type="danger"
-              @close="cancelLogoutWarning"
-              @cancel="cancelLogoutWarning"
-              @confirm="logout()"
-              title="Log out"
-            >
-              Are you sure you want to log out? Currently you have a demo account and if you log out, your recipes will be lost.
-            </Modal>
-          </Teleport>
         </nav>
       </div>
     </div>
     <!-- MOBILE MENU -->
-    <nav v-if="showMenu" class="w-full fixed bottom-0 z-20 border-t border-stone-200
-    bg-white md:hidden bottom-menu">
+    <!-- TOP -->
+    <nav v-if="!hideMenu" class="h-14 md:hidden py-2.5 bg-white fixed w-full z-20 top-0 left-0
+      border-b border-stone-200 mobile-menu">
+      <div class="px-3 flex items-center justify-between">
+        <div class="flex-shrink-0">
+          <RouterLink to="/home" aria-label="Cookbook Logo">
+            <Logo class="mr-4 h-9 cursor-pointer" aria-hidden="true"/>
+          </RouterLink>
+        </div>
+        <div class="flex justify-around items-center text-stone-500 h-full gap-3">
+          <RouterLink
+            v-for="item in mobileTopItems"
+            :key="menuItems[item].name"
+            :to="menuItems[item].route"
+            class="w-1/5 flex flex-col items-center hover:text-yellow-400"
+            :aria-label="menuItems[item].name"
+          >
+            <component :is=menuItems[item].icon class="w-6 h-6" aria-hidden="true" focusable="false"/>
+          </RouterLink>
+        </div>
+      </div>
+    </nav>
+    <!-- BOTTOM -->
+    <nav v-if="!hideMenu" class="w-full fixed bottom-0 z-20 border-t border-stone-200
+    bg-white md:hidden mobile-menu">
       <div class="flex justify-around items-center text-stone-500 h-full my-2">
         <RouterLink
-          v-for="item in menuItems"
-          :key="item.name"
-          :to="item.route"
+          v-for="item in mobileBottomItems"
+          :key="menuItems[item].name"
+          :to="menuItems[item].route"
           class="w-1/5 flex flex-col items-center hover:text-yellow-400"
         >
-          <component :is=item.icon class="w-6 h-6" aria-hidden="true" focusable="false"/>
-          <div class="text-xs">{{ item.nameOnMobile || item.name }}</div>
+          <component :is=menuItems[item].icon class="w-6 h-6" aria-hidden="true" focusable="false"/>
+          <div class="text-xs">{{ menuItems[item].nameOnMobile || menuItems[item].name }}</div>
         </RouterLink>
       </div>
     </nav>
+    <Teleport to="body">
+      <Modal
+        v-if="showLogoutWarningModal"
+        confirm-label="Log out"
+        confirm-button-type="danger"
+        @close="cancelLogoutWarning"
+        @cancel="cancelLogoutWarning"
+        @confirm="logout()"
+        title="Log out"
+      >
+        Are you sure you want to log out? Currently you have a demo account and if you log out, your recipes will be lost.
+      </Modal>
+    </Teleport>
   </header>
 </template>
 
@@ -150,15 +198,15 @@ async function logout() {
   background-position: 0 100%;
 }
 
-.bottom-menu {
+.mobile-menu {
   @apply text-stone-400;
   padding-bottom: env(safe-area-inset-bottom);
 }
-.bottom-menu .router-link-active {
+.mobile-menu .router-link-active {
   @apply text-yellow-400;
 }
 
-.top-menu .router-link-active {
+.desktop-menu .router-link-active {
   border-bottom-width: 0;
   background-size: 100% 3px;
   background-position: 0 100%;

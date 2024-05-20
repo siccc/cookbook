@@ -6,10 +6,18 @@ import {
   exchangeCodeForTokens,
   getUserInfo
 } from './_googleAuth';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client'
+import { PrismaLibSQL } from '@prisma/adapter-libsql'
+import { createClient } from '@libsql/client'
 import type { VercelResponse } from '@vercel/node';
 
-const prisma = new PrismaClient();
+const libsql = createClient({
+  url: `${process.env.DATABASE_URL}`,
+  authToken: `${process.env.DB_AUTH_TOKEN}`,
+})
+
+const adapter = new PrismaLibSQL(libsql)
+const prisma = new PrismaClient({ adapter })
 
 type GoogleUserSession = {
   type: 'google'

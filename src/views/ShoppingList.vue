@@ -44,7 +44,7 @@ const listLength = computed(() => {
   return list.value ? list.value.length : 0;
 });
 
-const checkedListLenght = computed(() => {
+const checkedListLength = computed(() => {
   return list.value ? list.value.filter(item => item.checked).length : 0;
 });
 
@@ -127,7 +127,7 @@ function saveChanges() {
         </h1>
         <Button
           class="<xs:hidden"
-          v-if="checkedListLenght !== 0"
+          v-if="checkedListLength !== 0"
           @click="onClickShowModal"
           :disabled="editedItem !== undefined"
         >
@@ -155,7 +155,7 @@ function saveChanges() {
       </div>
       <Button
         class="<xs:inline-flex <xs:mb-3 <xs:w-full hidden"
-        v-if="checkedListLenght !== 0"
+        v-if="checkedListLength !== 0"
         @click="onClickShowModal"
         :disabled="editedItem !== undefined"
       >

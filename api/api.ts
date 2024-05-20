@@ -1,12 +1,20 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client'
+import { PrismaLibSQL } from '@prisma/adapter-libsql'
+import { createClient } from '@libsql/client'
 import fetch from 'cross-fetch';
 import { differenceBy, sampleSize } from 'lodash';
 import { verifyAuth } from './_auth';
 import { generateId } from './_utils';
 import { generateRecipes } from './_generateRecipes';
 
-const prisma = new PrismaClient();
+const libsql = createClient({
+  url: `${process.env.DATABASE_URL}`,
+  authToken: `${process.env.DB_AUTH_TOKEN}`,
+})
+
+const adapter = new PrismaLibSQL(libsql)
+const prisma = new PrismaClient({ adapter })
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   const { method, query } = req;
@@ -23,48 +31,48 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       const cursor = query.cursor as string ?? '';
       const cursorObj = cursor === '' ? undefined : { id: cursor };
       // SEARCH
-      if (query.search && typeof query.search === 'string') {
-        recipes = await prisma.recipe.findMany({
-          take: limit,
-          skip: cursor !== '' ? 1 : 0, // skip the first one if cursor is not empty
-          cursor: cursorObj,
-          orderBy: { createdAt: 'desc' },
-          where: {
-            AND: [
-              { title: { search: preprocessSearchKeywords(query.search) } },
-              { category: { contains: category } },
-              { accountId: { equals: accountId } }
-            ]
-          },
-          select: {
-            id: true,
-            title: true,
-            category: true,
-            imagePublicId: true
-          },
-        });
-      } 
+      // if (query.search && typeof query.search === 'string') {
+      //   recipes = await prisma.recipe.findMany({
+      //     take: limit,
+      //     skip: cursor !== '' ? 1 : 0, // skip the first one if cursor is not empty
+      //     cursor: cursorObj,
+      //     orderBy: { createdAt: 'desc' },
+      //     where: {
+      //       AND: [
+      //         { title: { search: preprocessSearchKeywords(query.search) } },
+      //         { category: { contains: category } },
+      //         { accountId: { equals: accountId } }
+      //       ]
+      //     },
+      //     select: {
+      //       id: true,
+      //       title: true,
+      //       category: true,
+      //       imagePublicId: true
+      //     },
+      //   });
+      // } 
       // LIST ALL
-      else {
-        recipes = await prisma.recipe.findMany({
-          take: limit,
-          skip: cursor !== '' ? 1 : 0, // skip the first one if cursor is not empty
-          cursor: cursorObj,
-          orderBy: { createdAt: 'desc' },
-          where: {
-            AND: [
-              { category: { contains: category } },
-              { accountId: { equals: accountId } }
-            ]
-          },
-          select: {
-            id: true,
-            title: true,
-            category: true,
-            imagePublicId: true
-          },
+      // else {
+      recipes = await prisma.recipe.findMany({
+        take: limit,
+        skip: cursor !== '' ? 1 : 0, // skip the first one if cursor is not empty
+        cursor: cursorObj,
+        orderBy: { createdAt: 'desc' },
+        where: {
+          AND: [
+            { category: { contains: category } },
+            { accountId: { equals: accountId } }
+          ]
+        },
+        select: {
+          id: true,
+          title: true,
+          category: true,
+          imagePublicId: true
+        },
         });
-      }
+      // }
       return res.status(200).json({
         recipes,
         nextId: recipes.length === limit ? recipes[limit - 1].id : undefined
@@ -294,14 +302,14 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 // HELPERS
 // -----------------------------------
 
-const preprocessSearchKeywords = (searchKeywords: string) => {
-	const searchText = searchKeywords
-    .trim()
-		.split(/\s+/)
-		.join('* & ');
-  // console.log(searchText + '*');
-  return searchText + '*';
-}
+// const preprocessSearchKeywords = (searchKeywords: string) => {
+// 	const searchText = searchKeywords
+//     .trim()
+// 		.split(/\s+/)
+// 		.join('* & ');
+//   // console.log(searchText + '*');
+//   return searchText + '*';
+// }
 
 const processTags = (accountId: string, newTags: {id: string, name: string}[], prevTags?: {id: string, name: string}[]) => {
   const tagsToDisconnect = differenceBy(prevTags, newTags, 'name');

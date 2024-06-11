@@ -6,13 +6,30 @@ import fetchFromApi from "@/utils/fetchFromApi";
 // GET SHOPPING LIST
 // -----------------------------------
 
+type ShoppingListResult = {
+  id: string,
+  items: string
+};
+
 const shoppingListFetcher = async (): Promise<ShoppingList|null> => {
-  return fetchFromApi<ShoppingList|null>({
+  const shoppingList = await fetchFromApi<ShoppingListResult|null>({
       url: `/api/shopping-list`,
       method: 'GET'
     },
     'An error occurred while getting the shopping list.'
   );
+  return deserializeShoppingList(shoppingList);
+}
+
+const deserializeShoppingList = (data: ShoppingListResult|null): ShoppingList|null => {
+  if (!data) {
+    return null;
+  }
+  const parsedItems: { checked: boolean, name: string }[] = JSON.parse(data.items);
+  return {
+    id: data.id,
+    items: parsedItems
+  }
 }
 
 export function getShoppingList() {
@@ -34,7 +51,7 @@ const shoppingListUpdater = async (shoppingList: ShoppingList): Promise<Shopping
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(shoppingList.items),
+      body: JSON.stringify(JSON.stringify(shoppingList.items)), // serialize shopping list items
     },
     'An error occurred while updating the shopping list. Try again later.'
   );

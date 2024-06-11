@@ -15,13 +15,12 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "prisma:generate": "prisma generate"
   },
-  "prisma": {
-    "seed": "ts-node prisma/seed.ts"
-  },
   "dependencies": {
     "@cloudinary/url-gen": "^1.16.1",
     "@codemirror/lang-markdown": "^6.0.3",
     "@formkit/auto-animate": "^0.8.1",
+    "@libsql/client": "^0.6.0",
+    "@prisma/adapter-libsql": "^5.14.0",
     "@types/dompurify": "^2.3.4",
     "@vueuse/core": "^9.5.0",
     "cloudinary": "^2.0.1",
@@ -40,14 +39,14 @@
     "vue3-markdown-it": "^1.0.10"
   },
   "devDependencies": {
-    "@prisma/client": "4.12.0",
+    "@prisma/client": "5.14.0",
     "@rushstack/eslint-patch": "1.2.0",
     "@tailwindcss/typography": "^0.5.7",
     "@types/cookie": "^0.5.1",
     "@types/jsdom": "20.0.0",
     "@types/lodash": "^4.14.187",
-    "@types/node": "16.11.56",
-    "@vercel/node": "2.5.22",
+    "@types/node": "20.12.12",
+    "@vercel/node": "3.1.5",
     "@vitejs/plugin-vue": "3.1.2",
     "@vue/eslint-config-typescript": "11.0.2",
     "@vue/test-utils": "2.1.0",
@@ -59,10 +58,10 @@
     "node-mocks-http": "1.12.2",
     "npm-run-all": "4.1.5",
     "postcss": "^8.4.35",
-    "prisma": "4.12.0",
+    "prisma": "5.14.0",
     "tailwindcss": "3.1.8",
     "typescript": "4.8.4",
-    "vercel": "^33.5.1",
+    "vercel": "34.2.0",
     "vite": "3.2.8",
     "vite-svg-loader": "^3.6.0",
     "vitest": "0.24.0",

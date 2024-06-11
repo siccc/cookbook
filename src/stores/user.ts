@@ -77,6 +77,38 @@ export function useCreateUserMutation() {
   });
 }
 
+// -----------------------------------
+// GET USER SETTINGS
+// -----------------------------------
+
+// const shoppingListFetcher = async (): Promise<UserSettings|null> => {
+//   return fetchFromApi<UserSettings|null>({
+//       url: `/api/shopping-list`,
+//       method: 'GET'
+//     },
+//     'An error occurred while getting the shopping list.'
+//   );
+// }
+
+// export function getShoppingList() {
+//   const { isLoading, isError, data, error } = useQuery(
+//     ['shopping-list'],
+//     () => shoppingListFetcher()
+//   );
+//   return { isLoading, isError, data, error };
+// }
+
+// -----------------------------------
+// UPDATE USER SETTINGS
+// -----------------------------------
+
+
+
+
+// -----------------------------------
+// LOGOUT USER
+// -----------------------------------
+
 export async function userLogout(): Promise<void> {
   localStorage.removeItem('isDemoUser');
   const response = await fetch(`/api/user-logout`);

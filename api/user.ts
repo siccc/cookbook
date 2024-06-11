@@ -1,12 +1,21 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client'
+import { PrismaLibSQL } from '@prisma/adapter-libsql'
+import { createClient } from '@libsql/client'
 import { v2 as cloudinary } from 'cloudinary';
 import verifyRecaptcha from './_verifyRecaptcha';
 import { loginWithGoogle, loginDemoUser, logoutUser } from './_auth';
 import { generateRecipes } from './_generateRecipes'
 import { generateId } from './_utils';
 
-const prisma = new PrismaClient();
+const libsql = createClient({
+  url: `${process.env.DATABASE_URL}`,
+  authToken: `${process.env.DB_AUTH_TOKEN}`,
+})
+
+const adapter = new PrismaLibSQL(libsql)
+const prisma = new PrismaClient({ adapter })
+
 cloudinary.config({ 
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
   api_key: process.env.CLOUDINARY_API_KEY, 

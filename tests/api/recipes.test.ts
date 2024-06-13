@@ -21,7 +21,6 @@ vi.mock('../../api/_verifyRecaptcha', () => {
   }
 });
 
-
 describe('recipes api', () => {
   const recaptchaToken = 'test';
   const isDemoUser = false;
@@ -47,7 +46,7 @@ describe('recipes api', () => {
 
   afterAll(async () => {
     if (user) {
-      await deleteUser(user.id);
+      await deleteUser(user.userId);
     }
   });
 
@@ -61,7 +60,7 @@ describe('recipes api', () => {
       },
       body: {
         ...recipeBody,
-        userId: user.id
+        userId: user.userId
       }
     });
     const res = createMockVercelResponse();
@@ -78,11 +77,11 @@ describe('recipes api', () => {
       method: 'POST',
       url: '/api/recipes',
       headers: {
-        'Authorization': `Basic ${ user.id }`
+        'Authorization': `Basic ${ user.userId }`
       },
       body: {
         ...recipeBody,
-        userId: user.id
+        userId: user.userId
       }
     });
     const res = createMockVercelResponse();
@@ -101,7 +100,7 @@ describe('recipes api', () => {
         method: 'POST',
         url: '/api/recipes',
         headers: {
-          'Authorization': `Basic ${ user.id }`
+          'Authorization': `Basic ${ user.userId }`
         },
         query: {
           resource: 'recipes'
@@ -121,14 +120,14 @@ describe('recipes api', () => {
         method: 'POST',
         url: '/api/recipes',
         headers: {
-          'Authorization': `Basic ${ user.id }`
+          'Authorization': `Basic ${ user.userId }`
         },
         query: {
           resource: 'recipes'
         },
         body: {
           ...recipeBody,
-          userId: user.id
+          userId: user.userId
         }
       });
       const createRecipeRes = createMockVercelResponse();
@@ -146,7 +145,7 @@ describe('recipes api', () => {
         method: 'DELETE',
         url: `/api/recipes`,
         headers: {
-          'Authorization': `Basic ${ user.id }`
+          'Authorization': `Basic ${ user.userId }`
         },
         query: {
           resource: 'recipes',
@@ -163,17 +162,17 @@ describe('recipes api', () => {
     });
   
     it('should create and delete a recipe with helpers', async () => {
-      const recipe = await createRecipe(user.id, recipeBody);
+      const recipe = await createRecipe(user.userId, recipeBody);
       expect(recipe).toHaveProperty('id');
   
-      await deleteRecipe(user.id, recipe.id);
+      await deleteRecipe(user.userId, recipe.id);
     });
   });
 
   // GET RECIPE
   describe('get recipes', () => {
     it('should get a recipe', async () => {
-      const recipe = await createRecipe(user.id, recipeBody);
+      const recipe = await createRecipe(user.userId, recipeBody);
       expect(recipe).toHaveProperty('id');
   
       if (recipe) {
@@ -181,7 +180,7 @@ describe('recipes api', () => {
           method: 'GET',
           url: '/api/recipes',
           headers: {
-            'Authorization': `Basic ${ user.id }`
+            'Authorization': `Basic ${ user.userId }`
           },
           query: {
             resource: 'recipes',
@@ -197,7 +196,7 @@ describe('recipes api', () => {
         expect(res.json).toBeCalledTimes(1);
         expect(res.json.mock.calls[0][0]).toHaveProperty('id');
   
-        await deleteRecipe(user.id, recipe.id);
+        await deleteRecipe(user.userId, recipe.id);
       }
     });
   
@@ -206,7 +205,7 @@ describe('recipes api', () => {
         method: 'GET',
         url: '/api/recipes',
         headers: {
-          'Authorization': `Basic ${ user.id }`
+          'Authorization': `Basic ${ user.userId }`
         },
         query: {
           resource: 'recipes',
@@ -223,7 +222,7 @@ describe('recipes api', () => {
     });
   
     it('should return error if the user tries to get a recipe that does not belong to them', async () => {
-      const recipe = await createRecipe(user.id, recipeBody);
+      const recipe = await createRecipe(user.userId, recipeBody);
       expect(recipe).toHaveProperty('id');
   
       if (recipe) {
@@ -246,7 +245,7 @@ describe('recipes api', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.send).toBeCalledTimes(1);
 
-        await deleteRecipe(user.id, recipe.id);
+        await deleteRecipe(user.userId, recipe.id);
       }
     });
   });
@@ -254,7 +253,7 @@ describe('recipes api', () => {
   // UPDATE RECIPE
   describe('update recipes', () => {
     it('should update a recipe', async () => {
-      const recipe = await createRecipe(user.id, recipeBody);
+      const recipe = await createRecipe(user.userId, recipeBody);
       expect(recipe).toHaveProperty('id');
   
       if (recipe) {
@@ -262,7 +261,7 @@ describe('recipes api', () => {
           method: 'PUT',
           url: '/api/recipes',
           headers: {
-            'Authorization': `Basic ${ user.id }`
+            'Authorization': `Basic ${ user.userId }`
           },
           query: {
             resource: 'recipes',
@@ -270,7 +269,7 @@ describe('recipes api', () => {
           },
           body: {
             ...recipeBody,
-            userId: user.id,
+            userId: user.userId,
             title: 'Updated title'
           }
         });
@@ -284,12 +283,12 @@ describe('recipes api', () => {
         expect(res.json.mock.calls[0][0]).toHaveProperty('title');
         expect(res.json.mock.calls[0][0].title).toBe('Updated title');
   
-        await deleteRecipe(user.id, recipe.id);
+        await deleteRecipe(user.userId, recipe.id);
       }
     });
   
     it('should return error if the user tries to update a recipe that does not belong to them', async () => {
-      const recipe = await createRecipe(user.id, recipeBody);
+      const recipe = await createRecipe(user.userId, recipeBody);
       expect(recipe).toHaveProperty('id');
   
       if (recipe) {
@@ -312,7 +311,7 @@ describe('recipes api', () => {
         expect(res.status).toHaveBeenCalledWith(403);
         expect(res.send).toBeCalledTimes(1);
   
-        await deleteRecipe(user.id, recipe.id);
+        await deleteRecipe(user.userId, recipe.id);
       }
     });
   
@@ -321,7 +320,7 @@ describe('recipes api', () => {
         method: 'PUT',
         url: '/api/recipes',
         headers: {
-          'Authorization': `Basic ${ user.id }`
+          'Authorization': `Basic ${ user.userId }`
         },
         query: {
           resource: 'recipes',
@@ -338,7 +337,7 @@ describe('recipes api', () => {
     });
 
     it('should update a recipe\'s tags', async () => {
-      const recipe = await createRecipe(user.id, recipeBody);
+      const recipe = await createRecipe(user.userId, recipeBody);
       expect(recipe).toHaveProperty('id');
   
       if (recipe) {
@@ -346,7 +345,7 @@ describe('recipes api', () => {
           method: 'PUT',
           url: '/api/recipes',
           headers: {
-            'Authorization': `Basic ${ user.id }`
+            'Authorization': `Basic ${ user.userId }`
           },
           query: {
             resource: 'recipes',
@@ -354,7 +353,7 @@ describe('recipes api', () => {
           },
           body: {
             ...recipeBody,
-            userId: user.id,
+            userId: user.userId,
             tags: [
               { name: 'tag1' },
               { name: 'tag2' }
@@ -371,12 +370,12 @@ describe('recipes api', () => {
         expect(res.json.mock.calls[0][0]).toHaveProperty('tags');
         expect(res.json.mock.calls[0][0].tags).toHaveLength(2);
   
-        await deleteRecipe(user.id, recipe.id);
+        await deleteRecipe(user.userId, recipe.id);
       }
     });
 
     it('should update tags if the user deleted some', async () => {
-      const recipe = await createRecipe(user.id, {
+      const recipe = await createRecipe(user.userId, {
         ...recipeBody,
         tags: [
           { name: 'tag1' },
@@ -391,7 +390,7 @@ describe('recipes api', () => {
           method: 'PUT',
           url: '/api/recipes',
           headers: {
-            'Authorization': `Basic ${ user.id }`
+            'Authorization': `Basic ${ user.userId }`
           },
           query: {
             resource: 'recipes',
@@ -399,7 +398,7 @@ describe('recipes api', () => {
           },
           body: {
             ...recipeBody,
-            userId: user.id,
+            userId: user.userId,
             tags: [
               { name: 'tag1' } // tag2 and tag3 are deleted
             ]
@@ -415,7 +414,7 @@ describe('recipes api', () => {
         expect(res.json.mock.calls[0][0]).toHaveProperty('tags');
         expect(res.json.mock.calls[0][0].tags).toHaveLength(1);
   
-        await deleteRecipe(user.id, recipe.id);
+        await deleteRecipe(user.userId, recipe.id);
       }
     });
   });
@@ -423,7 +422,7 @@ describe('recipes api', () => {
   // DELETE RECIPE
   describe('delete recipes', () => {
     it('should return error if the user tries to delete a recipe that does not belong to them', async () => {
-      const recipe = await createRecipe(user.id, recipeBody);
+      const recipe = await createRecipe(user.userId, recipeBody);
       expect(recipe).toHaveProperty('id');
   
       if (recipe) {
@@ -446,7 +445,7 @@ describe('recipes api', () => {
         expect(res.status).toHaveBeenCalledWith(403);
         expect(res.send).toBeCalledTimes(1);
 
-        await deleteRecipe(user.id, recipe.id);
+        await deleteRecipe(user.userId, recipe.id);
       }
     });
   
@@ -455,7 +454,7 @@ describe('recipes api', () => {
         method: 'DELETE',
         url: '/api/recipes',
         headers: {
-          'Authorization': `Basic ${ user.id }`
+          'Authorization': `Basic ${ user.userId }`
         },
         query: {
           resource: 'recipes',
@@ -475,15 +474,15 @@ describe('recipes api', () => {
   // LIST RECIPES
   describe('list recipes', () => {
     it('should return all recipes by user', async () => {
-      const recipe1 = await createRecipe(user.id, {
+      const recipe1 = await createRecipe(user.userId, {
         ...recipeBody,
         title: 'Recipe 1'
       });
-      const recipe2 = await createRecipe(user.id, {
+      const recipe2 = await createRecipe(user.userId, {
         ...recipeBody,
         title: 'Recipe 2'
       });
-      const recipe3 = await createRecipe(user.id, {
+      const recipe3 = await createRecipe(user.userId, {
         ...recipeBody,
         title: 'Recipe 3'
       });
@@ -492,7 +491,7 @@ describe('recipes api', () => {
           method: 'GET',
           url: '/api/recipes',
           headers: {
-            'Authorization': `Basic ${ user.id }`
+            'Authorization': `Basic ${ user.userId }`
           },
           query: {
             resource: 'recipes'
@@ -508,14 +507,14 @@ describe('recipes api', () => {
         expect(res.json.mock.calls[0][0]).toHaveProperty('recipes');
         expect(res.json.mock.calls[0][0].recipes).toHaveLength(3);
   
-        await deleteRecipe(user.id, recipe1.id);
-        await deleteRecipe(user.id, recipe2.id);
-        await deleteRecipe(user.id, recipe3.id);
+        await deleteRecipe(user.userId, recipe1.id);
+        await deleteRecipe(user.userId, recipe2.id);
+        await deleteRecipe(user.userId, recipe3.id);
       }
     });
 
     it('should return empty array if the user tries to list recipes that do not belong to them', async () => {
-      const recipe = await createRecipe(user.id, recipeBody);
+      const recipe = await createRecipe(user.userId, recipeBody);
       if (recipe) {
         const req = createMockVercelRequest({
           method: 'GET',
@@ -537,20 +536,20 @@ describe('recipes api', () => {
         expect(res.json.mock.calls[0][0]).toHaveProperty('recipes');
         expect(res.json.mock.calls[0][0].recipes).toHaveLength(0);
 
-        await deleteRecipe(user.id, recipe.id);
+        await deleteRecipe(user.userId, recipe.id);
       }
     });
 
     it('should return with filtered recipe list if the user gives a search query', async () => {
-      const recipe1 = await createRecipe(user.id, {
+      const recipe1 = await createRecipe(user.userId, {
         ...recipeBody,
         title: 'apple'
       });
-      const recipe2 = await createRecipe(user.id, {
+      const recipe2 = await createRecipe(user.userId, {
         ...recipeBody,
         title: 'pear'
       });
-      const recipe3 = await createRecipe(user.id, {
+      const recipe3 = await createRecipe(user.userId, {
         ...recipeBody,
         title: 'orange'
       });
@@ -559,7 +558,7 @@ describe('recipes api', () => {
           method: 'GET',
           url: '/api/recipes',
           headers: {
-            'Authorization': `Basic ${ user.id }`
+            'Authorization': `Basic ${ user.userId }`
           },
           query: {
             resource: 'recipes',
@@ -577,18 +576,18 @@ describe('recipes api', () => {
         expect(res.json.mock.calls[0][0].recipes).toHaveLength(1);
         expect(res.json.mock.calls[0][0].recipes[0].title).toBe('apple');
   
-        await deleteRecipe(user.id, recipe1.id);
-        await deleteRecipe(user.id, recipe2.id);
-        await deleteRecipe(user.id, recipe3.id);
+        await deleteRecipe(user.userId, recipe1.id);
+        await deleteRecipe(user.userId, recipe2.id);
+        await deleteRecipe(user.userId, recipe3.id);
       }
     });
 
     it('should return empty array if there is no recipe with the given search query', async () => {
-      const recipe1 = await createRecipe(user.id, {
+      const recipe1 = await createRecipe(user.userId, {
         ...recipeBody,
         title: 'apple'
       });
-      const recipe2 = await createRecipe(user.id, {
+      const recipe2 = await createRecipe(user.userId, {
         ...recipeBody,
         title: 'pear'
       });
@@ -597,7 +596,7 @@ describe('recipes api', () => {
           method: 'GET',
           url: '/api/recipes',
           headers: {
-            'Authorization': `Basic ${ user.id }`
+            'Authorization': `Basic ${ user.userId }`
           },
           query: {
             resource: 'recipes',
@@ -614,17 +613,17 @@ describe('recipes api', () => {
         expect(res.json.mock.calls[0][0]).toHaveProperty('recipes');
         expect(res.json.mock.calls[0][0].recipes).toHaveLength(0);
   
-        await deleteRecipe(user.id, recipe1.id);
-        await deleteRecipe(user.id, recipe2.id);
+        await deleteRecipe(user.userId, recipe1.id);
+        await deleteRecipe(user.userId, recipe2.id);
       }
     });
 
     it('should handle multiple words and treat them as OR', async () => {
-      const recipe1 = await createRecipe(user.id, {
+      const recipe1 = await createRecipe(user.userId, {
         ...recipeBody,
         title: 'apple'
       });
-      const recipe2 = await createRecipe(user.id, {
+      const recipe2 = await createRecipe(user.userId, {
         ...recipeBody,
         title: 'pear'
       });
@@ -633,7 +632,7 @@ describe('recipes api', () => {
           method: 'GET',
           url: '/api/recipes',
           headers: {
-            'Authorization': `Basic ${ user.id }`
+            'Authorization': `Basic ${ user.userId }`
           },
           query: {
             resource: 'recipes',
@@ -650,8 +649,8 @@ describe('recipes api', () => {
         expect(res.json.mock.calls[0][0]).toHaveProperty('recipes');
         expect(res.json.mock.calls[0][0].recipes).toHaveLength(2);
   
-        await deleteRecipe(user.id, recipe1.id);
-        await deleteRecipe(user.id, recipe2.id);
+        await deleteRecipe(user.userId, recipe1.id);
+        await deleteRecipe(user.userId, recipe2.id);
       }
     });
   });
@@ -659,15 +658,15 @@ describe('recipes api', () => {
   // LIST RECIPE SELECTION
   describe('get recipe selection', () => {
     it('should return with recipe selection', async () => {
-      const recipe1 = await createRecipe(user.id, {
+      const recipe1 = await createRecipe(user.userId, {
         ...recipeBody,
         title: 'Recipe 1'
       });
-      const recipe2 = await createRecipe(user.id, {
+      const recipe2 = await createRecipe(user.userId, {
         ...recipeBody,
         title: 'Recipe 2'
       });
-      const recipe3 = await createRecipe(user.id, {
+      const recipe3 = await createRecipe(user.userId, {
         ...recipeBody,
         title: 'Recipe 3'
       });
@@ -676,7 +675,7 @@ describe('recipes api', () => {
           method: 'GET',
           url: '/api/recipes',
           headers: {
-            'Authorization': `Basic ${ user.id }`
+            'Authorization': `Basic ${ user.userId }`
           },
           query: {
             resource: 'recipes',
@@ -692,9 +691,9 @@ describe('recipes api', () => {
         expect(res.json).toBeCalledTimes(1);
         expect(res.json.mock.calls[0][0]).toHaveLength(3);
   
-        await deleteRecipe(user.id, recipe1.id);
-        await deleteRecipe(user.id, recipe2.id);
-        await deleteRecipe(user.id, recipe3.id);
+        await deleteRecipe(user.userId, recipe1.id);
+        await deleteRecipe(user.userId, recipe2.id);
+        await deleteRecipe(user.userId, recipe3.id);
       }
     });
 
@@ -703,7 +702,7 @@ describe('recipes api', () => {
         method: 'GET',
         url: '/api/recipes',
         headers: {
-          'Authorization': `Basic ${ user.id }`
+          'Authorization': `Basic ${ user.userId }`
         },
         query: {
           resource: 'recipes',
@@ -721,17 +720,17 @@ describe('recipes api', () => {
     });
 
     it('should return less than 3 recipes if there are less than 3, that match for the given category', async () => {
-      const recipe1 = await createRecipe(user.id, {
+      const recipe1 = await createRecipe(user.userId, {
         ...recipeBody,
         title: 'Recipe 1',
         category: 'Breakfast'
       });
-      const recipe2 = await createRecipe(user.id, {
+      const recipe2 = await createRecipe(user.userId, {
         ...recipeBody,
         title: 'Recipe 2',
         category: 'Breakfast'
       });
-      const recipe3 = await createRecipe(user.id, {
+      const recipe3 = await createRecipe(user.userId, {
         ...recipeBody,
         title: 'Recipe 3',
         category: 'test'
@@ -741,7 +740,7 @@ describe('recipes api', () => {
           method: 'GET',
           url: '/api/recipes',
           headers: {
-            'Authorization': `Basic ${ user.id }`
+            'Authorization': `Basic ${ user.userId }`
           },
           query: {
             resource: 'recipes',
@@ -758,9 +757,9 @@ describe('recipes api', () => {
         expect(res.json).toBeCalledTimes(1);
         expect(res.json.mock.calls[0][0]).toHaveLength(2);
   
-        await deleteRecipe(user.id, recipe1.id);
-        await deleteRecipe(user.id, recipe2.id);
-        await deleteRecipe(user.id, recipe3.id);
+        await deleteRecipe(user.userId, recipe1.id);
+        await deleteRecipe(user.userId, recipe2.id);
+        await deleteRecipe(user.userId, recipe3.id);
       }
     });
   });
@@ -772,7 +771,7 @@ describe('recipes api', () => {
         method: 'GET',
         url: '/api/recipes',
         headers: {
-          'Authorization': `Basic ${ user.id }`
+          'Authorization': `Basic ${ user.userId }`
         },
         query: {
           resource: 'shopping-list'
@@ -793,7 +792,7 @@ describe('recipes api', () => {
         method: 'GET',
         url: '/api/recipes',
         headers: {
-          'Authorization': `Basic ${ user.id }`
+          'Authorization': `Basic ${ user.userId }`
         },
         query: {
           resource: 'shopping-list'
@@ -813,7 +812,7 @@ describe('recipes api', () => {
         method: 'PUT',
         url: '/api/recipes',
         headers: {
-          'Authorization': `Basic ${ user.id }`
+          'Authorization': `Basic ${ user.userId }`
         },
         query: {
           resource: 'shopping-list',
@@ -838,7 +837,7 @@ describe('recipes api', () => {
         method: 'PUT',
         url: '/api/recipes',
         headers: {
-          'Authorization': `Basic ${ user.id }`
+          'Authorization': `Basic ${ user.userId }`
         },
         query: {
           resource: 'shopping-list',
@@ -866,7 +865,7 @@ describe('recipes api', () => {
         method: 'GET',
         url: '/api/recipes',
         headers: {
-          'Authorization': `Basic ${ user.id }`
+          'Authorization': `Basic ${ user.userId }`
         },
         query: {
           resource: 'shopping-list'

@@ -1,10 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, type Account, type User } from '@prisma/client'
 import { PrismaLibSQL } from '@prisma/adapter-libsql'
 import { createClient } from '@libsql/client'
 import { v2 as cloudinary } from 'cloudinary';
 import verifyRecaptcha from './_verifyRecaptcha';
-import { loginWithGoogle, loginDemoUser, logoutUser } from './_auth';
+import { loginWithGoogle, loginDemoUser, logoutUser, verifyAuth } from './_auth';
 import { generateRecipes } from './_generateRecipes'
 import { generateId } from './_utils';
 
@@ -25,7 +25,7 @@ cloudinary.config({
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   const { method, query } = req;
-  console.log(query)
+  console.log("USER", query)
   if (method === 'GET' && query.logout) {
     logoutUser(res);
     return res.status(200).send('OK');
@@ -50,6 +50,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           users: {
             create: {
               id: generateId('user'),
+              settings: req.body.settings
             }
           }
         },
@@ -63,8 +64,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       await generateRecipes(accountId);
 
       loginDemoUser(accountId, res);
-
-      return res.json(account);
+      const userResponse = await createUserResponse(account, req, res);
+      return res.status(200).json(userResponse);
     } catch (error) {
       console.log(error);
       return res.status(500).send('User creation failed.');
@@ -90,6 +91,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           users: {
             create: {
               id: generateId('user'),
+              settings: req.body.settings
             }
           }
         },
@@ -99,8 +101,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       });
       await setCloudinaryFolderForUser(accountId);
       await createShoppingList(accountId);
-
-      return res.status(200).json(account);
+      const userResponse = await createUserResponse(account, req, res);
+      return res.status(200).json(userResponse);
     } catch (error) {
       console.log(error);
       return res.status(500).send('User creation failed.');
@@ -139,6 +141,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
                 displayName: userInfo.name,
                 profileImage: userInfo.picture,
                 googleId: userInfo.sub,
+                settings: req.body.settings
               },
             },
           },
@@ -151,8 +154,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       await setCloudinaryFolderForUser(account.id);
       await createShoppingList(account.id);
       // -----------------------------------
-
-      return res.status(200).json(updatedAccount);
+      const userResponse = await createUserResponse(updatedAccount, req, res);
+      return res.status(200).json(userResponse);
     } catch (error) {
       console.log(error);
       return res.status(403).send('User verification failed.');
@@ -167,12 +170,29 @@ export default async (req: VercelRequest, res: VercelResponse) => {
           users: true,
         }
       });
-      return res.status(200).json(account);
+      const userResponse = await createUserResponse(account, req, res);
+      return res.status(200).json(userResponse);
     } catch (error) {
       return res.status(404).send('The requested user could not be found.');
     }
   }
-  // DELETE USER
+  // UPDATE USER
+  else if (method === 'PUT' && query.id) {
+    const accountId = query.id as string;
+    try {
+      const account = await prisma.account.findUniqueOrThrow({
+        where: { id: accountId },
+        include: {
+          users: true,
+        }
+      });
+      const updatedUserResponse = await updateUserResponse(account, req, res);
+      return res.status(200).json(updatedUserResponse);
+    } catch (error) {
+      return res.status(404).send('An error occurred while updating the user.');
+    }
+  }
+  // DELETE ACCOUNT
   else if (method === 'DELETE' && query.id) {
     const accountId = query.id as string;
     try {
@@ -231,3 +251,66 @@ const createShoppingList = async (accountId: string) => {
   await prisma.$disconnect();
 }
 
+type ExtendedAccount = {
+  users?: User[]
+} & Account;
+
+const createUserResponse = async (account: ExtendedAccount, req: VercelRequest, res: VercelResponse) => {
+  try {
+    const user = await getUserByAccount(account, req, res);
+    if (!user || !account.users) {
+      throw new Error();
+    }
+    return {
+      userId: account.id,
+      isMultiAccount: account.users.length > 1,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      displayName: user.displayName,
+      profileImage: user.profileImage,
+      settings: user.settings
+    };
+  } catch {
+    throw new Error();
+  }
+}
+
+const updateUserResponse = async (account: ExtendedAccount, req: VercelRequest, res: VercelResponse) => {
+  try {
+    const user = await getUserByAccount(account, req, res);
+    if (!user || !account.users) {
+      throw new Error();
+    }
+    const newUser = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        settings: req.body
+      },
+    });
+    return {
+      userId: account.id,
+      isMultiAccount: account.users.length > 1,
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      displayName: newUser.displayName,
+      profileImage: newUser.profileImage,
+      settings: newUser.settings
+    };
+  } catch {
+    throw new Error();
+  }
+}
+
+const getUserByAccount = async (account: ExtendedAccount, req: VercelRequest, res: VercelResponse) => {
+  const { googleUserId } = await verifyAuth(req.headers.cookie, res);
+  let user;
+  if (!account.users || account.users.length === 0) {
+    throw new Error();
+  }
+  if (googleUserId) {
+    user = account.users?.find(u => u.googleId === googleUserId)
+  } else {
+    user = account.users[0]
+  }
+  return user;
+}

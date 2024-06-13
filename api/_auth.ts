@@ -30,8 +30,14 @@ type DemoUserSession = {
 
 type Session = GoogleUserSession | DemoUserSession;
 
-export async function verifyAuth(cookies: string | undefined, res: VercelResponse): Promise<string | undefined> {
+type VeryficationResponse = {
+  accountId?: string,
+  googleUserId?: string
+}
+
+export async function verifyAuth(cookies: string | undefined, res: VercelResponse): Promise<VeryficationResponse> {
   let accountId;
+  let googleUserId;
   if (cookies) {
     const cookiesObject = cookie.parse(cookies);
     if (cookiesObject.session) {
@@ -45,7 +51,8 @@ export async function verifyAuth(cookies: string | undefined, res: VercelRespons
       }
       // GOOGLE USER
       else if (parsedSession.type === 'google') {
-        const { userId: googleUserId, newTokens } = await verifyGoogleAuth(parsedSession as GoogleUserSession);
+        const { userId, newTokens } = await verifyGoogleAuth(parsedSession as GoogleUserSession);
+        googleUserId = userId;
         // refresh session cookies if needed
         if (newTokens) {
           console.log('refreshing session cookies');
@@ -53,7 +60,6 @@ export async function verifyAuth(cookies: string | undefined, res: VercelRespons
           res.setHeader('Set-Cookie', [sessionCookie]);
         }
         // get user by googleId
-        // console.log('googleUserId: ', googleUserId);
         try {
           const account = await prisma.account.findFirstOrThrow({
             where: {
@@ -76,7 +82,7 @@ export async function verifyAuth(cookies: string | undefined, res: VercelRespons
     }
   }
   // undefined if cookies or session in cookie are not found
-  return accountId;
+  return { accountId, googleUserId};
 }
 
 export async function loginWithGoogle(code: string, res: VercelResponse): Promise<UserInfoResponse> {

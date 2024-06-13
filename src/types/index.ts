@@ -33,15 +33,18 @@ export interface Account {
 }
 
 export interface User {
-  id: string,
+  userId: string,
+  isMultiAccount: string,
   firstName?: string,
   lastName?: string,
   displayName?: string,
   profileImage?: string,
-  settings: {
-    lang: 'en' | 'hu',
-    seasonalFoodCountry: 'nl' | 'hu'
-  },
+  settings: UserSettings,
+}
+
+export interface UserSettings {
+  lang: string,
+  location: string
 }
 
 export interface ShoppingList {

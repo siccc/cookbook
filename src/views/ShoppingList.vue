@@ -122,7 +122,7 @@ function saveChanges() {
   <main class="px-6 md:px-9 max-w-screen-sm mx-auto mt-14 mb-20">
     <div class="sticky top-14 bg-white z-20 pt-6">
       <div class="flex items-center justify-between">
-        <h1 class="text-2xl text-center md:text-left my-1">
+        <h1 class="text-2xl my-1">
           Shopping list
         </h1>
         <Button

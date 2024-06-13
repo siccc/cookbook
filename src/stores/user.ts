@@ -1,5 +1,5 @@
-import { useQuery, useMutation } from "vue-query";
-import type { Account } from '@/types';
+import { useQuery, useMutation, useQueryClient } from "vue-query";
+import type { UserSettings, User } from '@/types';
 import fetchFromApi from "@/utils/fetchFromApi";
 import type { CallbackTypes } from "vue3-google-login";
 
@@ -7,7 +7,11 @@ import type { CallbackTypes } from "vue3-google-login";
 // GET USER
 // -----------------------------------
 
-const userFetcher = async (userId: string | null): Promise<Account|null> => {
+type UserResult = Omit<User, 'settings'> & {
+  settings: string
+}
+
+const userFetcher = async (userId: string | null): Promise<User|null> => {
   if (!userId) {
     return Promise.resolve(null);
   }
@@ -23,7 +27,8 @@ const userFetcher = async (userId: string | null): Promise<Account|null> => {
   } else if (!response.ok) {
     throw new Error('An error occurred while getting user.');
   }
-  return response.json();
+  const user: UserResult = await response.json();
+  return deserializeUser(user);
 }
 
 export function getUser() {
@@ -45,13 +50,21 @@ type UserCreaterOptions = {
   googleCode?: CallbackTypes.CodePopupResponse
 }
 
-const userCreater = async (option: UserCreaterOptions): Promise<Account> => {
+const userCreater = async (option: UserCreaterOptions): Promise<User|null> => {
   const { type, recaptchaToken, googleCode } = option;
   let body;
   if (type === 'google' && googleCode) {
-    body = { googleCode: googleCode.code };
+    body = {
+      googleCode: googleCode.code,
+      settings: getDefaultUserSettings()
+    };
   } else if (type === 'demo' && recaptchaToken) {
-    body = { recaptchaToken, isDemoUser: true, userId: localStorage.getItem('userId') || '' };
+    body = {
+      recaptchaToken,
+      isDemoUser: true,
+      userId: localStorage.getItem('userId') || '',
+      settings: getDefaultUserSettings()
+    };
     localStorage.setItem('isDemoUser', 'true');
   }
   const response = await fetch(`/api/user`, {
@@ -66,44 +79,55 @@ const userCreater = async (option: UserCreaterOptions): Promise<Account> => {
   } else if (!response.ok) {
     throw new Error('An error occurred while creating user.');
   }
-  return response.json();
+  const user: UserResult = await response.json();
+  return deserializeUser(user);
 }
 
 export function useCreateUserMutation() {
   return useMutation(userCreater, {
     onSuccess: (user) => {
-      localStorage.setItem('userId', user.id);
+      if (user) {
+        localStorage.setItem('userId', user.userId);
+      }
     }
   });
 }
 
 // -----------------------------------
-// GET USER SETTINGS
+// UPDATE USER
 // -----------------------------------
 
-// const shoppingListFetcher = async (): Promise<UserSettings|null> => {
-//   return fetchFromApi<UserSettings|null>({
-//       url: `/api/shopping-list`,
-//       method: 'GET'
-//     },
-//     'An error occurred while getting the shopping list.'
-//   );
-// }
+const userUpdater = async (updatedUser: User): Promise<User> => {
+  return fetchFromApi<User>({
+      url: `/api/user/${updatedUser.userId}`,
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(JSON.stringify(updatedUser.settings)) // serialize user settings
+    },
+    'An error occurred while updating the user. Try again later.'
+  );
+}
 
-// export function getShoppingList() {
-//   const { isLoading, isError, data, error } = useQuery(
-//     ['shopping-list'],
-//     () => shoppingListFetcher()
-//   );
-//   return { isLoading, isError, data, error };
-// }
-
-// -----------------------------------
-// UPDATE USER SETTINGS
-// -----------------------------------
-
-
-
+export function useUpdateUserMutation() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    userUpdater, {
+      onMutate: async (user: User) => {
+        await queryClient.cancelQueries(['user', user.userId]);
+        const previousUserData = queryClient.getQueryData<User>(['user', user.userId]);
+        queryClient.setQueryData(['user', user.userId], user);
+        return { previousUserData };
+      },
+      onError: (err, variables, context) => {
+        if (context?.previousUserData) {
+          queryClient.setQueryData(['user', variables.userId], context.previousUserData);
+        }
+      }
+    }
+  );
+}
 
 // -----------------------------------
 // LOGOUT USER
@@ -119,4 +143,24 @@ export async function userLogout(): Promise<void> {
 
 export function isDemoUser(): boolean {
   return localStorage.getItem('isDemoUser') === 'true';
+}
+
+// -----------------------------------
+// SERIALIZATION
+// -----------------------------------
+
+const deserializeUser = (data: UserResult|null): User|null => {
+  if (!data) {
+    return null;
+  }
+  const parsedSettings: UserSettings = JSON.parse(data.settings);
+  return {
+    ...data,
+    settings: parsedSettings
+  }
+}
+
+// TODO: set better defaults
+const getDefaultUserSettings = () => {
+  return JSON.stringify({ lang: 'en', location: 'hu'})
 }

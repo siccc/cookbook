@@ -63,6 +63,6 @@ model ShoppingList {
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   name            String          @default("Shopping List")
-  items           String          @default("{}")
+  items           String          @default("[]")
   accountId       String
 }

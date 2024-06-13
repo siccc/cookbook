@@ -1,19 +1,30 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 
+type Option = {
+  value: string,
+  label: string
+}
 const props = defineProps<{
   value: string,
   disabled?: boolean,
   label?: string,
-  options: string[],
+  options: string[] | Option[],
 }>();
 
+const selectOptions = computed(() => {
+  return props.options.map((option) => {
+    return typeof option === 'string' ? { value: option, label: option } : option
+  })
+})
+
 const emit = defineEmits<{
-  (e: 'click', event: Event): void
+  (e: 'change', event: Event): void
   (e: 'focusout', event: Event): void
 }>();
 
 function onChange(event: Event) {
-  emit('click', event);
+  emit('change', event);
 }
 function onFocusout(event: Event) {
   emit('focusout', event);
@@ -22,9 +33,9 @@ function onFocusout(event: Event) {
 </script>
 
 <template>
-  <select :value="value" @change="onChange" class="selectInput">
-    <option v-for="option in options" :key="option" :value="option">
-      {{ option }}
+  <select :value="value" @change="onChange" class="selectInput" @blur="onFocusout">
+    <option v-for="option in selectOptions" :key="option.value" :value="option.value">
+      {{ option.label }}
     </option>
   </select>
 </template>

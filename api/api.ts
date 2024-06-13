@@ -18,7 +18,7 @@ const prisma = new PrismaClient({ adapter })
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   const { method, query } = req;
-  const accountId = await verifyAuth(req.headers.cookie, res);
+  const { accountId } = await verifyAuth(req.headers.cookie, res);
   if (!accountId) {
     return res.status(401).send('Unauthorized');
   }

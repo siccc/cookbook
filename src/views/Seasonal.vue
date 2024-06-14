@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getCurrentMonth, getSeasonalFoodsByMonth, getMonths } from '@/stores/seasonalFoods';
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, type ComputedRef } from 'vue';
 import type { Food, FoodList } from '@/types';
 import SelectInput from '@/components/SelectInput.vue';
 import Button from '@/components/Button.vue';
@@ -10,10 +10,15 @@ import winterBg from '@/assets/winter.png';
 import springBg from '@/assets/spring.png';
 import summerBg from '@/assets/summer.png';
 import autumnBg from '@/assets/autumn.png';
+import { useI18n } from 'vue-i18n';
+import { getUser } from '@/stores/user';
 
+// tm is a locale messages getter - used for getting the months localized value here
+const { tm } = useI18n();
 const showModal = ref(false);
 const selectedFood = ref<Food | null>(null);
 const selectedFoodType = ref('');
+const { data } = getUser();
 
 // -----------------------------------
 // INIT
@@ -24,6 +29,8 @@ const selectedMonthIndex = ref(0);
 const { month: initialMonth, monthIndex: initialMonthIndex }= getCurrentMonth();
 selectedMonth.value = initialMonth;
 selectedMonthIndex.value = initialMonthIndex;
+const lang = computed(() => data.value?.settings.lang || 'en');
+const location = computed(() => data.value?.settings.location || 'hu');
 
 const foods = ref<FoodList>({
   vegetables: [],
@@ -44,13 +51,13 @@ const sesonalBgStyle = computed(() => {
   if (selectedMonth.value === '' || !parallaxEl.value) {
     return '';
   }
-  if (['January', 'February', 'December'].includes(selectedMonth.value)) {
+  if (['january', 'february', 'december'].includes(selectedMonth.value)) {
     return { backgroundImage: `url(${ winterBg })` };
-  } else if (['March', 'April', 'May'].includes(selectedMonth.value)) {
+  } else if (['march', 'april', 'may'].includes(selectedMonth.value)) {
     return { backgroundImage: `url(${ springBg })` };
-  } else if (['June', 'July', 'August'].includes(selectedMonth.value)) {
+  } else if (['june', 'july', 'august'].includes(selectedMonth.value)) {
     return { backgroundImage: `url(${ summerBg })` };
-  } else if (['September', 'October', 'November'].includes(selectedMonth.value)) {
+  } else if (['september', 'october', 'november'].includes(selectedMonth.value)) {
     return { backgroundImage: `url(${ autumnBg })` };
   }
 });
@@ -124,20 +131,20 @@ function onClickCancelModal() {
       />
       <h1 class="text-center md:text-left px-6 mb-6 md:ml-3 absolute bottom-6 md:bottom-12">
         <span class="bg-sky-900/50 px-3 rounded-sm font-k2d text-2xl text-white leading-relaxed">
-          Local seasonal foods in {{ selectedMonth }}
+          {{ $t("seasonal.title", { month: $t(`months.${ selectedMonth }`) }) }}
         </span>
       </h1>
     </div>
     <div class="-mt-6 md:-mt-12">
       <div class="bg-white pt-3 rounded-t-3xl">
         <div class="flex justify-between items-center my-6 px-6">
-          <div class="text-xl">Veggies</div>
+          <div class="text-xl">{{ $t("seasonal.vegetables") }}</div>
           <div class="flex items-center">
-            <div class="mr-3">Month:</div>
+            <div class="mr-3">{{ $t("seasonal.month") }}:</div>
             <SelectInput
               class="w-32"
               :value="selectedMonth"
-              :options="months"
+              :options="tm('months')"
               @change="onSelectedMonthChange"
             />
           </div>
@@ -148,7 +155,7 @@ function onClickCancelModal() {
               items-center cursor-pointer"
             @click="onClickShowModal(veggie, 'vegetable')"
             v-for="veggie in foods.vegetables"
-            :aria-label="`Open ${ veggie.name_EN } details`"
+            :aria-label="`Open ${ veggie.id } details`"
           >
             <div class="p-1 rounded-lg mr-1 text-sky-800/50">
               <SvgSprite
@@ -158,19 +165,18 @@ function onClickCancelModal() {
               />
             </div>
             <div class="text-left">
-              <div>{{ veggie.name_EN }}</div>
-              <!-- <div class="text-xs mt-0.5">{{ veggie.name_HU }}</div> -->
+              <div>{{ $t(`food.${ veggie.id }`) }}</div>
             </div>
           </button>
         </div>
-        <div class="text-xl mt-9 mb-6 px-6">Fruits</div>
+        <div class="text-xl mt-9 mb-6 px-6">{{ $t("seasonal.fruits") }}</div>
         <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 px-6">
           <button
             class="p-3 md:p-1 text-yellow-600 bg-amber-200 rounded-lg leading-none flex
               items-center cursor-pointer"
             @click="onClickShowModal(fruit, 'fruit')"
             v-for="fruit in foods.fruits"
-            :aria-label="`Open ${fruit.name_EN} details`"
+            :aria-label="`Open ${fruit.id} details`"
           >
             <div class="p-1 rounded-lg mr-1 text-amber-800/50">
               <SvgSprite
@@ -180,8 +186,7 @@ function onClickCancelModal() {
               />
             </div>
             <div class="text-left">
-              <div>{{ fruit.name_EN }}</div>
-              <!-- <div class="text-xs mt-0.5">{{ fruit.name_HU }}</div> -->
+              <div>{{ $t(`food.${ fruit.id }`) }}</div>
             </div>
           </button>
         </div>
@@ -194,6 +199,8 @@ function onClickCancelModal() {
           :selectedFood="selectedFood!"
           :selectedFoodType="selectedFoodType"
           :currentMonthIndex="selectedMonthIndex"
+          :lang="lang"
+          :location="location"
         />
       </Teleport>
     </div>

@@ -87,8 +87,8 @@ useInfiniteScroll(
 <template>
   <main class="p-3 md:p-9 max-w-screen-xl mx-auto mt-14 mb-20">
     <div v-if="showGreetings">
-      <div>Greetings! 👋</div>
-      <h1 class="mt-3 mb-6 text-3xl">Let's cook something delicious!</h1>
+      <div>{{ $t("greeting") }} 👋</div>
+      <h1 class="mt-3 mb-6 text-3xl">{{ $t("homeHeadline") }}</h1>
     </div>
     <div class="mx-auto sm:flex sm:items-center sm:justify-between">
       <div class="sm:flex-1 flex items-center relative sm:mr-3">
@@ -106,7 +106,7 @@ useInfiniteScroll(
           class="inputWithIcon"
           @input="onSearchTextInput"
           @change="onSearchTextChange"
-          placeholder="Search for recipes..."
+          :placeholder="$t('searchPlaceholder')"
         />
         <IconButton
           class="absolute right-0 mr-1 text-stone-400"
@@ -122,7 +122,7 @@ useInfiniteScroll(
       </div>
       <Button type="primary" to="/edit/new" class="hidden sm:inline-flex w-auto mt-3 sm:mt-0">
         <PlusIcon class="w-6 h-6 mr-1" aria-hidden="true" focusable="false"/>
-        Create recipe
+        {{ $t("createRecipe") }}
       </Button>
     </div>
     <CategoryListWithSelector  class="mt-3 -mx-3 px-3" @selectedCategoryChange="onCategoryClick" />
@@ -136,13 +136,13 @@ useInfiniteScroll(
         justify-center gap-3"
       >
         <Button type="primary" @click="onGenerateRecipesClick">
-          Give me some recipes!
+          {{ $t("generateRecipes") }}
         </Button>
         <Button type="primary" to="/edit/new">
-          Create a recipe
+          {{ $t("createRecipe") }}
         </Button>
       </div>
-      <h2 v-if="hasRecipe" class="mt-6 mb-4 text-2xl">Latest recipes</h2>
+      <h2 v-if="hasRecipe" class="mt-6 mb-4 text-2xl">{{ $t("latestRecipes") }}</h2>
       <div class="flex flex-row flex-wrap -mx-2 md:-mx-3">
         <template v-if="hasRecipe" v-for="(page, index) in data?.pages" :key="index">
           <div
@@ -162,7 +162,9 @@ useInfiniteScroll(
           </div>
         </template>
       </div>
-      <div v-if="hasNextPage" class="text-center text-xl text-yellow-400 mt-6">Loading...</div>
+      <div v-if="hasNextPage" class="text-center text-xl text-yellow-400 mt-6">
+        {{ $t("loading") }}
+      </div>
     </div>
   </main>
 </template>

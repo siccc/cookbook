@@ -4,7 +4,13 @@
   "compilerOptions": {
     "composite": true,
     "lib": [],
-    "types": ["vitest/importMeta", "vitest/globals", "node", "jsdom"],
+    "types": [
+      "vitest/importMeta",
+      "vitest/globals",
+      "node",
+      "jsdom",
+      "@intlify/vite-plugin-vue-i18n/client"
+    ],
     "ignoreDeprecations": "5.0"
   }
 }

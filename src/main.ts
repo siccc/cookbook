@@ -1,8 +1,9 @@
 import { createApp } from 'vue';
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue';
 import { VueQueryPlugin } from "vue-query";
-import vue3GoogleLogin from 'vue3-google-login'
+import vue3GoogleLogin from 'vue3-google-login';
 import type { VueQueryPluginOptions } from "vue-query";
+import { i18n } from './i18n';
 
 import App from './App.vue';
 import router from './router';
@@ -24,6 +25,7 @@ const vueQueryPluginOptions: VueQueryPluginOptions = {
 const app = createApp(App);
 
 app.use(router);
+app.use(i18n);
 app.use(VueQueryPlugin, vueQueryPluginOptions);
 app.use(autoAnimatePlugin);
 app.use(vue3GoogleLogin, {

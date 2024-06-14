@@ -30,7 +30,7 @@
   </div>
   <div class="mt-1 uppercase select-none w-full">
     <span class="inline-block text-stone-400 text-sm">
-      {{ props.recipe.category }}
+      {{ $t(`categories.${props.recipe.category}`) }}
     </span>
     <div class="group-hover:text-sky-300 group-hover:transition duration-300 ease-in-out
       font-k2d md:text-xl cursor-pointer md:leading-tight leading-tight"

@@ -1,21 +1,31 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-type Option = {
+type OptionPair = {
   value: string,
   label: string
 }
+type OptionsAsObject = {[key: string]: string};
+
 const props = defineProps<{
   value: string,
   disabled?: boolean,
   label?: string,
-  options: string[] | Option[],
+  options: string[] | OptionPair[] | OptionsAsObject,
 }>();
 
-const selectOptions = computed(() => {
-  return props.options.map((option) => {
-    return typeof option === 'string' ? { value: option, label: option } : option
-  })
+const normalizedOptions = computed(() => {
+  if(Array.isArray(props.options)) {
+    return props.options.map((option) => {
+      return typeof option === 'string' ? { value: option, label: option } : option
+    })
+  } else {
+    const newOptions = [];
+    for (const [key, value] of Object.entries(props.options)) {
+      newOptions.push({ value: key, label: value });
+    }
+    return newOptions;
+  }
 })
 
 const emit = defineEmits<{
@@ -34,7 +44,7 @@ function onFocusout(event: Event) {
 
 <template>
   <select :value="value" @change="onChange" class="selectInput" @blur="onFocusout">
-    <option v-for="option in selectOptions" :key="option.value" :value="option.value">
+    <option v-for="option in normalizedOptions" :key="option.value" :value="option.value">
       {{ option.label }}
     </option>
   </select>

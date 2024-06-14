@@ -50,7 +50,7 @@ function onCategoryClick(value: string) {
           'text-stone-600 group-hover:text-sky-800': selectedCategory !== category
         }"
       >
-        {{ category }}
+        {{ $t(`categories.${category}`) }}
       </span>
     </button>
   </section>

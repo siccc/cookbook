@@ -3,7 +3,6 @@ import { useCreateUserMutation } from '@/stores/user';
 import { VueRecaptcha } from 'vue-recaptcha';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import type { CallbackTypes } from "vue3-google-login";
 import { googleAuthCodeLogin } from "vue3-google-login";
 import Button from '@/components/Button.vue';
 import DetailedLogo from '@/assets/detailed-logo.svg?component';
@@ -52,7 +51,7 @@ async function onGoogleSignUp() {
     >
       <DetailedLogo class="w-32 h-32 mt-3 shrink-0" />
       <div class="text-2xl text-center my-6 font-k2d">
-        Hey, welcome to Cookbook<sup class="text-sm">DEMO</sup>
+        Hey, welcome to Cookbook
       </div>
       <div class="sm:w-96 text-center mb-9">Bring your treasured family recipes into the digital
         age with my easy-to-use recipe app. Keep all of your favorite dishes in one convenient

@@ -26,7 +26,6 @@ const hideMenu = computed(() => {
 
 type MenuItem = {
   name: string;
-  nameOnMobile?: string;
   icon: any;
   route: string;
   hideOnDesktop?: boolean;
@@ -34,39 +33,38 @@ type MenuItem = {
 
 const menuItems: Record<string, MenuItem> = {
   'home': {
-    name: 'Recipes',
+    name: 'recipes',
     icon: HomeIcon,
     route: '/home'
   },
   'inspiration': {
-    name: 'Inspiration',
+    name: 'inspiration',
     icon: IdeaIcon,
     route: '/inspiration'
   },
   'create': {
-    name: 'Create',
+    name: 'create',
     icon: PlusIcon,
     route: '/edit/new',
     hideOnDesktop: true
   },
   'shoppingList': {
-    name: 'Shopping list',
+    name: 'shoppingList',
     icon: GroceryIcon,
     route: '/shopping-list'
   },
   'seasonalFoods':{
-    name: 'Seasonal', // What's in season
-    nameOnMobile: 'Seasonal',
+    name: 'seasonal', // What's in season
     icon: SeasonIcon,
     route: '/seasonal-foods'
   },
   'logout': {
-    name: 'Logout',
+    name: 'logout',
     icon: SignoutIcon,
     route: '/logout'
   },
   'settings': {
-    name: 'Settings',
+    name: 'settings',
     icon: CogIcon,
     route: '/settings'
   }
@@ -91,7 +89,6 @@ function cancelLogoutWarning() {
 
 async function logout() {
   await userLogout();
-  console.log('redirect to login')
   router.push('/login');
 }
 </script>
@@ -115,7 +112,7 @@ async function logout() {
               class="ml-4 link-underline link-underline-yellow"
             >
               <div class="flex flex-col items-center">
-                {{ menuItems[item].name }}
+                {{ $t(`menu.${menuItems[item].name}`) }}
               </div>
             </RouterLink>
           </template>
@@ -159,21 +156,23 @@ async function logout() {
           class="w-1/5 flex flex-col items-center hover:text-yellow-400"
         >
           <component :is=menuItems[item].icon class="w-6 h-6" aria-hidden="true" focusable="false"/>
-          <div class="text-xs">{{ menuItems[item].nameOnMobile || menuItems[item].name }}</div>
+          <div class="text-xs">
+            {{ $t(`menu.${menuItems[item].name}`) }}
+          </div>
         </RouterLink>
       </div>
     </nav>
     <Teleport to="body">
       <Modal
         v-if="showLogoutWarningModal"
-        confirm-label="Log out"
+        :confirm-label="$t('logout.logoutModal.confirmLabel')"
         confirm-button-type="danger"
         @close="cancelLogoutWarning"
         @cancel="cancelLogoutWarning"
         @confirm="logout()"
-        title="Log out"
+        :title="$t('logout.logoutModal.title')"
       >
-        Are you sure you want to log out? Currently you have a demo account and if you log out, your recipes will be lost.
+        {{ $t("logout.logoutModal.description") }}
       </Modal>
     </Teleport>
   </header>

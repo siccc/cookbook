@@ -123,7 +123,7 @@ function saveChanges() {
     <div class="sticky top-14 bg-white z-20 pt-6">
       <div class="flex items-center justify-between">
         <h1 class="text-2xl my-1">
-          Shopping list
+          {{ $t("menu.shoppingList") }}
         </h1>
         <Button
           class="<xs:hidden"
@@ -131,7 +131,7 @@ function saveChanges() {
           @click="onClickShowModal"
           :disabled="editedItem !== undefined"
         >
-          Delete all checked
+          {{ $t("shoppingList.deleteChecked") }}
         </Button>
       </div>
       <div v-if="!isLoading" class="py-6 flex justify-between items-center <xs:flex-wrap">
@@ -140,7 +140,7 @@ function saveChanges() {
           ref="newItemInputEl"
           class="filledInput"
           :value="newItem"
-          placeholder="Add items (separated by &quot;,&quot; )"
+          :placeholder="$t('shoppingList.addItemsPlaceholder')"
           @keypress.enter="addItems"
         />
         <Button
@@ -149,8 +149,8 @@ function saveChanges() {
           type="primary"
         >
           <PlusIcon class="w-5 h-5" aria-hidden="true" focusable="false"/>
-          Add
-          <span class="<xs:inline ml-1 hidden"> items</span>
+          <span class="<xs:hidden inline">{{ $t("add") }}</span>
+          <span class="<xs:inline hidden">{{ $t("addItems") }}</span>
         </Button>
       </div>
       <Button
@@ -159,7 +159,7 @@ function saveChanges() {
         @click="onClickShowModal"
         :disabled="editedItem !== undefined"
       >
-        Delete all checked
+        {{ $t("shoppingList.deleteChecked") }}
       </Button>
     </div>
     <LoadingState v-if="isLoading" />
@@ -167,14 +167,14 @@ function saveChanges() {
     <Teleport to="body">
       <Modal
         v-if="showModal"
-        confirm-label="Delete"
+        :confirm-label="$t('delete')"
         confirm-button-type="danger"
         @close="onClickCancelModal"
         @cancel="onClickCancelModal"
         @confirm="removeAllChecked()"
-        title="Delete all checked items?"
+        :title="$t('shoppingList.deleteCheckedModal.title')"
       >
-        Are you sure you want to delete permanently all checked items?
+      {{ $t("shoppingList.deleteCheckedModal.msg") }}
       </Modal>
     </Teleport>
     <div class="divide-y" v-auto-animate>
@@ -200,7 +200,7 @@ function saveChanges() {
     </div>
     <EmptyState
       v-if="listLength === 0 && !isLoading"
-      message="Your shopping list is empty. Start adding products you need to buy."
+      :message="$t('shoppingList.emtpyStateMsg')"
       type="default"
     />
   </main>

@@ -42,9 +42,12 @@ export interface User {
   settings: UserSettings,
 }
 
+export type Language = 'en' | 'hu';
+export type Location = 'hu' | 'nl';
+
 export interface UserSettings {
-  lang: string,
-  location: string
+  lang: Language,
+  location: Location
 }
 
 export interface ShoppingList {
@@ -63,7 +66,7 @@ export interface FoodList {
 }
 
 export interface Food {
-  name_EN: string,
+  id: string,
   name_HU: string,
   inSeason_HU: number[],
   inSeason_NL: number[],

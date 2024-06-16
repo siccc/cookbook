@@ -9,7 +9,6 @@
       "vitest/globals",
       "node",
       "jsdom",
-      "@intlify/vite-plugin-vue-i18n/client"
     ],
     "ignoreDeprecations": "5.0"
   }

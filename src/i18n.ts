@@ -1,14 +1,10 @@
 import { createI18n } from 'vue-i18n';
-import messages from '@intlify/vite-plugin-vue-i18n/messages';
 import type { Language } from './types';
 
 export const i18n = createI18n({
   legacy: false,
   globalInjection: true,
   useScope: 'global',
-  locale: 'en', // set default locale
-  fallbackLocale: 'en',
-  messages
 })
 
 export async function setLocale (locale: Language) {
@@ -25,9 +21,9 @@ export async function setLocale (locale: Language) {
 }
 
 async function loadLocale(locale: Language) {
-  const res = await fetch(`./lang/${locale}.json`)
+  const res = await fetch(`src/lang/${locale}.json`)
   if (!res.ok) {
-    throw new Error("Something went wrong during changing the language.");
+    throw new Error('Something went wrong during loading locale.');
   }
   return res.json();
 }

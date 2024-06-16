@@ -12,12 +12,12 @@ const { isError, error, data, isLoading } = getUser();
 const errorMessage = ref('');
 
 watch(
-  data, (data) => {
-    if (data) {
-      setLocale(data.settings.lang);
+  data, (newData, oldData) => {
+    if (newData !== oldData && newData) {
+      setLocale(newData.settings.lang);
     }
   },
-  { immediate:true }
+  { once: true }
 )
 const showMenu = computed(() => {
   return router.currentRoute.value.path !== '/login';

@@ -22,16 +22,18 @@ const vueQueryPluginOptions: VueQueryPluginOptions = {
   },
 };
 
+const vue3GoogleLoginOptions = {
+  clientId: '279710550614-icb0g0ddi3lo5rpsavltoffc83o45t4f.apps.googleusercontent.com',
+  scope: 'email profile',
+};
+
 const app = createApp(App);
 
 app.use(router);
 app.use(i18n);
 app.use(VueQueryPlugin, vueQueryPluginOptions);
 app.use(autoAnimatePlugin);
-app.use(vue3GoogleLogin, {
-  clientId: '279710550614-icb0g0ddi3lo5rpsavltoffc83o45t4f.apps.googleusercontent.com',
-  scope: 'email profile',
-})
+app.use(vue3GoogleLogin, vue3GoogleLoginOptions);
 
 app.provide('app', app);
 

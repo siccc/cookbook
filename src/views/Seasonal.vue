@@ -145,6 +145,7 @@ function onClickCancelModal() {
               class="w-32"
               :value="selectedMonth"
               :options="tm('months')"
+              i18n-options
               @change="onSelectedMonthChange"
             />
           </div>

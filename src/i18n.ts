@@ -5,6 +5,8 @@ export const i18n = createI18n({
   legacy: false,
   globalInjection: true,
   useScope: 'global',
+  missingWarn: false,
+  fallbackWarn: false
 })
 
 export async function setLocale (locale: Language) {
@@ -21,7 +23,7 @@ export async function setLocale (locale: Language) {
 }
 
 async function loadLocale(locale: Language) {
-  const res = await fetch(`src/lang/${locale}.json`)
+  const res = await fetch(`/src/lang/${locale}.json`)
   if (!res.ok) {
     throw new Error('Something went wrong during loading locale.');
   }

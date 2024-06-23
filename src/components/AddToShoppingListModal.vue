@@ -106,7 +106,7 @@ async function showSuccessMessage() {
       confirm-button-type="primary"
       @cancel="onCancel"
       @confirm="onConfirm"
-      title="Add to shopping list"
+      :title="$t('addToShoppingList')"
       :is-scrollable="true"
     > 
       <div class="text-left divide-y" v-show="!showSaveSuccessMessage">
@@ -127,7 +127,7 @@ async function showSuccessMessage() {
         <div class="bg-sky-200 p-1.5 rounded-lg">
           <CheckIcon class="w-6 h-6 text-white" />
         </div>
-        Items added successfully to shopping list.
+        {{ $t("notifications.itemAddedToShoppingList") }}
       </div>
       <template v-slot:footer>
         <div class="flex justify-between items-center gap-3 px-6 mt-6">
@@ -136,7 +136,7 @@ async function showSuccessMessage() {
             @click="onCancel"
             v-show="!showSaveSuccessMessage"
           >
-            Cancel
+            {{ $t("cancel") }}
           </Button>
           <Button
             v-show="!showSaveSuccessMessage"
@@ -149,8 +149,8 @@ async function showSuccessMessage() {
               v-if="updateShoppingListMutation.isLoading.value"
               class="w-6 h-6 animate-spin mr-2"
             />
-            <span v-if="updateShoppingListMutation.isLoading.value">Saving...</span>
-            <span v-else class="uppercase">Add items</span>
+            <span v-if="updateShoppingListMutation.isLoading.value">{{ $t("saving") }}</span>
+            <span v-else class="uppercase">{{ $t("addItems") }}</span>
           </Button>
         </div>
       </template>

@@ -32,6 +32,8 @@
   "saveChanges": "Save changes",
   "delete": "Delete",
   "cancel": "Cancel",
+  "edit": "Edit",
+  "back": "Back",
   "homeHeadline": "Let's cook something delicious!",
   "shoppingList": {
     "addItemsPlaceholder": "Add items (separated by \",\")",
@@ -41,6 +43,32 @@
       "title": "Delete all checked items?",
       "msg": "Are you sure you want to delete permanently all checked items?"
     }
+  },
+  "addToShoppingList": "Add to shopping list",
+  "recipeDetails": {
+    "recipeName": "Your recipe's name",
+    "tags": "Tags",
+    "serving": "Serving",
+    "prepTime": "Prep time",
+    "cookTime": "Cook time",
+    "totalTime": "Total time",
+    "dishType": "Dish type",
+    "ingredients": "Ingredients",
+    "steps": "Steps",
+    "notes": "Notes",
+    "min": "min",
+    "madeIt": "I made it!",
+    "addToShoppingList": "Add to shopping list",
+    "notesPlaceholder": "Add your notes",
+    "stepsPlaceholder": "1. first step\n2. second step\n3. ...",
+    "ingredientsPlaceholder": "- ingredient 1\n- ingredient 2\n- ...",
+    "titlePlaceholder": "My favorite bolognese sauce",
+    "tagsPlaceholder": "italian, christmas",
+    "servingsPlaceholder": "4 servings"
+  },
+  "inspiration": {
+    "title": "Which category you want to see ideas from?",
+    "3more": "Give me another 3"
   },
   "seasonal": {
     "title": "Local seasonal foods in { month }",
@@ -71,6 +99,18 @@
     "accountId": "Account ID",
     "language": "Language",
     "location": "Location"
+  },
+  "imageUpload": {
+    "upload": "Upload",
+    "uploadSuffix": "a photo of your dish",
+    "change": "Change",
+    "photo": "photo",
+    "changePhoto": "Change photo",
+    "deletePhoto": "Delete photo"
+  },
+  "errors": {
+    "appOffline": "Looks like you're offline. Don't worry, you can still access recipes when you're back online. Please check your internet connection and try again.",
+    "recipeNotFound": "Nem találtam ilyen receptet."
   },
   "login": {
     "title": "Hey, welcome to Cookbook",

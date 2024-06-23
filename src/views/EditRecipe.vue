@@ -216,7 +216,7 @@ onMounted(() => {
               @click="onSaveClick()"
             >
               <SpinnerIcon v-if="saveInProgress" class="w-6 h-6 animate-spin mr-1"/>
-              Save changes
+              {{ $t('saveChanges') }}
             </Button>
             <Button
               v-if="props.id !== 'new'"
@@ -225,7 +225,7 @@ onMounted(() => {
               :disabled="saveInProgress"
               @click="onCancelClick()"
             >
-              Cancel
+              {{ $t('cancel') }}
             </Button>
           </div>
         </div>
@@ -236,11 +236,8 @@ onMounted(() => {
           class="flex items-center p-3 pt-6"
           :class="{ 'justify-between': props.id === 'new', 'justify-end': props.id !== 'new' }"
         >
-          <Button
-            v-if="props.id === 'new'"
-            to="/"
-          >
-            Back
+          <Button v-if="props.id === 'new'" to="/">
+            {{ $t('back') }}
           </Button>
           <div class="flex items-center">
             <Button
@@ -249,7 +246,7 @@ onMounted(() => {
               @click="onSaveClick()"
             >
               <SpinnerIcon v-if="saveInProgress" class="w-6 h-6 animate-spin mr-1"/>
-              Save changes
+              {{ $t('saveChanges') }}
             </Button>
             <Button
               v-if="props.id !== 'new'"
@@ -257,7 +254,7 @@ onMounted(() => {
               @click="onCancelClick()"
               :disabled="saveInProgress"
             >
-              Cancel
+              {{ $t('cancel') }}
             </Button>
           </div>
         </div>
@@ -273,14 +270,14 @@ onMounted(() => {
         <div class="md:col-span-2 pt-6 md:pt-3 md:mt-0 p-3 rounded-t-3xl md:rounded-none -mt-10
           bg-white drop-shadow-[0_-1px_3px_rgba(28,23,25,0.1)] md:drop-shadow-none">
           <div>
-            <label for="recipeName" class="uppercase">Your recipe's name*</label>
+            <label for="recipeName" class="uppercase">{{ $t('recipeDetails.recipeName') }}*</label>
             <input
               type="text"
               name="recipeName"
               id="recipeName"
               aria-required="true"
               v-model="recipe.title"
-              placeholder="My favorite bolognese sauce"
+              :placeholder="$t('recipeDetails.titlePlaceholder')"
               @change="validate('title', recipe!.title)"
             />
           </div>
@@ -289,31 +286,31 @@ onMounted(() => {
           </ValidationMessage>
           <!-- TAGS -->
           <div class="mt-3">
-            <label class="uppercase" for="tags">Tags</label>
+            <label class="uppercase" for="tags">{{ $t('recipeDetails.tags') }}</label>
             <input
               type="text"
               name="tags"
               id="tags"
               v-model="tags"
-              placeholder="italian, comfort food"
+              :placeholder="$t('recipeDetails.tagsPlaceholder')"
             />
           </div>
           <!-- TIME & SERVINGS -->
           <div class="mt-3 flex items-center gap-3">
             <div>
-              <label for="servings" class="uppercase">Serving*</label>
+              <label for="servings" class="uppercase">{{ $t('recipeDetails.serving') }}*</label>
               <input
                 type="text"
                 name="servings"
                 id="servings"
                 aria-required="true"
                 v-model="recipe.servings"
-                placeholder="4 servings"
+                :placeholder="$t('recipeDetails.servingsPlaceholder')"
                 @change="validate('servings', recipe!.servings)"
               />
             </div>
             <div>
-              <label for="prepTime" class="uppercase">Prep time</label>
+              <label for="prepTime" class="uppercase">{{ $t('recipeDetails.prepTime') }}</label>
               <input
                 type="number"
                 name="prepTime"
@@ -323,7 +320,7 @@ onMounted(() => {
               />
             </div>
             <div>
-              <label for="cookTime" class="uppercase">Cook time</label>
+              <label for="cookTime" class="uppercase">{{ $t('recipeDetails.cookTime') }}</label>
               <input
                 type="number"
                 name="cookTime"
@@ -337,7 +334,7 @@ onMounted(() => {
             {{ inputValidations.servings.message }}
           </ValidationMessage>
           <div class="mt-6">
-            <span class="uppercase">Dish type*</span>
+            <span class="uppercase">{{ $t('recipeDetails.dishType') }}*</span>
             <section
               class="flex items-center flex-wrap gap-3"
               aria-label="select a main category for the recipe"
@@ -363,15 +360,14 @@ onMounted(() => {
         <!-- INGREDIENTS -->
         <div class="md:my-0 w-full p-3">
           <div class="flex">
-            <label for="ingredients" class="text-xl uppercase font-k2d mb-1">Ingredients<sup>*</sup></label>
+            <label for="ingredients" class="text-xl uppercase font-k2d mb-1">
+              {{ $t('recipeDetails.ingredients') }}<sup>*</sup>
+            </label>
           </div>
           <div class="h-48 md:h-64">
             <MarkdownEditor
-              
               :content="recipe.ingredients"
-              placeholder="- ingredient 1 
-- ingredient 2
-- ..."
+              :placeholder="$t('recipeDetails.ingredientsPlaceholder')"
               @change="(event) => { onInputChange('ingredients', event); validate('ingredients', event) }"
             />
           </div>
@@ -382,14 +378,14 @@ onMounted(() => {
         <!-- STEPS & NOTES -->
         <div class="md:col-span-2 md:my-0 w-full p-3">
           <div class="flex">
-            <label for="steps" class="text-xl uppercase font-k2d mb-1">Steps<sup>*</sup></label>
+            <label for="steps" class="text-xl uppercase font-k2d mb-1">
+              {{ $t('recipeDetails.steps') }}<sup>*</sup>
+            </label>
           </div>
           <div class="h-48 md:h-64">
             <MarkdownEditor
               :content="recipe.steps"
-              placeholder="1. first step 
-2. second step
-3. ..."
+              :placeholder="$t('recipeDetails.stepsPlaceholder')"
               @change="(event) => { onInputChange('steps', event); validate('steps', event) }"
             />
           </div>
@@ -398,11 +394,13 @@ onMounted(() => {
             {{ inputValidations.steps.message }}
           </ValidationMessage>
           <div class="mt-3">
-            <label for="notes" class="text-xl uppercase font-k2d mb-1">Notes</label>
+            <label for="notes" class="text-xl uppercase font-k2d mb-1 inline-block">
+              {{ $t('recipeDetails.notes') }}
+            </label>
             <div class="h-auto">
               <MarkdownEditor
                 :content="recipe.notes"
-                placeholder="Add your notes"
+                :placeholder="$t('recipeDetails.notesPlaceholder')"
                 @change="(event) => onInputChange('notes', event)"
               />
             </div>

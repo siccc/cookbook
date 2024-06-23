@@ -107,9 +107,9 @@ function validateFileExtension(type:string) {
         @keydown.space="clickFileInput"
       >
         <span class="text-yellow-400 font-semibold group-hover:text-yellow-300">
-          Upload
+          {{ $t("imageUpload.upload") }}
         </span>
-         a photo of your dish
+        {{ $t("imageUpload.uploadSuffix") }}
       </label>
     </div>
     <!-- IMAGE PREVIEW -->
@@ -137,11 +137,13 @@ function validateFileExtension(type:string) {
           @keydown.enter="clickFileInput"
           @keydown.space="clickFileInput"
         >
-          <span class="text-yellow-400 font-semibold group-hover:text-yellow-300">Change</span>
-           photo
+          <span class="text-yellow-400 font-semibold group-hover:text-yellow-300">
+            {{ $t("imageUpload.change") }}
+          </span>
+          {{ $t("imageUpload.photo") }}
         </label>
-        <Button class="p-2 text-red-400 font-semibold hover:text-red-300" @click="deleteImage">
-          Delete
+        <Button class="p-2" type="danger" @click="deleteImage">
+          {{ $t("delete") }}
         </Button>
       </div>
       <div class="flex justify-between items-center md:hidden -mt-24 mb-14 px-3">
@@ -151,11 +153,11 @@ function validateFileExtension(type:string) {
           hover:text-white"
         >
           <ImageUploadIcon class="w-6 h-6" aria-hidden focusable="false"/>
-          <span>Change photo</span>
+          <span>{{ $t("imageUpload.changePhoto") }}</span>
         </label>
         <Button type="white" @click="deleteImage">
           <DeleteIcon class="w-6 h-6 mr-1" aria-hidden focusable="false"/>
-          Delete photo
+          {{ $t("imageUpload.deletePhoto") }}
         </Button>
       </div>
     </div>

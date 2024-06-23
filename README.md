@@ -17,21 +17,21 @@ For a live demo of the project have a look at [here](https://cookbook-app-siccc.
 
 This project was built using the following technologies:
 
-Vite + Vue 3, Typescript, Tailwind, VueQuery, Vercel, Prisma, Planetscale
+Vite + Vue 3, Typescript, Tailwind, VueQuery, Vercel, Prisma, Turso
 
 ## :soon: Future features
 
 Here are some features I am planning to add in the near future
 
 - [x] Email registration: For demo purposes, registration is not needed currently. However, to enable synchronization between devices in the future, I plan to introduce email registration.
+- [x] Screen lock prevention: It can be frustrating when mobile device screen turns off while cooking, so I want to introduce a feature that prevents that.
+- [ ] Hungarian language support (in progress)
 - [ ] Tag filtering: Although search by categories is already functioning, adding the ability to filter recipes based on tags would ease finding recipes.
 - [ ] Search recipes by vegetables/fruits: I'd like to implement a search feature that enables users to find recipes based on seasonal food suggestions.
-- [ ] Shopping list consolidation: To make grocery shopping easier, when adding ingredients from recipes, I intend to consolidate duplicate ingredients and sum the amounts.
-- [x] Screen lock prevention: It can be frustrating when mobile device screen turns off while cooking, so I want to introduce a feature that prevents that.
+- [ ] Shopping list consolidation: To make grocery shopping easier, when adding ingredients from recipes, I intend to merge ingredient duplications and sum their amounts.
 - [ ] Toast messages: I want to add a feature that displays a toast message whenever an action is successful or an error accured.
 - [ ] Adding friends + recipe sharing: I plan to expand the app for my friends and family. I know we get to the point very quicky when we want to share our recipes.
 - [ ] Advanced search: I plan to introduce an advanced search feature that uses Algolia to improve the currently limited free text search.
-- [ ] Hungarian language support
 
 
 ## :scroll: License

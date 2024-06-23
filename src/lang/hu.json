@@ -1,6 +1,6 @@
 {
   "searchPlaceholder": "Keress a receptek között...",
-  "latestRecipes": "Legfrisseb receptek",
+  "latestRecipes": "Legfrissebb receptek",
   "menu": {
     "recipes": "Receptek",
     "shoppingList": "Bevásárló lista",
@@ -32,15 +32,43 @@
   "saveChanges": "Mentés",
   "delete": "Törlés",
   "cancel": "Mégse",
+  "edit": "Szerkesztés",
+  "back": "Vissza",
   "homeHeadline": "Főzzünk valami finomat!",
   "shoppingList": {
     "addItemsPlaceholder": "Adj hozzá elemeket (vesszővel elválasztva \",\")",
-    "emtpyStateMsg": "Üres a bevásárló listád. Vegyél fel mindent, amire csak szükséged lehet.",
+    "emtpyStateMsg": "Egyelőre még üres a bevásárló listád.",
     "deleteChecked": "Összes kijelölt törlése",
     "deleteCheckedModal": {
       "title": "Összes kijelölt elem törlése",
       "msg": "Véglegesen törölni szeretnéd a kijelölt elemeket?"
     }
+  },
+  "addToShoppingList": "Hozzáadás a bevásárló listához",
+  "recipeDetails": {
+    "recipeName": "Recepted neve",
+    "tags": "Címkék",
+    "serving": "Adag",
+    "prepTime": "Előkészítés",
+    "cookTime": "Főzési idő",
+    "totalTime": "Összesen",
+    "dishType": "Kategória",
+    "ingredients": "Hozzávalók",
+    "steps": "Elkészítés",
+    "notes": "Megjegyzések",
+    "min": "perc",
+    "madeIt": "Elkészítettem!",
+    "addToShoppingList": "Bevásárlólistához adom",
+    "notesPlaceholder": "Itt adhatsz hozzá megjegyzést",
+    "stepsPlaceholder": "1. első lépés\n2. második lépés\n3. ...",
+    "ingredientsPlaceholder": "- hozzávaló 1\n- hozzávaló 2\n- ...",
+    "titlePlaceholder": "A kedvenc bolognai szószom",
+    "tagsPlaceholder": "olasz, karácsony",
+    "servingsPlaceholder": "4 adag"
+  },
+  "inspiration": {
+    "title": "Melyik kategóriából szeretnél inspirációt?",
+    "3more": "Kérek 3 másikat"
   },
   "seasonal": {
     "title": "{ month }i szezonális zöldségek, gyümölcsök",
@@ -72,7 +100,16 @@
     "language": "Nyelv",
     "location": "Hely"
   },
+  "imageUpload": {
+    "upload": "Feltöltök",
+    "uploadSuffix": "egy képet a recepthez",
+    "change": "Megváltoztatom",
+    "photo": "a képet",
+    "changePhoto": "Kép megváltoztatása",
+    "deletePhoto": "Kép törlése"
+  },
   "errors": {
+    "appOffline": "Úgy tűnik offline vagy. De ne aggódj, a receptjeid továbbra is eléred, amint online leszel. Ellenőrizd az internet hozzáférésed és próbáld újra.",
     "recipeNotFound": "Nem találtam ilyen receptet."
   },
   "notifications": {

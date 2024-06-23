@@ -6,8 +6,10 @@ import { useRouter } from 'vue-router';
 import { computed, ref, watch } from 'vue';
 import ErrorState from '@/components/ErrorState.vue';
 import { setLocale } from './i18n';
+import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
+const { t } = useI18n();
 const { isError, error, data, isLoading } = getUser();
 const errorMessage = ref('');
 
@@ -28,9 +30,7 @@ watch(error, (newValue) => {
     if (newValue.message.includes('401')) {
       location.href = '/login';
     } else if (newValue.message.includes('503')) {
-      errorMessage.value = `Looks like you're offline.
-      Don't worry, you can still access recipes when you're back online.
-      Please check your internet connection and try again.`;
+      errorMessage.value = t('errors.appOffline');
     } else {
       errorMessage.value = newValue.message;
     }

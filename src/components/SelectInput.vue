@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 type OptionPair = {
   value: string,
@@ -9,10 +10,12 @@ type OptionsAsObject = {[key: string]: string};
 
 const props = defineProps<{
   value: string,
+  options: string[] | OptionPair[] | OptionsAsObject,
   disabled?: boolean,
   label?: string,
-  options: string[] | OptionPair[] | OptionsAsObject,
+  i18nOptions?: boolean
 }>();
+const { rt } = useI18n();
 
 const normalizedOptions = computed(() => {
   if(Array.isArray(props.options)) {
@@ -22,7 +25,7 @@ const normalizedOptions = computed(() => {
   } else {
     const newOptions = [];
     for (const [key, value] of Object.entries(props.options)) {
-      newOptions.push({ value: key, label: value });
+      newOptions.push({ value: key, label: props.i18nOptions ? rt(value) : value });
     }
     return newOptions;
   }

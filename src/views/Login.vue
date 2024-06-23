@@ -9,6 +9,7 @@ import DetailedLogo from '@/assets/detailed-logo.svg?component';
 import GoogleIcon from '@/assets/icons/google-logo.svg?component';
 import UserIcon from '@/assets/icons/user-circle.svg?component';
 import SpinnerIcon from '@/assets/icons/spinner.svg?component';
+import { setLocale } from '@/i18n';
 
 const router = useRouter();
 const recaptcha = ref(null);
@@ -18,7 +19,10 @@ const createUserMutation = useCreateUserMutation();
 async function onCaptchaVerified (recaptchaToken: string) {
   if (recaptcha.value) {
     (recaptcha.value as VueRecaptcha).reset();
-    await createUserMutation.mutateAsync({type: 'demo', recaptchaToken});
+    const user = await createUserMutation.mutateAsync({type: 'demo', recaptchaToken});
+    if (user) {
+      setLocale(user.settings.lang);
+    }
     router.push('/');
   }
 }
@@ -37,7 +41,10 @@ function onStartDemoClick() {
 
 async function onGoogleSignUp() {
   const googleCode = await googleAuthCodeLogin();
-  await createUserMutation.mutateAsync({type: 'google', googleCode});
+  const user = await createUserMutation.mutateAsync({type: 'google', googleCode});
+  if (user) {
+    setLocale(user.settings.lang);
+  }
   router.push('/');
 }
 

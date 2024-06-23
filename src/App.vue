@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
-import Menu from '@/components/Menu.vue';
-import { getUser } from './stores/user';
-import { useRouter } from 'vue-router';
 import { computed, ref, watch } from 'vue';
-import ErrorState from '@/components/ErrorState.vue';
-import { setLocale } from './i18n';
+import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { setLocale } from '@/i18n';
+import { getUser } from '@/stores/user';
+import Menu from '@/components/Menu.vue';
+import ErrorState from '@/components/ErrorState.vue';
 
 const router = useRouter();
 const { t } = useI18n();

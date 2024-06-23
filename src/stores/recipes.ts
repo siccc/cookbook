@@ -87,12 +87,15 @@ const recipeFetcher = async (id: string | 'new'): Promise<Recipe> => {
     };
     return Promise.resolve(recipe);
   }
-  return fetchFromApi<Recipe>({
+  const recipe = await fetchFromApi<Recipe>({
       url: `/api/recipes/${id}`,
       method: 'GET'
     },
     'An error occurred while fetching a recipe.'
   );
+  recipe.ingredients = recipe.ingredients.replace(/\\n/g, '\n');
+  recipe.steps = recipe.steps.replace(/\\n/g, '\n');
+  return recipe;
 }
 
 export function getRecipe(id: string | 'new') {

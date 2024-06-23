@@ -142,12 +142,12 @@ onUnmounted(() => {
         <div class="flex justify-between items-center p-3 pt-6">
           <Button @click="onBackClick">
             <BackIcon class="w-6 h-6" />
-            Back
+            {{ $t('back') }}
           </Button>
           <div class="flex items-center">
             <Button class="mr-3" :to="`/edit/${props.id}`">
               <EditIcon class="w-6 h-6 mr-1" />
-              Edit
+              {{ $t('edit') }}
             </Button>
             <Button @click="onDeleteConfirmShow" :disabled="deleteRecipeMutation.isLoading.value">
               <SpinnerIcon
@@ -155,7 +155,7 @@ onUnmounted(() => {
                 class="w-6 h-6 animate-spin mr-2"
               />
               <DeleteIcon v-else class="w-6 h-6 mr-1" />
-              Delete
+              {{ $t('delete') }}
             </Button>
           </div>
         </div>
@@ -198,7 +198,7 @@ onUnmounted(() => {
           <!-- TAGS -->
           <div class="mt-3 flex justify-center md:justify-start flex-wrap">
             <span class="inline-block text-stone-400 uppercase">
-              {{ recipe.category }}
+              {{ $t(`categories.${ recipe.category }`) }}
             </span>
             <div class="flex items-center ml-3" v-for="tag in recipe.tags" :key="tag.id">
               <span class="bg-stone-400 rounded-full w-1 h-1 mr-3 inline-block" />
@@ -209,7 +209,7 @@ onUnmounted(() => {
           <div class="mt-3 grid grid-cols-3 md:grid-cols-4 gap-3 justify-around md:justify-start
             p-3 rounded-lg border-2 border-sky-100">
             <div class="hidden md:block">
-              <div class="uppercase text-stone-300">Servings</div>
+              <div class="uppercase text-stone-300">{{ $t('recipeDetails.serving') }}</div>
               <div class="flex items-center">
                 <ServingsIcon
                   class="w-6 h-6 text-sky-200 mr-1"
@@ -220,36 +220,36 @@ onUnmounted(() => {
               </div>
             </div>
             <div>
-              <div class="uppercase text-stone-300">Prep</div>
+              <div class="uppercase text-stone-300">{{ $t('recipeDetails.prepTime') }}</div>
               <div class="flex items-center">
                 <ClockIcon
                   class="w-6 h-6 text-yellow-300 mr-1"
                   aria-hidden="true"
                   focusable="false"
                 />
-                <span>{{ recipe.prepTime }} min</span>
+                <span>{{ recipe.prepTime }} {{ $t('recipeDetails.min') }}</span>
               </div>
             </div>
             <div>
-              <div class="uppercase text-stone-300">Cook</div>
+              <div class="uppercase text-stone-300">{{ $t('recipeDetails.cookTime') }}</div>
               <div class="flex items-center">
                 <ClockIcon
                   class="w-6 h-6 text-yellow-300 mr-1"
                   aria-hidden="true"
                   focusable="false"
                 />
-                <span>{{ recipe.cookTime }} min</span>
+                <span>{{ recipe.cookTime }} {{ $t('recipeDetails.min') }}</span>
               </div>
             </div>
             <div>
-              <div class="uppercase text-stone-300">Total</div>
+              <div class="uppercase text-stone-300">{{ $t('recipeDetails.totalTime') }}</div>
               <div class="flex items-center">
                 <ClockIcon
                   class="w-6 h-6 text-yellow-300 mr-1"
                   aria-hidden="true"
                   focusable="false"
                 />
-                <span>{{ totalTime }} min</span>
+                <span>{{ totalTime }} {{ $t('recipeDetails.min') }}</span>
               </div>
             </div>
           </div>
@@ -257,7 +257,7 @@ onUnmounted(() => {
         <!-- INGREDIENTS -->
         <div class="md:my-0 w-full p-3">
           <div class="flex items-center justify-between mb-1">
-            <div class="text-xl uppercase font-k2d">Ingredients</div>
+            <div class="text-xl uppercase font-k2d">{{ $t('recipeDetails.ingredients') }}</div>
             <div class="flex md:hidden px-3 py-1.5 rounded-md bg-sky-50">
               <ServingsIcon class="w-6 h-6 text-sky-200 mr-1" />
               <span>{{ recipe.servings }}</span>
@@ -265,7 +265,7 @@ onUnmounted(() => {
           </div>
           <MarkdownRenderer :content="recipe.ingredients" />
           <Button class="w-full mt-4" @click="onAddToShoppingListShow">
-            Add to shopping list
+            {{ $t('recipeDetails.addToShoppingList') }}
           </Button>
         </div>
         <AddToShoppingListModal
@@ -277,10 +277,10 @@ onUnmounted(() => {
         />
         <!-- STEPS & NOTES -->
         <div class="md:col-span-2 md:my-0 p-3 w-full">
-          <div class="text-xl uppercase font-k2d mb-1">Steps</div>
+          <div class="text-xl uppercase font-k2d mb-1">{{ $t('recipeDetails.steps') }}</div>
           <MarkdownRenderer :content="recipe.steps" />
           <div v-if="recipe.notes">
-            <div class="text-xl uppercase font-k2d mb-1 mt-6">Notes</div>
+            <div class="text-xl uppercase font-k2d mb-1 mt-6">{{ $t('recipeDetails.notes') }}</div>
             <MarkdownRenderer :content="recipe.notes" />
           </div>
           <div class="flex justify-center">
@@ -307,7 +307,7 @@ onUnmounted(() => {
                 aria-hidden="true"
                 focusable="false"
               />
-              I made it!
+              {{ $t('recipeDetails.madeIt') }}
               ({{ recipe.cookedCount }})
             </Button>
           </div>

@@ -5,11 +5,22 @@ import { getUser } from './stores/user';
 import { useRouter } from 'vue-router';
 import { computed, ref, watch } from 'vue';
 import ErrorState from '@/components/ErrorState.vue';
+import { setLocale } from './i18n';
+import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
-const { isError, error } = getUser();
+const { t } = useI18n();
+const { isError, error, data, isLoading } = getUser();
 const errorMessage = ref('');
 
+watch(
+  data, (newData, oldData) => {
+    if (newData !== oldData && newData) {
+      setLocale(newData.settings.lang);
+    }
+  },
+  { once: true }
+)
 const showMenu = computed(() => {
   return router.currentRoute.value.path !== '/login';
 });
@@ -19,9 +30,7 @@ watch(error, (newValue) => {
     if (newValue.message.includes('401')) {
       location.href = '/login';
     } else if (newValue.message.includes('503')) {
-      errorMessage.value = `Looks like you're offline.
-      Don't worry, you can still access recipes when you're back online.
-      Please check your internet connection and try again.`;
+      errorMessage.value = t('errors.appOffline');
     } else {
       errorMessage.value = newValue.message;
     }
@@ -31,8 +40,8 @@ watch(error, (newValue) => {
 </script>
 
 <template>
-  <Menu v-if="showMenu" />
-  <RouterView v-if="!isError" />
+  <Menu v-if="showMenu && !isLoading" />
+  <RouterView v-if="!isError && !isLoading" />
   <div v-if="isError && errorMessage" class="p-3 md:p-9 max-w-screen-sm mx-auto mt-14">
     <ErrorState :error="errorMessage" />
   </div>

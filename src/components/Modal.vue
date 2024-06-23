@@ -99,7 +99,7 @@ function onConfirm(event: Event) {
               class="flex-1 uppercase"
               @click="onCancel"
             >
-              {{ props.cancelLabel || 'Cancel' }}
+              {{ props.cancelLabel || $t("cancel") }}
             </Button>
             <Button
               v-if="props.showConfirmButton"

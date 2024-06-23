@@ -7,11 +7,16 @@ import Button from '@/components/Button.vue';
 import SpinnerIcon from '@/assets/icons/spinner.svg?component';
 import CheckIcon from '@/assets/icons/check.svg?component';
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps<{
   selectedFood: Food,
   selectedFoodType: string,
-  currentMonthIndex: number
+  currentMonthIndex: number,
+  location: string,
+  lang: string
 }>();
 
 const emit = defineEmits<{
@@ -62,7 +67,8 @@ async function addItemsToShoppingList() {
       items: [
         ...shoppingList.value.items,
         {
-          name: props.selectedFood.name_EN, checked: false
+          checked: false,
+          name: t(`food.${ props.selectedFood.id }`)
         }
       ]
     };
@@ -91,7 +97,6 @@ async function showSuccessMessage() {
     @close="onCancel"
     @cancel="onCancel"
     :show-title="false"
-    confirm-label="Add to shopping list"
     title="Food details"
   >
     <div v-if="props.selectedFood && !showSaveSuccessMessage" class="flex flex-col items-center">
@@ -102,7 +107,7 @@ async function showSuccessMessage() {
           'text-yellow-500': props.selectedFoodType === 'fruit'
         }"
       >
-        {{ props.selectedFood.name_EN }}
+        {{ $t(`food.${ props.selectedFood.id }`) }}
         <span
           v-if="props.selectedFood.stored_HU && props.selectedFood.stored_HU[currentMonthIndex]"
           class="bg-stone-100 px-1 rounded-sm text-stone-600 text-xs ml-1"
@@ -110,8 +115,7 @@ async function showSuccessMessage() {
           stored
         </span>
       </div>
-      <!-- <div class="text-sm text-stone-400">{{ props.selectedFood.name_HU }}</div> -->
-      <div class="text-sm text-stone-400 mt-6 mb-1 text-left w-full">Months</div>
+      <div class="text-sm text-stone-400 mt-6 mb-1 text-left w-full">{{ $t("seasonal.months") }}</div>
       <div class="text-sm grid grid-cols-12 gap-3">
         <div
           v-for="(value, monthIndex) in props.selectedFood.inSeason_HU"
@@ -146,7 +150,7 @@ async function showSuccessMessage() {
               'bg-amber-400': props.selectedFoodType === 'fruit'
             }"
           />
-          seasonal
+          {{ $t("seasonal.seasonal") }}
         </div>
         <div class="flex items-center justify-center">
           <div
@@ -156,11 +160,11 @@ async function showSuccessMessage() {
               'bg-amber-200': props.selectedFoodType === 'fruit'
             }"
           />
-          out of season but available (stored)
+          {{ $t("seasonal.stored") }}
         </div>
         <div class="flex items-center justify-center">
           <div class="w-3 h-3 rounded-full bg bg-stone-200 mr-1" />
-          out of season
+          {{ $t("seasonal.outOfSeason") }}
         </div>
       </section>
     </div>
@@ -172,7 +176,7 @@ async function showSuccessMessage() {
       <div class="bg-sky-200 p-1.5 rounded-lg">
         <CheckIcon class="w-6 h-6 text-white" />
       </div>
-      Item added successfully to shopping list.
+      {{ $t("notifications.itemAddedToShoppingList") }}
     </div>
     <template v-slot:footer>
       <div class="px-6 mt-6" v-show="!showSaveSuccessMessage">
@@ -184,8 +188,8 @@ async function showSuccessMessage() {
             v-if="updateShoppingListMutation.isLoading.value"
             class="w-6 h-6 animate-spin mr-2"
           />
-          <span v-if="updateShoppingListMutation.isLoading.value">Saving...</span>
-          <span v-else class="uppercase">Add to shopping list</span>
+          <span v-if="updateShoppingListMutation.isLoading.value">{{ $t("saving") }}</span>
+          <span v-else class="uppercase">{{ $t("seasonal.addToShoppingList") }}</span>
         </Button>
       </div>
     </template>

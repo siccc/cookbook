@@ -1,24 +1,21 @@
 {
   "vegetables": [
     {
-      "name_EN": "artichoke",
-      "name_HU": "articsóka",
+      "id": "artichoke",
       "name_NL": "artisjok",
       "inSeason_HU": [0,0,1,1,1,1,1,1,1,0,0,0],
       "inSeason_NL": [0,0,0,0,1,1,1,0,0,0,0,0],
       "imageId": "artichoke"
     },
     {
-      "name_EN": "asparagus",
-      "name_HU": "spárga",
+      "id": "asparagus",
       "name_NL": "asperges",
       "inSeason_HU": [0,0,0,1,1,1,0,0,0,0,0,0],
       "inSeason_NL": [0,0,0,1,1,1,0,0,0,0,0,0],
       "imageId": "asparagus"
     },
     {
-      "name_EN": "beetroot",
-      "name_HU": "cékla",
+      "id": "beetroot",
       "name_NL": "biet",
       "inSeason_HU": [0,0,0,0,0,0,0,0,1,1,1,0],
       "inSeason_NL": [0,0,0,0,0,0,0,0,1,1,1,0],
@@ -27,56 +24,49 @@
       "imageId": "radish"
     },
     {
-      "name_EN": "black radish",
-      "name_HU": "fekete retek",
+      "id": "black radish",
       "name_NL": "zwarte radijs (rammenas)",
       "inSeason_HU": [0,0,0,0,1,1,1,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,0,0,0,1,1,1,1,1],
       "imageId": "radish"
     },
     {
-      "name_EN": "bell pepper",
-      "name_HU": "kaliforniai paprika",
+      "id": "bell pepper",
       "name_NL": "paprika",
       "inSeason_HU": [0,0,0,0,0,1,1,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,0,0,1,1,1,0,0,0],
       "imageId": "pepper"
     },
     {
-      "name_EN": "broady bean",
-      "name_HU": "lóbab",
+      "id": "broady bean",
       "name_NL": "tuinboon",
       "inSeason_HU": [0,0,0,1,1,1,1,1,1,0,0,0],
       "inSeason_NL": [0,0,0,0,0,1,1,0,0,0,0,0],
       "imageId": "bean"
     },
     {
-      "name_EN": "broccoli",
-      "name_HU": "brokkoli",
+      "id": "broccoli",
       "name_NL": "broccoli",
       "inSeason_HU": [0,0,0,0,0,1,1,1,1,1,1,0],
       "inSeason_NL": [0,0,0,0,0,0,0,0,1,1,1,0],
       "imageId": "broccoli"
     },
     {
-      "name_EN": "brussels sprout",
-      "name_HU": "kelbimbó",
+      "id": "brussels sprout",
       "name_NL": "spruitjes",
       "inSeason_HU": [1,1,1,0,0,0,0,0,1,1,1,1],
       "inSeason_NL": [1,0,0,0,0,0,0,0,0,1,1,1],
       "imageId": "brussels-sprout"
     },
     {
-      "name_EN": "butternut squash",
-      "name_HU": "pézsmatök",
+      "id": "butternut squash",
       "name_NL": "flespompoen",
       "inSeason_HU": [0,0,0,0,0,0,0,1,1,1,1,1],
       "inSeason_NL": [0,0,0,0,0,0,0,0,1,1,1,1],
       "imageId": "squash"
     },
     {
-      "name_EN": "cabbage",
-      "name_HU": "káposzta",
+      "id": "cabbage",
       "name_NL": "kool",
       "inSeason_HU": [0,0,0,0,0,0,0,1,1,1,1,1],
       "inSeason_NL": [0,0,0,0,0,0,0,1,1,1,1,1],
@@ -85,8 +75,7 @@
       "imageId": "cabbage"
     },
     {
-      "name_EN": "carrot",
-      "name_HU": "sárgarépa",
+      "id": "carrot",
       "name_NL": "wortel",
       "inSeason_HU": [0,0,0,0,0,0,0,1,1,1,1,0],
       "inSeason_NL": [0,0,0,0,0,0,0,1,1,1,1,0],
@@ -95,16 +84,14 @@
       "imageId": "carrot"
     },
     {
-      "name_EN": "cauliflower",
-      "name_HU": "karfiol",
+      "id": "cauliflower",
       "name_NL": "bloemkool",
       "inSeason_HU": [0,0,0,0,0,0,0,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,0,0,1,1,1,1,1,0],
       "imageId": "cauliflower"
     },
     {
-      "name_EN": "celeriac",
-      "name_HU": "zeller",
+      "id": "celeriac",
       "name_NL": "knolselderij",
       "inSeason_HU": [0,0,0,0,0,0,1,1,1,1,1,0],
       "inSeason_NL": [0,0,0,0,0,0,0,0,1,1,1,0],
@@ -113,31 +100,27 @@
       "imageId": "celeriac"
     },
     {
-      "name_EN": "celery",
-      "name_HU": "szárzeller",
+      "id": "celery",
       "name_NL": "selderij",
       "inSeason_HU": [1,0,0,0,0,0,1,1,1,1,1,1],
       "inSeason_NL": [0,0,0,0,0,1,1,1,1,1,1,0],
       "imageId": "celery"
     },
     {
-      "name_EN": "chanterelle mushroom",
-      "name_HU": "sárga rókagomba",
+      "id": "chanterelle mushroom",
       "name_NL": "cantharellen paddestoel",
       "inSeason_HU": [0,0,0,0,0,1,1,1,1,0,0,0],
       "imageId": "mushroom"
     },
     {
-      "name_EN": "chard",
-      "name_HU": "mángold",
+      "id": "chard",
       "name_NL": "snijbiet",
       "inSeason_HU": [0,0,0,0,1,1,1,1,1,1,1,0],
       "inSeason_NL": [0,0,0,0,0,1,1,1,1,1,1,0],
       "imageId": "rhubarb"
     },
     {
-      "name_EN": "chinese cabbage",
-      "name_HU": "kínai kel",
+      "id": "chinese cabbage",
       "name_NL": "chinese kool",
       "inSeason_HU": [0,0,0,0,0,1,1,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,1,1,1,1,1,1,0,0],
@@ -146,95 +129,83 @@
       "imageId": "chinese-cabbage"
     },
     {
-      "name_EN": "corn",
-      "name_HU": "kukorica",
+      "id": "corn",
       "name_NL": "maïs",
       "inSeason_HU": [0,0,0,0,0,0,1,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,0,0,1,1,1,0,0,0],
       "imageId": "corn"
     },
     {
-      "name_EN": "courgette (zucchini)",
-      "name_HU": "cukkini",
+      "id": "courgette",
       "name_NL": "courgette",
       "inSeason_HU": [0,0,0,0,1,1,1,1,1,0,0,0],
       "inSeason_NL": [0,0,0,0,0,1,1,1,1,0,0,0],
       "imageId": "zucchini"
     },
     {
-      "name_EN": "cucumber",
-      "name_HU": "uborka",
+      "id": "cucumber",
       "name_NL": "komkommer",
       "inSeason_HU": [0,0,0,0,1,1,1,1,1,1,1,0],
       "inSeason_NL": [0,0,0,0,0,1,1,1,1,0,0,0],
       "imageId": "cucumber"
     },
     {
-      "name_EN": "eggplant (aubergine)",
-      "name_HU": "padlizsán",
+      "id": "eggplant",
       "name_NL": "aubergine",
       "inSeason_HU": [0,0,0,0,0,1,1,1,1,0,0,0],
       "inSeason_NL": [0,0,0,0,0,0,0,1,1,0,0,0],
       "imageId": "eggplant"
     },
     {
-      "name_EN": "endive",
-      "name_HU": "endívia saláta",
+      "id": "endive",
       "name_NL": "andijvie",
       "inSeason_HU": [1,1,1,1,0,0,0,0,0,1,1,1],
       "inSeason_NL": [1,1,0,0,0,0,0,0,0,1,1,1],
       "imageId": "salad"
     },
     {
-      "name_EN": "enoki mushroom",
-      "name_HU": "téli fülőke gomba",
+      "id": "enoki mushroom",
       "name_NL": "enoki paddestoel",
       "inSeason_HU": [1,1,1,0,0,0,0,0,0,1,1,1],
       "imageId": "mushroom"
     },
     {
-      "name_EN": "fennel",
-      "name_HU": "édeskömény",
+      "id": "fennel",
       "name_NL": "venkel",
       "inSeason_HU": [0,0,0,0,1,1,1,1,1,1,1,1],
       "inSeason_NL": [0,0,0,0,0,1,1,1,1,1,1,0],
       "imageId": "fennel"
     },
     {
-      "name_EN": "garlic",
-      "name_HU": "fokhagyma",
+      "id": "garlic",
       "name_NL": "knoflook",
       "inSeason_HU": [0,0,0,0,1,1,1,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,0,1,1,1,0,0,0,0],
       "imageId": "garlic"
     },
     {
-      "name_EN": "green bean",
-      "name_HU": "zöldbab",
+      "id": "green bean",
       "name_NL": "groene boon",
       "inSeason_HU": [0,0,0,0,0,1,1,1,1,0,0,0],
       "inSeason_NL": [0,0,0,0,0,1,1,1,1,0,0,0],
       "imageId": "greenbean"
     },
     {
-      "name_EN": "iceberg lettuce",
-      "name_HU": "jégsaláta",
+      "id": "iceberg lettuce",
       "name_NL": "ijsbergsla",
       "inSeason_HU": [0,0,0,0,1,1,1,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,1,1,1,1,1,1,0,0],
       "imageId": "salad"
     },
     {
-      "name_EN": "kale",
-      "name_HU": "fodros kel",
+      "id": "kale",
       "name_NL": "boerenkool",
       "inSeason_HU": [0,0,0,0,0,0,1,1,1,1,1,0],
       "inSeason_NL": [0,0,0,0,0,0,0,1,1,1,1,1],
       "imageId": "salad"
     },
     {
-      "name_EN": "savoy cabbage",
-      "name_HU": "kelkáposzta",
+      "id": "savoy cabbage",
       "name_NL": "savooikool",
       "inSeason_HU": [0,0,0,0,0,0,1,1,1,1,1,0],
       "inSeason_NL": [0,0,0,0,0,1,1,1,1,1,1,0],
@@ -243,46 +214,40 @@
       "imageId": "kale"
     },
     {
-      "name_EN": "kohlrabi",
-      "name_HU": "karalábé",
+      "id": "kohlrabi",
       "name_NL": "koolrabi",
       "inSeason_HU": [0,0,0,0,1,1,1,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,0,0,1,1,1,1,0,0],
       "imageId": "kohlrabi"
     },
     {
-      "name_EN": "lamb's lettuce",
-      "name_HU": "madársaláta",
+      "id": "lambs lettuce",
       "name_NL": "veldsla",
       "inSeason_HU": [1,1,1,1,1,1,1,1,1,0,0,0],
       "imageId": "leaves"
     },
     {
-      "name_EN": "lettuce",
-      "name_HU": "kerti saláta",
+      "id": "lettuce",
       "name_NL": "sla",
       "inSeason_HU": [1,1,1,1,1,1,1,1,1,0,0,0],
       "inSeason_NL": [1,1,0,0,0,0,0,0,0,0,1,1],
       "imageId": "salad"
     },
     {
-      "name_EN": "leek",
-      "name_HU": "póréhagyma",
+      "id": "leek",
       "name_NL": "prei",
       "inSeason_HU": [1,1,1,1,0,0,0,0,1,1,1,1],
       "inSeason_NL": [1,1,1,1,1,1,1,1,1,1,1,1],
       "imageId": "leek"
     },
     {
-      "name_EN": "champignon mushroom",
-      "name_HU": "csiperkegomba",
+      "id": "champignon mushroom",
       "name_NL": "champignon",
       "inSeason_HU": [1,1,1,1,1,1,0,0,1,1,1,1],
       "imageId": "mushroom"
     },
     {
-      "name_EN": "onion",
-      "name_HU": "hagyma",
+      "id": "onion",
       "name_NL": "ui",
       "inSeason_HU": [0,0,0,0,0,1,1,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,0,1,1,1,1,1,0,0],
@@ -291,31 +256,27 @@
       "imageId": "onion"
     },
     {
-      "name_EN": "oyster mushroom",
-      "name_HU": "laskagomba",
+      "id": "oyster mushroom",
       "name_NL": "oesterzwam",
       "inSeason_HU": [1,1,0,0,0,0,0,0,0,1,1,1],
       "imageId": "mushroom"
     },
     {
-      "name_EN": "pak choi",
-      "name_HU": "pak choi",
+      "id": "pak choi",
       "name_NL": "paksoi",
       "inSeason_HU": [0,0,0,1,1,1,1,1,1,1,1,1],
       "inSeason_NL": [1,1,0,0,1,1,1,1,1,1,1,1],
       "imageId": "pakchoi"
     },
     {
-      "name_EN": "parsley root",
-      "name_HU": "petrezselyem gyökér",
+      "id": "parsley root",
       "name_NL": "peterseliewortel",
       "inSeason_HU": [0,0,0,0,0,0,1,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,0,0,0,0,0,1,1,1],
       "imageId": "carrot"
     },
     {
-      "name_EN": "parsnip",
-      "name_HU": "paszternák",
+      "id": "parsnip",
       "name_NL": "pastinaak",
       "inSeason_HU": [1,1,1,1,0,0,0,0,1,1,1,1],
       "inSeason_NL": [0,0,0,0,0,0,0,1,1,1,1,0],
@@ -324,24 +285,21 @@
       "imageId": "carrot"
     },
     {
-      "name_EN": "pattypan squash",
-      "name_HU": "patisszon",
+      "id": "pattypan squash",
       "name_NL": "patisson",
       "inSeason_HU": [0,0,0,0,0,0,1,1,1,0,0,0],
       "inSeason_NL": [0,0,0,0,0,0,1,1,1,0,0,0],
       "imageId": "pattypan"
     },
     {
-      "name_EN": "pea",
-      "name_HU": "borsó",
+      "id": "pea",
       "name_NL": "erwt",
       "inSeason_HU": [0,0,0,0,0,1,1,1,0,0,0,0],
       "inSeason_NL": [0,0,0,0,1,1,0,0,0,0,0,0],
       "imageId": "pea"
     },
     {
-      "name_EN": "potato",
-      "name_HU": "burgonya",
+      "id": "potato",
       "name_NL": "aardappel",
       "inSeason_HU": [0,0,0,0,0,1,1,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,0,1,1,1,1,1,0,0],
@@ -350,8 +308,7 @@
       "imageId": "potato"
     },
     {
-      "name_EN": "pumpkin",
-      "name_HU": "sütőtök",
+      "id": "pumpkin",
       "name_NL": "pompoen",
       "inSeason_HU": [0,0,0,0,0,0,0,0,0,1,1,0],
       "inSeason_NL": [0,0,0,0,0,0,0,0,0,1,1,0],
@@ -360,16 +317,14 @@
       "imageId": "pumpkin"
     },
     {
-      "name_EN": "radish",
-      "name_HU": "retek",
+      "id": "radish",
       "name_NL": "radijs",
       "inSeason_HU": [0,0,1,1,1,1,0,0,0,0,0,0],
       "inSeason_NL": [1,1,1,1,1,1,1,1,1,1,1,1],
       "imageId": "radish"
     },
     {
-      "name_EN": "red cabbage",
-      "name_HU": "lilakáposzta",
+      "id": "red cabbage",
       "name_NL": "rode kool",
       "inSeason_HU": [0,0,0,0,0,1,1,1,1,1,1,1],
       "inSeason_NL": [0,0,0,0,0,0,0,1,1,1,1,1],
@@ -378,72 +333,63 @@
       "imageId": "cabbage"
     },
     {
-      "name_EN": "rhubarb",
-      "name_HU": "rebarbara",
+      "id": "rhubarb",
       "name_NL": "rabarber",
       "inSeason_HU": [0,0,0,0,1,1,0,0,0,0,0,0],
       "inSeason_NL": [0,0,0,1,1,1,0,0,0,0,0,0],
       "imageId": "rhubarb"
     },
     {
-      "name_EN": "rucola",
-      "name_HU": "rukkola",
+      "id": "rucola",
       "name_NL": "rucola",
       "inSeason_HU": [0,0,0,1,1,1,0,0,0,0,0,0],
       "inSeason_NL": [0,0,0,0,1,1,1,1,1,1,0,0],
       "imageId": "rucola"
     },
     {
-      "name_EN": "rutabaga (swede)",
-      "name_HU": "karórépa",
+      "id": "rutabaga",
       "name_NL": "koolraap",
       "inSeason_HU": [1,1,1,1,0,0,0,0,0,1,1,1],
       "inSeason_NL": [1,1,0,0,0,0,0,0,1,1,1,1],
       "imageId": "carrot"
     },
     {
-      "name_EN": "scallion (spring onion)",
-      "name_HU": "újhagyma",
+      "id": "scallion",
       "name_NL": "bosui",
       "inSeason_HU": [0,0,0,0,1,1,1,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,1,1,1,1,1,1,0,0],
       "imageId": "leek"
     },
     {
-      "name_EN": "snow pea",
-      "name_HU": "cukorborsó",
+      "id": "snow pea",
       "name_NL": "sneeuw erwt",
       "inSeason_HU": [0,0,0,0,1,1,0,0,0,0,0,0],
       "inSeason_NL": [0,0,0,0,1,1,0,0,0,0,0,0],
       "imageId": "snowpea"
     },
     {
-      "name_EN": "sorrel",
-      "name_HU": "sóska",
+      "id": "sorrel",
       "name_NL": "zuring",
       "inSeason_HU": [0,0,0,1,1,1,1,1,1,1,1,0],
       "inSeason_NL": [0,0,0,1,1,1,1,1,1,1,0,0],
       "imageId": "leaves"
     },
     {
-      "name_EN": "spinach",
-      "name_HU": "spenót",
+      "id": "spinach",
       "name_NL": "spinazie",
       "inSeason_HU": [0,0,0,1,1,1,0,0,1,1,1,0],
       "inSeason_NL": [0,0,0,1,1,1,1,1,1,1,0,0],
       "imageId": "leaves"
     },
     {
-      "name_EN": "spaghetti squash",
-      "name_HU": "spagetti tök",
+      "id": "spaghetti squash",
       "name_NL": "spaghetti pompoen",
       "inSeason_HU": [1,0,0,0,0,0,0,0,0,1,1,1],
       "inSeason_NL": [0,0,0,0,0,0,0,0,1,1,1,0],
       "imageId": "squash"
     },
     {
-      "name_EN": "sweet potato",
-      "name_HU": "édesburgonya",
+      "id": "sweet potato",
       "name_NL": "zoete aardappel",
       "inSeason_HU": [0,0,0,0,0,0,0,0,1,1,1,1],
       "inSeason_NL": [0,0,0,0,0,0,0,0,1,1,1,1],
@@ -452,40 +398,35 @@
       "imageId": "sweetpotato"
     },
     {
-      "name_EN": "tomato",
-      "name_HU": "paradicsom",
+      "id": "tomato",
       "name_NL": "tomaat",
       "inSeason_HU": [0,0,0,0,1,1,1,1,1,0,0,0],
       "inSeason_NL": [0,0,0,0,0,0,1,1,1,0,0,0],
       "imageId": "tomato"
     },
     {
-      "name_EN": "turnip",
-      "name_HU": "tarlórépa",
+      "id": "turnip",
       "name_NL": "raap",
       "inSeason_HU": [0,0,0,0,0,1,1,1,1,0,0,0],
       "inSeason_NL": [1,1,0,0,0,0,0,0,1,1,1,1],
       "imageId": "radish"
     },
     {
-      "name_EN": "truffle",
-      "name_HU": "szarvasgomba",
+      "id": "truffle",
       "name_NL": "truffel",
       "inSeason_HU": [1,1,1,0,0,0,0,0,1,1,1,1],
       "inSeason_NL": [1,1,1,0,0,0,0,0,0,0,1,1],
       "imageId": "truffle"
     },
     {
-      "name_EN": "watercress",
-      "name_HU": "vízitorma",
+      "id": "watercress",
       "name_NL": "waterkers",
       "inSeason_HU": [0,0,0,0,1,1,1,1,1,0,0,0],
       "inSeason_NL": [0,0,0,1,1,1,1,1,1,0,0,0],
       "imageId": "leaves"
     },
     {
-      "name_EN": "Jerusalem artichoke",
-      "name_HU": "csicsóka",
+      "id": "Jerusalem artichoke",
       "name_NL": "aardpeer",
       "inSeason_HU": [0,0,0,0,0,0,0,0,1,1,1,0],
       "inSeason_NL": [1,1,0,0,0,0,0,0,0,1,1,1],
@@ -494,8 +435,7 @@
   ],
   "fruits": [
     {
-      "name_EN": "apple",
-      "name_HU": "alma",
+      "id": "apple",
       "name_NL": "appel",
       "inSeason_HU": [0,0,0,0,0,0,0,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,0,0,0,1,1,1,0,0],
@@ -504,144 +444,126 @@
       "imageId": "apple"
     },
     {
-      "name_EN": "blackthorn",
-      "name_HU": "kökény",
+      "id": "blackthorn",
       "name_NL": "sleedoorn",
       "inSeason_HU": [1,1,0,0,0,0,0,0,0,0,0,1],
       "inSeason_NL": [0,0,0,1,1,0,0,0,0,0,0,0],
       "imageId": "berry"
     },
     {
-      "name_EN": "medlar",
-      "name_HU": "naspolya",
+      "id": "medlar",
       "name_NL": "mispel",
       "inSeason_HU": [1,1,0,0,0,0,0,0,0,0,1,1],
       "inSeason_NL": [0,0,0,0,0,0,0,0,0,1,1,0],
       "imageId": "medlar"
     },
     {
-      "name_EN": "blackcurrant",
-      "name_HU": "fekete ribizli",
+      "id": "blackcurrant",
       "name_NL": "zwarte bes",
       "inSeason_HU": [0,0,0,0,1,0,0,0,0,0,0,0],
       "inSeason_NL": [0,0,0,0,0,1,1,0,0,0,0,0],
       "imageId": "currant"
     },
     {
-      "name_EN": "cherry",
-      "name_HU": "cseresznye",
+      "id": "cherry",
       "name_NL": "kers",
       "inSeason_HU": [0,0,0,0,1,1,0,0,0,0,0,0],
       "inSeason_NL": [0,0,0,0,0,1,1,0,0,0,0,0],
       "imageId": "cherry"
     },
     {
-      "name_EN": "sour cherry",
-      "name_HU": "meggy",
+      "id": "sour cherry",
       "name_NL": "zure kers",
       "inSeason_HU": [0,0,0,0,1,1,0,0,0,0,0,0],
       "inSeason_NL": [0,0,0,0,0,1,1,0,0,0,0,0],
       "imageId": "cherry"
     },
     {
-      "name_EN": "gooseberry",
-      "name_HU": "piszke",
+      "id": "gooseberry",
       "name_NL": "kruisbes",
       "inSeason_HU": [0,0,0,0,1,1,0,0,0,0,0,0],
       "inSeason_NL": [0,0,0,0,0,1,1,1,0,0,0,0],
       "imageId": "gooseberry"
     },
     {
-      "name_EN": "raspberry",
-      "name_HU": "málna",
+      "id": "raspberry",
       "name_NL": "framboos",
       "inSeason_HU": [0,0,0,0,1,1,0,0,0,0,0,0],
       "inSeason_NL": [0,0,0,0,0,1,1,0,0,0,0,0],
       "imageId": "raspberry"
     },
     {
-      "name_EN": "redcurrant",
-      "name_HU": "ribizli",
+      "id": "redcurrant",
       "name_NL": "rode bes",
       "inSeason_HU": [0,0,0,0,1,1,0,0,0,0,0,0],
       "inSeason_NL": [0,0,0,0,0,1,1,0,0,0,0,0],
       "imageId": "currant"
     },
     {
-      "name_EN": "strawberry",
-      "name_HU": "eper",
+      "id": "strawberry",
       "name_NL": "aardbei",
       "inSeason_HU": [0,0,0,0,1,1,1,0,0,0,0,0],
       "inSeason_NL": [0,0,0,0,0,1,1,0,0,0,0,0],
       "imageId": "strawberry"
     },
     {
-      "name_EN": "peach",
-      "name_HU": "őszibarack",
+      "id": "peach",
       "name_NL": "perzik",
       "inSeason_HU": [0,0,0,0,0,0,1,1,1,0,0,0],
       "inSeason_NL": [0,0,0,0,0,0,1,1,0,0,0,0],
       "imageId": "peach"
     },
     {
-      "name_EN": "apricot",
-      "name_HU": "sárgabarack",
+      "id": "apricot",
       "name_NL": "abrikoos",
       "inSeason_HU": [0,0,0,0,0,0,1,1,0,0,0,0],
       "inSeason_NL": [0,0,0,0,0,1,1,0,0,0,0,0],
       "imageId": "apricot"
     },
     {
-      "name_EN": "watermelon",
-      "name_HU": "görögdinnye",
+      "id": "watermelon",
       "name_NL": "watermeloen",
       "inSeason_HU": [0,0,0,0,0,1,1,1,0,0,0,0],
       "inSeason_NL": [0,0,0,0,0,0,1,1,1,0,0,0],
       "imageId": "watermelon"
     },
     {
-      "name_EN": "cantaloupe",
-      "name_HU": "sárgadinnye",
+      "id": "cantaloupe",
       "name_NL": "meloen",
       "inSeason_HU": [0,0,0,0,0,0,1,1,1,0,0,0],
       "inSeason_NL": [0,0,0,0,0,0,1,1,1,0,0,0],
       "imageId": "melon"
     },
     {
-      "name_EN": "fig",
-      "name_HU": "füge",
+      "id": "fig",
       "name_NL": "vijg",
       "inSeason_HU": [0,0,0,0,0,0,1,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,0,0,0,1,1,0,0,0],
       "imageId": "fig"
     },
     {
-      "name_EN": "plum",
-      "name_HU": "szilva",
+      "id": "plum",
       "name_NL": "pruim",
       "inSeason_HU": [0,0,0,0,0,0,1,1,1,0,0,0],
       "inSeason_NL": [0,0,0,0,0,0,0,1,1,0,0,0],
       "imageId": "plum"
     },
     {
-      "name_EN": "grape",
-      "name_HU": "szőlő",
+      "id": "grape",
       "name_NL": "druif",
       "inSeason_HU": [0,0,0,0,0,0,0,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,0,0,0,1,1,1,0,0],
       "imageId": "grape"
     },
     {
-      "name_EN": "mirabelle (greengage)",
-      "name_HU": "ringló szilva",
+      "id": "mirabelle",
       "name_NL": "mirabellen",
       "inSeason_HU": [0,0,0,0,0,0,0,1,1,0,0,0],
       "inSeason_NL": [0,0,0,0,0,0,0,1,1,0,0,0],
       "imageId": "plum"
     },
     {
-      "name_EN": "pear",
-      "name_HU": "körte",
+      "id": "pear",
       "name_NL": "peer",
       "inSeason_HU": [0,0,0,0,0,0,1,1,1,1,0,0],
       "inSeason_NL": [0,0,0,0,0,0,0,0,1,1,1,0],

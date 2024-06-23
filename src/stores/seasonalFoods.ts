@@ -3,18 +3,18 @@ import type { Food, FoodList } from '@/types';
 
 const currentMonthIndex = new Date().getMonth();
 const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
+  'january',
+  'february',
+  'march',
+  'april',
+  'may',
+  'june',
+  'july',
+  'august',
+  'september',
+  'october',
+  'november',
+  'december'
 ];
 
 export function getSeasonalFoods(): FoodList {
@@ -30,12 +30,12 @@ export function getSeasonalFoodsByMonth(month: string): FoodList {
       .filter((fruit: Food) => {
         return isInSeason(fruit, monthIndex);
       })
-      .sort((a: Food, b: Food) => a.name_EN.localeCompare(b.name_EN)),
+      .sort((a: Food, b: Food) => a.id.localeCompare(b.id)),
     vegetables: foods.vegetables
       .filter((veggie: Food) => {
         return isInSeason(veggie, monthIndex);
       })
-      .sort((a: Food, b: Food) => a.name_EN.localeCompare(b.name_EN))
+      .sort((a: Food, b: Food) => a.id.localeCompare(b.id))
   };
 }
 

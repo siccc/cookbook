@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, type Ref } from 'vue';
 import { getUser, useUpdateUserMutation } from '@/stores/user';
+import { setLocale } from "@/i18n";
 import Button from '@/components/Button.vue';
 import SelectInput from '@/components/SelectInput.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import LoadingState from '@/components/LoadingState.vue';
 import SpinnerIcon from '@/assets/icons/spinner.svg?component';
+import type { Language, Location } from '@/types';
 
-const selectedLanguage = ref('');
-const selectedLocation = ref('');
+const selectedLanguage:Ref<Language> = ref('en');
+const selectedLocation:Ref<Location> = ref('hu');
 const { isLoading, isError, data, error } = getUser();
 const updateUserMutation = useUpdateUserMutation();
 
@@ -16,20 +18,28 @@ const updateUserMutation = useUpdateUserMutation();
 watch(
   data, (data) => {
     if (data) {
-      selectedLanguage.value = data.settings.lang || '';
-      selectedLocation.value = data.settings.location || '';
+      selectedLanguage.value = data.settings.lang;
+      selectedLocation.value = data.settings.location;
     }
   },
   { immediate:true }
 )
 
-const languages = [
+type LanguageOptions = {
+  value: Language,
+  label: string
+}
+const languages:LanguageOptions[] = [
   { value: 'hu', label: 'Magyar' },
   { value: 'en', label: 'English' },
 ];
-const locations = [
+type LocationOptions = {
+  value: Location,
+  label: string
+}
+const locations:LocationOptions[] = [
   { value: 'hu', label: 'Magyarország' },
-  { value: 'nl', label: 'The Netherlands' },
+  { value: 'nl', label: 'Nederland' },
 ];
 const saveInProgress = ref(false);
 const savingIsError = ref(false);
@@ -40,11 +50,11 @@ const savingErrorMessage = ref('');
 // -----------------------------------
 
 function selectedLanguageChange(event: Event) {
-  selectedLanguage.value = (event.target as HTMLInputElement).value;
+  selectedLanguage.value = (event.target as HTMLInputElement).value as Language;
 }
 
 function selectedLocationChange(event: Event) {
-  selectedLocation.value = (event.target as HTMLInputElement).value;
+  selectedLocation.value = (event.target as HTMLInputElement).value as Location;
 }
 
 async function onSaveClick() {
@@ -61,6 +71,7 @@ async function onSaveClick() {
       }
     });
     saveInProgress.value = false;
+    setLocale(selectedLanguage.value);
   } catch (error) {
     saveInProgress.value = false;
     savingIsError.value = true;
@@ -74,11 +85,11 @@ async function onSaveClick() {
   <main class="px-6 md:px-9 max-w-screen-sm mx-auto mt-14 mb-20">
     <div class="pt-6">
       <h1 class="mb-6 text-2xl">
-        Settings
+        {{ $t("menu.settings") }}
       </h1>
       <div v-if="!isLoading" class="flex flex-col gap-6">
         <div class="flex items-stretch sm:items-center flex-col sm:flex-row gap-1 sm:gap-3">
-          <label class="mr-3 w-40" for="id">Account ID</label>
+          <label class="mr-3 w-40" for="id">{{ $t("settings.accountId") }}</label>
           <input
             type="text"
             name="id"
@@ -89,7 +100,7 @@ async function onSaveClick() {
           />
         </div>
         <div class="flex items-stretch sm:items-center flex-col sm:flex-row gap-1 sm:gap-3">
-          <div class="mr-3 w-40">Language</div>
+          <div class="mr-3 w-40">{{ $t("settings.language") }}</div>
           <SelectInput
             class="flex-1"
             :value="selectedLanguage"
@@ -98,7 +109,7 @@ async function onSaveClick() {
           />
         </div>
         <div class="flex items-stretch sm:items-center flex-col sm:flex-row gap-1 sm:gap-3">
-          <div class="mr-3 w-40">Location</div>
+          <div class="mr-3 w-40">{{ $t("settings.location") }}</div>
           <SelectInput
             class="flex-1"
             :value="selectedLocation"
@@ -113,7 +124,7 @@ async function onSaveClick() {
           @click="onSaveClick()"
         >
           <SpinnerIcon v-if="saveInProgress" class="w-6 h-6 animate-spin mr-1"/>
-          Save changes
+          {{ $t("saveChanges") }}
         </Button>
       </div>
     </div>

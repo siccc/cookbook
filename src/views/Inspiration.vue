@@ -32,7 +32,7 @@ function onRefetchClick() {
 <template>
   <main class="p-3 md:p-9 max-w-screen-xl mx-auto mt-14 mb-20">
     <h1 class="mb-6 text-2xl text-center md:text-left">
-      Which category you want to see ideas from? ✨
+      {{ $t("inspiration.title") }} ✨
     </h1>
     <CategoryListWithSelector
       class="mt-6"
@@ -68,7 +68,7 @@ function onRefetchClick() {
             :disabled="isFetching"
           >
             <SpinnerIcon v-if="isFetching" class="w-6 h-6 animate-spin mr-1"/>
-            Give me another 3
+            {{ $t("inspiration.3more") }}
           </Button>
         </div>
       </div>

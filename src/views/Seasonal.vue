@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getCurrentMonth, getSeasonalFoodsByMonth, getMonths } from '@/stores/seasonalFoods';
 import { computed, onMounted, onUnmounted, ref, type ComputedRef } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { Food, FoodList } from '@/types';
 import SelectInput from '@/components/SelectInput.vue';
 import Button from '@/components/Button.vue';
@@ -10,7 +11,6 @@ import winterBg from '@/assets/winter.png';
 import springBg from '@/assets/spring.png';
 import summerBg from '@/assets/summer.png';
 import autumnBg from '@/assets/autumn.png';
-import { useI18n } from 'vue-i18n';
 import { getUser } from '@/stores/user';
 
 // tm is a locale messages getter - used for getting the months localized value here

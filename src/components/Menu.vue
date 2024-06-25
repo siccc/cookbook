@@ -117,7 +117,7 @@ async function logout() {
             </RouterLink>
           </template>
           <div @click="onLogoutClick" class="ml-4 cursor-pointer link-underline link-underline-yellow">
-            Logout
+            {{ $t("menu.logout") }}
           </div>
         </nav>
       </div>

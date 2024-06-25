@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, type Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { getUser, useUpdateUserMutation } from '@/stores/user';
 import { setLocale } from "@/i18n";
 import Button from '@/components/Button.vue';
@@ -9,6 +10,7 @@ import LoadingState from '@/components/LoadingState.vue';
 import SpinnerIcon from '@/assets/icons/spinner.svg?component';
 import type { Language, Location } from '@/types';
 
+const { tm } = useI18n();
 const selectedLanguage:Ref<Language> = ref('en');
 const selectedLocation:Ref<Location> = ref('hu');
 const { isLoading, isError, data, error } = getUser();
@@ -25,22 +27,6 @@ watch(
   { immediate:true }
 )
 
-type LanguageOptions = {
-  value: Language,
-  label: string
-}
-const languages:LanguageOptions[] = [
-  { value: 'hu', label: 'Magyar' },
-  { value: 'en', label: 'English' },
-];
-type LocationOptions = {
-  value: Location,
-  label: string
-}
-const locations:LocationOptions[] = [
-  { value: 'hu', label: 'Magyarország' },
-  { value: 'nl', label: 'Nederland' },
-];
 const saveInProgress = ref(false);
 const savingIsError = ref(false);
 const savingErrorMessage = ref('');
@@ -104,7 +90,8 @@ async function onSaveClick() {
           <SelectInput
             class="flex-1"
             :value="selectedLanguage"
-            :options="languages"
+            :options="tm('settings.languages')"
+            i18n-options
             @change="selectedLanguageChange"
           />
         </div>
@@ -113,7 +100,8 @@ async function onSaveClick() {
           <SelectInput
             class="flex-1"
             :value="selectedLocation"
-            :options="locations"
+            :options="tm('settings.locations')"
+            i18n-options
             @change="selectedLocationChange"
           />
         </div>

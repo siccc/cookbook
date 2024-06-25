@@ -120,7 +120,7 @@ useInfiniteScroll(
           <CloseIcon class="w-5 h-5" aria-hidden="true" focusable="false"/>
         </IconButton>
       </div>
-      <Button type="primary" to="/edit/new" class="hidden sm:inline-flex w-auto mt-3 sm:mt-0">
+      <Button type="primary" to="/edit/new" class="hidden sm:inline-flex w-40 mt-3 sm:mt-0">
         <PlusIcon class="w-6 h-6 mr-1" aria-hidden="true" focusable="false"/>
         {{ $t("createRecipe") }}
       </Button>

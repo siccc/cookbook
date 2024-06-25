@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref, type Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import ImagePlaceholder from '@/assets/image-placeholder.svg?component';
 import DeleteIcon from '@/assets/icons/trash-alt.svg?component';
 import Button from '@/components/Button.vue';
@@ -14,12 +15,13 @@ const emit = defineEmits<{
   (e: 'change', content: string): void
 }>();
 
+const { t } = useI18n();
 const imageSource:Ref<string> = ref('');
 const fileInput:Ref<HTMLInputElement | null> = ref(null);
 
 const imageValidations = reactive({
-  fileSize: { hasError: false, message: 'Maximum allowed file size is 10 MB.'},
-  fileExtension: { hasError: false, message: 'Only .jpeg, .jpg, .png or .webp files are allowed.'},
+  fileSize: { hasError: false, message: t('validations.fileSize')},
+  fileExtension: { hasError: false, message: t('validations.fileExtension')},
 });
 
 function clickFileInput() {

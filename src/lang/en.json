@@ -98,7 +98,15 @@
   "settings": {
     "accountId": "Account ID",
     "language": "Language",
-    "location": "Location"
+    "location": "Location",
+    "languages": {
+      "hu": "Hungarian",
+      "en": "English"
+    },
+    "locations": {
+      "hu": "Hungary",
+      "nl": "The Netherlands"
+    }
   },
   "imageUpload": {
     "upload": "Upload",
@@ -111,6 +119,15 @@
   "errors": {
     "appOffline": "Looks like you're offline. Don't worry, you can still access recipes when you're back online. Please check your internet connection and try again.",
     "recipeNotFound": "Nem találtam ilyen receptet."
+  },
+  "validations": {
+    "fileSize": "Maximum allowed file size is 10 MB.",
+    "fileExtension": "Only .jpeg, .jpg, .png or .webp files are allowed.",
+    "recipeTitle": "Enter the title of your recipe.",
+    "recipeCategory": "Choose a category.",
+    "recipeServings": "Enter the servings (e.g. 12 pieces or 4 servings).",
+    "recipeIngredients": "Add at least one ingredient.",
+    "recipeSteps": "Add at least one step."
   },
   "login": {
     "title": "Hey, welcome to Cookbook",

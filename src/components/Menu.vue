@@ -72,7 +72,7 @@ const menuItems: Record<string, MenuItem> = {
 
 // removed inspiration menu item from desktopTopItems for testing purposes
 const desktopTopItems = ['home', 'create', 'shoppingList', 'seasonalFoods', 'settings'];
-const mobileTopItems = ['settings', 'logout'];
+const mobileTopItems = ['settings'];
 const mobileBottomItems = ['home', 'inspiration', 'create', 'shoppingList', 'seasonalFoods'];
 
 function onLogoutClick() {
@@ -142,6 +142,9 @@ async function logout() {
           >
             <component :is=menuItems[item].icon class="w-6 h-6" aria-hidden="true" focusable="false"/>
           </RouterLink>
+          <div @click="onLogoutClick">
+            <SignoutIcon class="hover:text-yellow-400 w-6 h-6" aria-hidden="true" focusable="false"/>
+          </div>
         </div>
       </div>
     </nav>

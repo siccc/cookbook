@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, type Ref, watch, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { forEach, find } from 'lodash';
 import { useRouter } from 'vue-router';
 import { useThrottleFn } from '@vueuse/core';
@@ -26,14 +27,15 @@ const props = defineProps<{
   id: string
 }>();
 
+const { t } = useI18n();
 const scrollPosition = ref(0);
 const router = useRouter();
 const inputValidations = reactive({
-  title: { hasError: false, message: 'Enter the title of your recipe.'},
-  category: { hasError: false, message: 'Choose a category.'},
-  servings: { hasError: false, message: 'Enter the servings (e.g. 12 pieces or 4 servings).'},
-  ingredients: { hasError: false, message: 'Add at least one ingredient.'},
-  steps: { hasError: false, message: 'Add at least one step.'},
+  title: { hasError: false, message: t('validations.recipeTitle')},
+  category: { hasError: false, message: t('validations.recipeCategory')},
+  servings: { hasError: false, message: t('validations.recipeServings')},
+  ingredients: { hasError: false, message: t('validations.recipeIngredients')},
+  steps: { hasError: false, message: t('validations.recipeSteps')},
 });
 const categories = ['breakfast', 'soup', 'main dish', 'side dish', 'pasta', 'bread', 'sauce',
   'snack', 'dessert'];
@@ -347,9 +349,9 @@ onMounted(() => {
                   'hover:text-sky-400': recipe.category !== category
                 }"
                 v-for="category in categories"
-                @click="onCategoryChange(category)"
+                @click="onCategoryChange(category);validate('category', category)"
               >
-                {{ category }}
+                {{ $t(`categories.${category}`) }}
               </button>
             </section>
           </div>

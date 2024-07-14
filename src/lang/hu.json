@@ -98,7 +98,15 @@
   "settings": {
     "accountId": "Azonostó",
     "language": "Nyelv",
-    "location": "Hely"
+    "location": "Hely",
+    "languages": {
+      "hu": "Magyar",
+      "en": "Angol"
+    },
+    "locations": {
+      "hu": "Magyarország",
+      "nl": "Hollandia"
+    }
   },
   "imageUpload": {
     "upload": "Feltöltök",
@@ -114,6 +122,15 @@
   },
   "notifications": {
     "itemAddedToShoppingList": "Elem hozzáadva a bevásárló listához."
+  },
+  "validations": {
+    "fileSize": "A megengedett fájl méret maximum 10 MB.",
+    "fileExtension": "A következő kiterjesztések megengedettek: .jpeg, .jpg, .png or .webp",
+    "recipeTitle": "A recept nevét kötelező megadni.",
+    "recipeCategory": "Válassz egy kategóriát.",
+    "recipeServings": "Add meg az adagot (pl. 12 darab vagy 4 adag).",
+    "recipeIngredients": "Legalább egy hozzávaló megadása kötelező.",
+    "recipeSteps": "Legalább egy lépés/a leírás megadása kötelező."
   },
   "login": {
     "title": "Hey, welcome to Cookbook",

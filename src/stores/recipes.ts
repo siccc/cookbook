@@ -40,7 +40,7 @@ const recipeListFetcher = async (
       url: `/api/recipes?search=${search}&category=${cat}&cursor=${cursor}`,
       method: 'GET'
     },
-    'An error occurred while fetching the recipes.'
+    'errors.recipesFetch'
   );
 }
 
@@ -91,7 +91,7 @@ const recipeFetcher = async (id: string | 'new'): Promise<Recipe> => {
       url: `/api/recipes/${id}`,
       method: 'GET'
     },
-    'An error occurred while fetching a recipe.'
+    'errors.recipesFetch'
   );
   recipe.ingredients = recipe.ingredients.replace(/\\n/g, '\n');
   recipe.steps = recipe.steps.replace(/\\n/g, '\n');
@@ -121,7 +121,7 @@ const recipeCreater = async (newRecipe: Recipe): Promise<Recipe> => {
       },
       body: JSON.stringify(recipe)
     },
-    'An error occurred while updating the recipe. Try again later.'
+    'errors.recipesCreate'
   );
 }
 
@@ -149,7 +149,7 @@ const recipeUpdater = async (updatedRecipe: Recipe): Promise<Recipe> => {
       },
       body: JSON.stringify(updatedRecipe)
     },
-    'An error occurred while updating the recipe. Try again later.'
+    'errors.recipesUpdate'
   );
 }
 
@@ -190,7 +190,7 @@ const recipeDeleter = async (deletedRecipe: Recipe): Promise<Recipe> => {
       },
       body: JSON.stringify(deletedRecipe)
     },
-    'An error occurred while deleting the recipe. Try again later.'
+    'errors.recipesDelete'
   );
 }
 
@@ -244,7 +244,7 @@ const threeRandomRecipesFetcher = async (category: Ref<string>): Promise<Recipe[
       url: `/api/recipe-selection?category=${cat}`,
       method: 'GET'
     },
-    'An error occurred while fetching the recipes.'
+    'errors.recipesFetch'
   );
 
 }
@@ -268,7 +268,7 @@ const recipeGenerator = async (): Promise<void> => {
       url: `/api/recipe-generate`,
       method: 'GET'
     },
-    'An error occurred while generating the recipes.'
+    'errors.recipesFetch'
   );
 }
 

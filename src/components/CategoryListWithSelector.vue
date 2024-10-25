@@ -22,7 +22,7 @@ function onCategoryClick(value: string) {
 
 <template>
   <section
-    aria-label="category selector to filter recipe list"
+    :aria-label="$t('categorySectionHelper')"
     class="flex items-center md:justify-start gap-2 overflow-x-auto snap-x no-scrollbar snap-center"
   >
     <button

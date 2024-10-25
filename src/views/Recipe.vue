@@ -293,7 +293,7 @@ onUnmounted(() => {
               <SpinnerIcon
                 v-if="updateRecipeMutation.isLoading.value"
                 class="w-6 h-6 animate-spin mr-1"
-                aria-label="Loading"
+                :aria-label="$t('loading')"
               />
               <EmptyStarIcon
                 v-else-if="!isCounterClicked"

@@ -1,6 +1,9 @@
 {
   "searchPlaceholder": "Search for recipes...",
   "latestRecipes": "Latest recipes",
+  "logo": "Cookbook logo",
+  "search": "Search",
+  "emptySearch": "Delete search text",
   "menu": {
     "recipes": "Recipes",
     "shoppingList": "Shopping list",
@@ -22,6 +25,7 @@
     "snack": "snack",
     "dessert": "dessert"
   },
+  "categorySectionHelper": "Category selector to filter recipe list",
   "loading": "Loading...",
   "saving": "Saving...",
   "createRecipe": "Create recipe",
@@ -42,10 +46,13 @@
     "deleteCheckedModal": {
       "title": "Delete all checked items?",
       "msg": "Are you sure you want to delete permanently all checked items?"
-    }
+    },
+    "editItem": "Edit item",
+    "confirm": "Confirm editing"
   },
   "addToShoppingList": "Add to shopping list",
   "recipeDetails": {
+    "title": "Recipe details",
     "recipeName": "Your recipe's name",
     "tags": "Tags",
     "serving": "Serving",
@@ -64,7 +71,8 @@
     "ingredientsPlaceholder": "- ingredient 1\n- ingredient 2\n- ...",
     "titlePlaceholder": "My favorite bolognese sauce",
     "tagsPlaceholder": "italian, christmas",
-    "servingsPlaceholder": "4 servings"
+    "servingsPlaceholder": "4 servings",
+    "categorySectionHelper": "Select a main category for the recipe"
   },
   "inspiration": {
     "title": "Which category you want to see ideas from?",
@@ -72,6 +80,7 @@
   },
   "seasonal": {
     "title": "Local seasonal foods in { month }",
+    "foodDetails": "Food details",
     "vegetables": "Veggies",
     "fruits": "Fruits",
     "month": "Month",
@@ -79,7 +88,10 @@
     "stored": "out of season but available (stored)",
     "seasonal": "seasonal",
     "outOfSeason": "out of season",
-    "addToShoppingList": "Add to shopping list"
+    "addToShoppingList": "Add to shopping list",
+    "legendHelper": "Seasonal calendar legend",
+    "openItemDetails": "Open { item } details",
+    "itemStored": "stored"
   },
   "months": {
     "january": "January",
@@ -117,8 +129,19 @@
     "deletePhoto": "Delete photo"
   },
   "errors": {
+    "unknown": "An unknown error occurred.",
     "appOffline": "Looks like you're offline. Don't worry, you can still access recipes when you're back online. Please check your internet connection and try again.",
-    "recipeNotFound": "Nem találtam ilyen receptet."
+    "recipeNotFound": "Nem találtam ilyen receptet.",
+    "imageUpload": "An error occurred while uploading the image. Try again later.",
+    "unknownEmail": "Unknown email address. Please request access for your Google account from the creator.",
+    "userCreate": "An error occurred while creating user.",
+    "userUpdate": "An error occurred while updating the user. Try again later.",
+    "userGet": "An error occurred while getting user.",
+    "userLogout": "An error occurred while logging out user.",
+    "recipesFetch": "An error occurred while fetching the recipes.",
+    "recipesCreate": "An error occurred while creating the recipe.",
+    "recipesUpdate": "An error occurred while updating the recipe. Try again later.",
+    "recipesDelete": "An error occurred while deleting the recipe. Try again later."
   },
   "validations": {
     "fileSize": "Maximum allowed file size is 10 MB.",
@@ -207,7 +230,7 @@
     "turnip": "turnip",
     "truffle": "truffle",
     "watercress": "watercress",
-    "jerusalem artichoke": "Jerusalem artichoke",
+    "jerusalem_artichoke": "Jerusalem artichoke",
     "apple": "apple",
     "blackthorn": "blackthorn",
     "medlar": "medlar",

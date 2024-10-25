@@ -25,7 +25,7 @@ const userFetcher = async (userId: string | null): Promise<User|null> => {
     localStorage.removeItem('userId');
     throw new Error('401 Unauthorized');
   } else if (!response.ok) {
-    throw new Error('An error occurred while getting user.');
+    throw new Error('errors.userGet');
   }
   const user: UserResult = await response.json();
   return deserializeUser(user);
@@ -75,9 +75,9 @@ const userCreater = async (option: UserCreaterOptions): Promise<User|null> => {
     body: JSON.stringify(body)
   });
   if (!response.ok && response.status === 403) {
-    throw new Error('Unknown email address. Please request access for your Google account from the creator.');
+    throw new Error('errors.unknownEmail');
   } else if (!response.ok) {
-    throw new Error('An error occurred while creating user.');
+    throw new Error('errors.userCreate');
   }
   const user: UserResult = await response.json();
   return deserializeUser(user);
@@ -106,7 +106,7 @@ const userUpdater = async (updatedUser: User): Promise<User> => {
       },
       body: JSON.stringify(JSON.stringify(updatedUser.settings)) // serialize user settings
     },
-    'An error occurred while updating the user. Try again later.'
+    'errors.userUpdate'
   );
 }
 
@@ -137,7 +137,7 @@ export async function userLogout(): Promise<void> {
   localStorage.removeItem('isDemoUser');
   const response = await fetch(`/api/user-logout`);
   if (!response.ok) {
-    throw new Error('An error occurred while logging out user.');
+    throw new Error('errors.userLogout');
   }
 }
 

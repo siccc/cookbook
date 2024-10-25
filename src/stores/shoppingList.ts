@@ -1,6 +1,6 @@
-import { useQuery, useMutation, useQueryClient } from "vue-query";
+import { useQuery, useMutation, useQueryClient } from 'vue-query';
 import type { ShoppingList } from '@/types';
-import fetchFromApi from "@/utils/fetchFromApi";
+import fetchFromApi from '@/utils/fetchFromApi';
 
 // -----------------------------------
 // GET SHOPPING LIST

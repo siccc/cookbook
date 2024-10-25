@@ -192,7 +192,7 @@ function saveChanges() {
           v-show="showItemDelete"
           class="ml-2"
           @click="removeItem(item)"
-          aria-label="Delete item"
+          :aria-label="$t('delete')"
         >
           <CloseIcon class="w-5 h-5" />
         </IconButton>

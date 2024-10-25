@@ -95,7 +95,7 @@ useInfiniteScroll(
         <IconButton
           class="text-stone-300 absolute left-0 ml-1"
           @click="onSearchTextChange"
-          aria-label="Search"
+          :aria-label="$t('search')"
         >
           <SearchIcon class="w-5 h-5" aria-hidden="true" focusable="false"/>
         </IconButton>
@@ -115,7 +115,7 @@ useInfiniteScroll(
             'opacity-0': !searchText
           }"
           @click="cancelSearch"
-          aria-label="Delete search text"
+          :aria-label="$t('emptySearch')"
         >
           <CloseIcon class="w-5 h-5" aria-hidden="true" focusable="false"/>
         </IconButton>

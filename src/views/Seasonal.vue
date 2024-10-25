@@ -36,7 +36,7 @@ const foods = ref<FoodList>({
   vegetables: [],
   fruits: []
 });
-foods.value = getSeasonalFoodsByMonth(selectedMonth.value);
+foods.value = getSeasonalFoodsByMonth(selectedMonth.value, location.value);
 
 const months = getMonths();
 const parallaxEl = ref<HTMLInputElement | null>(null);
@@ -104,7 +104,7 @@ function loadImage(imageSrc: string) {
 function onSelectedMonthChange(event: Event) {
   selectedMonth.value = (event.target as HTMLInputElement).value;
   selectedMonthIndex.value = months.indexOf(selectedMonth.value);
-  foods.value = getSeasonalFoodsByMonth(selectedMonth.value);
+  foods.value = getSeasonalFoodsByMonth(selectedMonth.value, location.value);
 }
 
 function onClickShowModal(food: Food, foodType: string) {

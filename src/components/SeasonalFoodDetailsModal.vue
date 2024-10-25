@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Modal from '@/components/Modal.vue';
-import { getMonths } from '@/stores/seasonalFoods';
+import { getMonths, getFoodDataByLocation } from '@/stores/seasonalFoods';
 import { getShoppingList, useUpdateShoppingListMutation } from '@/stores/shoppingList';
 import type { Food, ShoppingList } from '@/types';
 import Button from '@/components/Button.vue';
@@ -33,8 +33,8 @@ const seasonalCalendarForFood = computed(() => {
   let isStoredInThisMonth;
   let isInSeasonInThisMonth;
   return shortMonths.map((month, index) => {
-    isStoredInThisMonth = props.selectedFood.stored_HU?.[index];
-    isInSeasonInThisMonth = props.selectedFood.inSeason_HU[index];
+    isStoredInThisMonth = foodStored.value[index];
+    isInSeasonInThisMonth = foodInSeason.value[index];
 
     if (!isStoredInThisMonth && !isInSeasonInThisMonth) {
       return 'unavailable';
@@ -45,6 +45,12 @@ const seasonalCalendarForFood = computed(() => {
     }
   });
 });
+const foodStored = computed(() => {
+  return getFoodDataByLocation('stored', props.location, props.selectedFood)
+})
+const foodInSeason = computed(() => {
+  return getFoodDataByLocation('inSeason', props.location, props.selectedFood)
+})
 
 // -----------------------------------
 // METHODS
@@ -109,7 +115,7 @@ async function showSuccessMessage() {
       >
         {{ $t(`food.${ props.selectedFood.id }`) }}
         <span
-          v-if="props.selectedFood.stored_HU && props.selectedFood.stored_HU[currentMonthIndex]"
+          v-if="foodStored && foodStored[currentMonthIndex]"
           class="bg-stone-100 px-1 rounded-sm text-stone-600 text-xs ml-1"
         >
           {{ $t("seasonal.itemStored") }} 
@@ -118,7 +124,7 @@ async function showSuccessMessage() {
       <div class="text-sm text-stone-400 mt-6 mb-1 text-left w-full">{{ $t("seasonal.months") }}</div>
       <div class="text-sm grid grid-cols-12 gap-3">
         <div
-          v-for="(value, monthIndex) in props.selectedFood.inSeason_HU"
+          v-for="(value, monthIndex) in foodInSeason"
           class="rounded-sm px-3 py-0.5 flex items-center justify-center font-medium"
           :class="{
             'bg-sky-300 text-sky-800': seasonalCalendarForFood[monthIndex] === 'inSeason' && props.selectedFoodType === 'vegetable',

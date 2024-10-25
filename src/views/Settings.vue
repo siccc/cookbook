@@ -75,17 +75,6 @@ async function onSaveClick() {
       </h1>
       <div v-if="!isLoading" class="flex flex-col gap-6">
         <div class="flex items-stretch sm:items-center flex-col sm:flex-row gap-1 sm:gap-3">
-          <label class="mr-3 w-40" for="id">{{ $t("settings.accountId") }}</label>
-          <input
-            type="text"
-            name="id"
-            id="id"
-            class="flex-1 cursor-default"
-            :value="data?.userId"
-            readonly
-          />
-        </div>
-        <div class="flex items-stretch sm:items-center flex-col sm:flex-row gap-1 sm:gap-3">
           <div class="mr-3 w-40">{{ $t("settings.language") }}</div>
           <SelectInput
             class="flex-1"

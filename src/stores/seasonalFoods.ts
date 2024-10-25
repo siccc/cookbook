@@ -1,4 +1,5 @@
 import foodsJson from '@/assets/seasonalFoods.json?raw';
+import hasOwnProperty from '@/utils/typeHelper';
 import type { Food, FoodList } from '@/types';
 
 const currentMonthIndex = new Date().getMonth();
@@ -22,31 +23,35 @@ export function getSeasonalFoods(): FoodList {
   return foods;
 }
 
-export function getSeasonalFoodsByMonth(month: string): FoodList {
+export function getSeasonalFoodsByMonth(month: string, location: string): FoodList {
   const monthIndex = months.indexOf(month);
   const foods = getSeasonalFoods();
   return {
     fruits: foods.fruits
       .filter((fruit: Food) => {
-        return isInSeason(fruit, monthIndex);
+        return shouldShowFood(fruit, monthIndex, location);
       })
       .sort((a: Food, b: Food) => a.id.localeCompare(b.id)),
     vegetables: foods.vegetables
       .filter((veggie: Food) => {
-        return isInSeason(veggie, monthIndex);
+        return shouldShowFood(veggie, monthIndex, location);
       })
       .sort((a: Food, b: Food) => a.id.localeCompare(b.id))
   };
 }
 
-function isInSeason(food: Food, monthIndex: number): boolean {
-  if (food.inSeason_HU && !food.stored_HU) {
-    return !!food.inSeason_HU[monthIndex];
-  } else if (food.inSeason_HU && food.stored_HU) {
-    return !!food.inSeason_HU[monthIndex] || !!food.stored_HU[monthIndex];
+export function getFoodDataByLocation(prefix: string, location: string, food: Food): number[] {
+  const propName = `${prefix}_${location.toUpperCase()}`;
+  const fallBack = `${prefix}_HU`;
+
+  if (hasOwnProperty(food, propName)) {
+    return food[propName] as number[];
+  } else if (hasOwnProperty(food, fallBack)) {
+    return food[fallBack] as number[];
+  } else {
+    return [];
   }
-  return false;
-}
+};
 
 export function getCurrentMonth() {
   return { month: months[currentMonthIndex], monthIndex: currentMonthIndex };
@@ -54,4 +59,15 @@ export function getCurrentMonth() {
 
 export function getMonths() {
   return months;
+}
+
+function shouldShowFood(food: Food, monthIndex: number, location: string): boolean {
+  const foodStored = getFoodDataByLocation('stored', location, food)
+  const foodInSeason = getFoodDataByLocation('inSeason', location, food)
+  if (foodInSeason && !foodStored) {
+    return !!foodInSeason[monthIndex];
+  } else if (foodInSeason && foodStored) {
+    return !!foodInSeason[monthIndex] || !!foodStored[monthIndex];
+  }
+  return false;
 }

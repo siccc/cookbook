@@ -1,68 +1,69 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+  binaryTargets   = ["native"]
+}
+
 datasource db {
   provider = "sqlite"
   url      = "file:./dev.db"
 }
 
-generator client {
-  provider        = "prisma-client-js"
-  binaryTargets   = ["native"]
-  previewFeatures = ["driverAdapters"]
-}
-
 model Recipe {
-  id              String          @id @unique
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  title           String
-  cookedCount     Int             @default(0)
-  servings        String
-  prepTime        Int?
-  cookTime        Int?
-  ingredients     String
-  steps           String
-  notes           String
-  category        String
-  tags            Tag[]
-  imageName       String          @default("")
-  imagePublicId   String          @default("")
-  accountId       String          @default("")
+  id            String   @id @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  title         String
+  cookedCount   Int      @default(0)
+  servings      String
+  prepTime      Int?
+  cookTime      Int?
+  ingredients   String
+  steps         String
+  notes         String
+  category      String
+  nutritionData String?  @default("")
+  imageName     String   @default("")
+  imagePublicId String   @default("")
+  accountId     String   @default("")
+  tags          Tag[]    @relation("RecipeToTag")
 }
 
 model Tag {
-  id              String                  @id @unique
-  name            String
-  accountId       String
-  recipes         Recipe[]
+  id        String   @id @unique
+  name      String
+  accountId String
+  recipes   Recipe[] @relation("RecipeToTag")
 }
 
 model Account {
-  id              String          @id @unique
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt @default(now())
-  users           User[]
+  id        String   @id @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  users     User[]
 }
 
 model User {
-  id              String          @id @unique
-  email           String?         @default("")
-  accountId       String
-  account         Account         @relation(fields: [accountId], references: [id])
-  firstName       String?         @default("")
-  lastName        String?         @default("")
-  displayName     String?         @default("")
-  profileImage    String?         @default("")
-  googleId        String?         @default("")
-  settings        String          @default("{}")
+  id           String  @id @unique
+  email        String? @default("")
+  accountId    String
+  firstName    String? @default("")
+  lastName     String? @default("")
+  displayName  String? @default("")
+  profileImage String? @default("")
+  googleId     String? @default("")
+  settings     String  @default("{}")
+  account      Account @relation(fields: [accountId], references: [id])
 
   @@index([email])
   @@index([accountId])
 }
 
 model ShoppingList {
-  id              String          @id @unique
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  name            String          @default("Shopping List")
-  items           String          @default("[]")
-  accountId       String
+  id        String   @id @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @default("Shopping List")
+  items     String   @default("[]")
+  accountId String
 }

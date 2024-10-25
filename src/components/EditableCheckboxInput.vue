@@ -68,7 +68,7 @@ function setItemChecked(item: ShoppingListItem, event: Event) {
         v-if="!props.disabled"
         class="ml-2"
         @click="editItem(props.item)"
-        aria-label="Edit item"
+        :aria-label="$t('shoppingList.editItem')"
       >
         <EditIcon class="w-5 h-5" aria-hidden focusable="false"/>
       </IconButton>
@@ -83,7 +83,7 @@ function setItemChecked(item: ShoppingListItem, event: Event) {
       <Button
         type="primary"
         class="ml-1"
-        aria-label="Confirm editing"
+        :aria-label="$t('shoppingList.confirm')"
         @click="confirmEditingItem"
       >
         <CheckIcon class="w-6 h-6 text-white" aria-hidden focusable="false"/>

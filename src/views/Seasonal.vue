@@ -156,7 +156,7 @@ function onClickCancelModal() {
               items-center cursor-pointer"
             @click="onClickShowModal(veggie, 'vegetable')"
             v-for="veggie in foods.vegetables"
-            :aria-label="`Open ${ veggie.id } details`"
+            :aria-label="$t('openItemDetails', { item: veggie.id })"
           >
             <div class="p-1 rounded-lg mr-1 text-sky-800/50">
               <SvgSprite
@@ -177,7 +177,7 @@ function onClickCancelModal() {
               items-center cursor-pointer"
             @click="onClickShowModal(fruit, 'fruit')"
             v-for="fruit in foods.fruits"
-            :aria-label="`Open ${fruit.id} details`"
+            :aria-label="$t('openItemDetails', { item: fruit.id })"
           >
             <div class="p-1 rounded-lg mr-1 text-amber-800/50">
               <SvgSprite

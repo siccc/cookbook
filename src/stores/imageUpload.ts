@@ -11,7 +11,7 @@ export default async function uploadImage(file: string) {
     body: data
   });
   if (!response.ok) {
-    throw new Error('An error occurred while uploading the image. Try again later.');
+    throw new Error('errors.imageUpload')
   }
   const result = await response.text();
   const resultObj = JSON.parse(result);

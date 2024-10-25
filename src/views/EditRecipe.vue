@@ -264,7 +264,7 @@ onMounted(() => {
       <ErrorState v-if="savingIsError" :error="savingErrorMessage" />
       <section
         class="md:grid md:grid-cols-3 md:justify-items-start flex flex-col"
-        aria-label="Recipe details"
+        :aria-label="$t('recipeDetails.title')"
       >
         <!-- IMAGE -->
         <ImageUploader :image-public-id="recipe.imagePublicId" @change="onImageChange"/>
@@ -339,7 +339,7 @@ onMounted(() => {
             <span class="uppercase">{{ $t('recipeDetails.dishType') }}*</span>
             <section
               class="flex items-center flex-wrap gap-3"
-              aria-label="select a main category for the recipe"
+              :aria-label="$t('recipeDetails.categorySectionHelper')"
             >
               <button
                 class="border border-stone-300 uppercase px-3 py-2 md:py-1.5 rounded-lg

@@ -100,7 +100,7 @@ async function logout() {
       border-b border-stone-200 desktop-menu hidden md:block md:fixed">
       <div class="lg:container mx-auto px-4 flex justify-center md:justify-between items-center">
         <div class="flex-shrink-0">
-          <RouterLink to="/home" aria-label="Cookbook Logo">
+          <RouterLink to="/home" :aria-label="$t('logo')">
             <Logo class="mr-4 h-9 cursor-pointer" aria-hidden="true"/>
           </RouterLink>
         </div>
@@ -128,7 +128,7 @@ async function logout() {
       border-b border-stone-200 mobile-menu">
       <div class="px-3 flex items-center justify-between">
         <div class="flex-shrink-0">
-          <RouterLink to="/home" aria-label="Cookbook Logo">
+          <RouterLink to="/home" :aria-label="$t('logo')">
             <Logo class="mr-4 h-9 cursor-pointer" aria-hidden="true"/>
           </RouterLink>
         </div>
@@ -138,7 +138,7 @@ async function logout() {
             :key="menuItems[item].name"
             :to="menuItems[item].route"
             class="w-1/5 flex flex-col items-center hover:text-yellow-400"
-            :aria-label="menuItems[item].name"
+            :aria-label="$t(`menu.${menuItems[item].name}`)"
           >
             <component :is=menuItems[item].icon class="w-6 h-6" aria-hidden="true" focusable="false"/>
           </RouterLink>

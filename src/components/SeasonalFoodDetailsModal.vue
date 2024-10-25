@@ -97,7 +97,7 @@ async function showSuccessMessage() {
     @close="onCancel"
     @cancel="onCancel"
     :show-title="false"
-    title="Food details"
+    :title="$t('seasonal.foodDetails')"
   >
     <div v-if="props.selectedFood && !showSaveSuccessMessage" class="flex flex-col items-center">
       <div
@@ -112,7 +112,7 @@ async function showSuccessMessage() {
           v-if="props.selectedFood.stored_HU && props.selectedFood.stored_HU[currentMonthIndex]"
           class="bg-stone-100 px-1 rounded-sm text-stone-600 text-xs ml-1"
         >
-          stored
+          {{ $t("seasonal.itemStored") }} 
         </span>
       </div>
       <div class="text-sm text-stone-400 mt-6 mb-1 text-left w-full">{{ $t("seasonal.months") }}</div>
@@ -127,12 +127,12 @@ async function showSuccessMessage() {
             'bg-amber-200 text-yellow-600': seasonalCalendarForFood[monthIndex] === 'stored' && props.selectedFoodType === 'fruit',
             'bg-stone-100 text-stone-500': seasonalCalendarForFood[monthIndex] === 'unavailable',
           }"
-          :aria-label="`${ months[monthIndex] }: ${ 
+          :aria-label="`${ $t(`months.${ months[monthIndex] }`) }: ${ 
             seasonalCalendarForFood[monthIndex] === 'inSeason' ?
-              'in season' : 
-            seasonalCalendarForFood[monthIndex] === 'stored' ? 
-              'available (stored)' : 
-              'out of season'
+              t('seasonal.seasonal') : 
+              seasonalCalendarForFood[monthIndex] === 'stored' ? 
+                t('seasonal.stored') : 
+                t('seasonal.outOfSeason')
             }`"
         >
           {{ shortMonths[monthIndex] }}
@@ -140,7 +140,7 @@ async function showSuccessMessage() {
       </div>
       <section
         class="text-sm mt-3 flex flex-col items-start self-start"
-        aria-label="legend for seasonal calendar"
+        :aria-label="$t('seasonal.legendHelper')"
       >
         <div class="flex items-center justify-center">
           <div

@@ -1,6 +1,9 @@
 {
   "searchPlaceholder": "Keress a receptek között...",
   "latestRecipes": "Legfrissebb receptek",
+  "logo": "Cookbook logó",
+  "search": "Keresés",
+  "emptySearch": "Keresés törlése",
   "menu": {
     "recipes": "Receptek",
     "shoppingList": "Bevásárló lista",
@@ -22,6 +25,7 @@
     "snack": "nasi",
     "dessert": "édesség"
   },
+  "categorySectionHelper": "Kategória választó a recept lista szűrésére",
   "loading": "Egy pillanat...",
   "saving": "Mentés...",
   "createRecipe": "Új recept",
@@ -42,10 +46,13 @@
     "deleteCheckedModal": {
       "title": "Összes kijelölt elem törlése",
       "msg": "Véglegesen törölni szeretnéd a kijelölt elemeket?"
-    }
+    },
+    "editItem": "Elem szerkesztése",
+    "confirm": "Szerkesztés jóváhagyása"
   },
   "addToShoppingList": "Hozzáadás a bevásárló listához",
   "recipeDetails": {
+    "title": "Recept részletei",
     "recipeName": "Recepted neve",
     "tags": "Címkék",
     "serving": "Adag",
@@ -64,7 +71,8 @@
     "ingredientsPlaceholder": "- hozzávaló 1\n- hozzávaló 2\n- ...",
     "titlePlaceholder": "A kedvenc bolognai szószom",
     "tagsPlaceholder": "olasz, karácsony",
-    "servingsPlaceholder": "4 adag"
+    "servingsPlaceholder": "4 adag",
+    "categorySectionHelper": "Válassz kategóriát a receptednek"
   },
   "inspiration": {
     "title": "Melyik kategóriából szeretnél inspirációt?",
@@ -72,6 +80,7 @@
   },
   "seasonal": {
     "title": "{ month }i szezonális zöldségek, gyümölcsök",
+    "foodDetails": "Zöldség, gyümölcs adatai",
     "vegetables": "Zöldségek",
     "fruits": "Gyümölcsök",
     "month": "Hónap",
@@ -79,7 +88,10 @@
     "stored": "nem szezonális, de kapható",
     "seasonal": "szezonális",
     "outOfSeason": "nincs szezonja",
-    "addToShoppingList": "Hozzáadás a bevásárló listához"
+    "addToShoppingList": "Hozzáadás a bevásárló listához",
+    "legendHelper": "Szezonális naptár jelmagyarázat",
+    "openItemDetails": "{ item } részletei",
+    "itemStored": "idényen kívüli"
   },
   "months": {
     "january": "Január",
@@ -117,8 +129,19 @@
     "deletePhoto": "Kép törlése"
   },
   "errors": {
+    "unknown": "Váratlan hiba történt.",
     "appOffline": "Úgy tűnik offline vagy. De ne aggódj, a receptjeid továbbra is eléred, amint online leszel. Ellenőrizd az internet hozzáférésed és próbáld újra.",
-    "recipeNotFound": "Nem találtam ilyen receptet."
+    "recipeNotFound": "Nem találtam ilyen receptet.",
+    "imageUpload": "Hiba történt a képfeltöltés során. Próbáld meg újra később.",
+    "unknownEmail": "Ismeretlen email cím. Kérlek kérj hozzáférést a Google email címedhez.",
+    "userCreate": "Hiba történt a felhasználó létrehozása során.",
+    "userUpdate": "Hiba történt a felhasználó frissítése során.",
+    "userGet": "Hiba történt a felhasználó lekérése során.",
+    "userLogout": "Hiba történt a felhasználó kijelentkeztetése során.",
+    "recipesFetch": "Hiba történt a receptek lekérése során.",
+    "recipesCreate": "Hiba történt a recept létrehozása során.",
+    "recipesUpdate": "Hiba történt a recept frissítése során.",
+    "recipesDelete": "Hiba történt a recept törlése során."
   },
   "notifications": {
     "itemAddedToShoppingList": "Elem hozzáadva a bevásárló listához."
@@ -207,7 +230,7 @@
     "turnip": "tarlórépa",
     "truffle": "szarvasgomba",
     "watercress": "vízitorma",
-    "jerusalem artichoke": "csicsóka",
+    "jerusalem_artichoke": "csicsóka",
     "apple": "alma",
     "blackthorn": "kökény",
     "medlar": "naspolya",

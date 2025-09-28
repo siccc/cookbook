@@ -1,4 +1,4 @@
-![screenshots3](https://user-images.githubusercontent.com/7619797/231281478-7290e499-c706-49dd-8804-55facd85f08d.jpg)
+![231281478-7290e499-c706-49dd-8804-55facd85f08d-min](https://github.com/user-attachments/assets/443f6025-9070-4eac-afec-3b856a010da1)
 
 > Cookbook is an easy-to-use recipe app, the digital version of your treasured family recipe book.
 
